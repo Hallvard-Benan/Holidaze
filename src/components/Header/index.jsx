@@ -31,7 +31,14 @@ export default function NavBar() {
               />
             </NavLink>
 
-            <button onClick={logout}>logout</button>
+            <button
+              onClick={() => {
+                logout();
+                navigate("/");
+              }}
+            >
+              logout
+            </button>
           </>
         ) : (
           <>

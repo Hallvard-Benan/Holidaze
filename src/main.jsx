@@ -12,6 +12,7 @@ import { loader as venueLoader } from "./pages/VenuePage";
 import { loader as userLoader } from "./pages/UserPage";
 import { loader as authLoader } from "./pages/LoginPage";
 import UserPage from "./pages/UserPage";
+import VenuesPage from "./pages/VenuesPage";
 
 const router = createBrowserRouter([
   {
@@ -25,6 +26,7 @@ const router = createBrowserRouter([
         element: <LoginPage />,
         loader: authLoader,
       },
+      { path: "/venues", element: <VenuesPage /> },
       { path: "/venues/:venueId", element: <VenuePage />, loader: venueLoader },
       {
         path: "/profiles/:userName",

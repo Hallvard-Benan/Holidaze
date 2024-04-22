@@ -4,8 +4,13 @@ const apiKey = import.meta.env.VITE_API_KEY;
 
 export async function fetchAllVenues() {
   const res = await axios.get(
-    `${baseUrl}/holidaze/venues?sort=created&sortOrder=desc`
+    `${baseUrl}/holidaze/venues?sort=created&sortOrder=desc&limit=10&page=1`
   );
+  return res;
+}
+
+export async function searchVenues(search) {
+  const res = await axios.get(`${baseUrl}/holidaze/venues/search?q=${search}`);
   return res;
 }
 

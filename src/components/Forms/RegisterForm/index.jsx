@@ -1,10 +1,14 @@
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { loginUser } from "../../../api";
+import { loginUser, registerUser } from "../../../api";
 import { useMutation } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
 import { useBoundStore } from "../../../stores/store";
+import { validateAvatar } from "../../../utils/validation";
+import { useState } from "react";
+import Spinner from "../../ui/spinner";
+
 const schema = z.object({
   name: z.string().regex(/^[a-zA-Z0-9_]+$/, {
     message:
@@ -24,30 +28,37 @@ const schema = z.object({
     .object({
       url: z
         .string()
-        .url({ message: "Avatar URL must be a valid URL" })
-        .optional(),
-      alt: z.string().max(120).default(""),
+        .optional()
+        .refine((value) => !value || validateAvatar(value), {
+          message: "Avatar URL must be a valid image-URL or left empty",
+        }),
+      alt: z.string().max(120).optional(),
     })
     .optional(),
   banner: z
     .object({
       url: z
         .string()
-        .url({ message: "Banner URL must be a valid URL" })
-        .optional(),
-      alt: z.string().max(120).default(""),
+        .optional()
+        .refine((value) => !value || validateAvatar(value), {
+          message: "Banner URL must be a valid image URL or left empty",
+        }),
+      alt: z.string().max(120).optional(),
     })
     .optional(),
   venueManager: z.boolean().optional(),
 });
 
 export default function RegisterForm() {
+  const [formData, setFormData] = useState(null); // Declare formData state
+
   const { login, updateUser } = useBoundStore();
   const navigate = useNavigate();
   const {
     register,
     reset,
     handleSubmit,
+    setError,
     formState: { errors, isSubmitting },
   } = useForm({ resolver: zodResolver(schema) });
 
@@ -59,12 +70,42 @@ export default function RegisterForm() {
       navigate("/");
     },
     onError: (res) => {
-      console.log(res);
+      setError("root", {
+        errors: res.response.data.errors,
+      });
+    },
+  });
+
+  const registerUserMutation = useMutation({
+    mutationFn: registerUser,
+    onSuccess: () => {
+      const loginDetails = {
+        email: formData.email,
+        password: formData.password,
+      };
+
+      loginUserMutation.mutate(loginDetails);
+    },
+    onError: (res) => {
+      setError("root", {
+        errors: res.response.data.errors,
+      });
     },
   });
 
   const onSubmit = async (data) => {
-    loginUserMutation.mutate(data);
+    const formData = {
+      ...data,
+      avatar: data.avatar.url
+        ? { url: data.avatar.url, alt: data.avatar.alt }
+        : undefined,
+      banner: data.banner.url
+        ? { url: data.banner.url, alt: data.banner.alt }
+        : undefined,
+    };
+
+    setFormData(formData); // Set formData state
+    registerUserMutation.mutate(formData);
     reset();
   };
 
@@ -80,6 +121,30 @@ export default function RegisterForm() {
       />
       {errors?.name && (
         <div className="text-red-500">{errors.name.message}</div>
+      )}
+
+      <label htmlFor="email">Email:</label>
+      <input
+        className="border p-2"
+        type="email"
+        {...register("email")}
+        placeholder="email"
+        name="email"
+        autoComplete="email"
+      />
+      {errors?.email && (
+        <div className="text-red-500">{errors.email.message}</div>
+      )}
+      <label htmlFor="password">Password</label>
+      <input
+        className="border p-2"
+        type="password"
+        name="password"
+        {...register("password")}
+        placeholder="password"
+      />
+      {errors?.password && (
+        <div className="text-red-500">{errors.password.message}</div>
       )}
 
       <label htmlFor="bio">Bio:</label>
@@ -145,7 +210,6 @@ export default function RegisterForm() {
           id="default-checkbox"
           {...register("venueManager")}
           type="checkbox"
-          value=""
           className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
         />
         <label
@@ -161,8 +225,21 @@ export default function RegisterForm() {
         type="submit"
         className="flex h-[48px] justify-center items-center md:max-w-[200px] bg-gray-500 text-gray-100 py-3 font-semibold rounded-lg hover:opacity-85 transition duration-300 ease-in-out"
       >
-        {isSubmitting ? "..." : "Register"}
+        {isSubmitting ||
+        registerUserMutation.isPending ||
+        loginUserMutation.isPending ? (
+          <Spinner />
+        ) : (
+          "Register"
+        )}
       </button>
+      {errors?.root && (
+        <div className="text-red-500">
+          {errors.root.errors.map((m, i) => (
+            <p key={i}>{m.message}</p>
+          ))}
+        </div>
+      )}
     </form>
   );
 }

@@ -14,6 +14,11 @@ export async function fetchVenueById(id) {
   return res;
 }
 
+export async function registerUser(data) {
+  const res = await axios.post(`${baseUrl}/auth/register`, data);
+  return res;
+}
+
 export async function loginUser(data) {
   const res = await axios.post(`${baseUrl}/auth/login`, data);
   return res;
@@ -29,6 +34,5 @@ export async function getUser(name) {
       "X-Noroff-API-Key": apiKey,
     },
   });
-  console.log(res);
   return res;
 }

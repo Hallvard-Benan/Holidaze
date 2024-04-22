@@ -6,7 +6,10 @@ export default function NavBar() {
 
   return (
     <nav className=" text-xl flex justify-between px-4 py-2 bg-slate-200">
-      <NavLink className={({ isActive }) => isActive && "underline"} to={"/"}>
+      <NavLink
+        className={({ isActive }) => (isActive ? "underline" : "")}
+        to={"/"}
+      >
         Home
       </NavLink>
       <div className="flex gap-2">
@@ -27,14 +30,14 @@ export default function NavBar() {
           <>
             {" "}
             <NavLink
-              className={({ isActive }) => isActive && "underline"}
-              to={"/login"}
+              className={({ isActive }) => (isActive ? "underline" : "")}
+              to={"/auth/login"}
             >
               Login
             </NavLink>
             <NavLink
-              className={({ isActive }) => isActive && "underline"}
-              to={"/login"}
+              className={({ isActive }) => (isActive ? "underline" : "")}
+              to={"/auth/register"}
             >
               Register
             </NavLink>{" "}

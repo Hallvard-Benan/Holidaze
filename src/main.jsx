@@ -10,6 +10,7 @@ import VenuePage from "./pages/VenuePage";
 
 import { loader as venueLoader } from "./pages/VenuePage";
 import { loader as userLoader } from "./pages/UserPage";
+import { loader as authLoader } from "./pages/LoginPage";
 import UserPage from "./pages/UserPage";
 
 const router = createBrowserRouter([
@@ -19,7 +20,11 @@ const router = createBrowserRouter([
     errorElement: <NotFoundPage></NotFoundPage>,
     children: [
       { path: "/", element: <HomePage /> },
-      { path: "/auth/:formVersion", element: <LoginPage /> },
+      {
+        path: "/auth/:formVersion",
+        element: <LoginPage />,
+        loader: authLoader,
+      },
       { path: "/venues/:venueId", element: <VenuePage />, loader: venueLoader },
       {
         path: "/profiles/:userName",

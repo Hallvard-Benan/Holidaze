@@ -5,15 +5,12 @@ import { loginUser } from "../../../api";
 import { useMutation } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
 import { useBoundStore } from "../../../stores/store";
+import Spinner from "../../ui/spinner";
 
 const schema = z.object({
-  // Insert a check that the email ends with: @stud.noroff.no, with the message "must be a valid Noroff email ending in @stud.noroff.no"
-  email: z
-    .string()
-    .email({ message: "invalid email format" })
-    .refine((value) => value.endsWith("@stud.noroff.no"), {
-      message: "Must be a valid email address, ending in @stud.noroff.no",
-    }),
+  email: z.string().refine((value) => value.endsWith("@stud.noroff.no"), {
+    message: "Must be a valid email address, ending in @stud.noroff.no",
+  }),
   password: z.string().min(8, { message: "must be 8 characters" }),
 });
 
@@ -22,26 +19,28 @@ export default function LoginForm() {
   const navigate = useNavigate();
   const {
     register,
-    reset,
     handleSubmit,
+    setError,
     formState: { errors, isSubmitting },
   } = useForm({ resolver: zodResolver(schema) });
 
   const loginUserMutation = useMutation({
     mutationFn: loginUser,
+
     onSuccess: (res) => {
       updateUser(res.data.data);
       login();
       navigate("/");
     },
     onError: (res) => {
-      console.log(res);
+      setError("root", {
+        errors: res.response.data.errors,
+      });
     },
   });
 
   const onSubmit = async (data) => {
     loginUserMutation.mutate(data);
-    reset();
   };
   return (
     <form onSubmit={handleSubmit(onSubmit)} className=" flex flex-col gap-4">
@@ -52,7 +51,7 @@ export default function LoginForm() {
         {...register("email")}
         placeholder="email"
         name="email"
-        defaultValue={"thebestuser@stud.noroff.no"}
+        defaultValue={"cool_cat@stud.noroff.no"}
         autoComplete="email"
       />
       {errors?.email && (
@@ -72,14 +71,20 @@ export default function LoginForm() {
         <div className="text-red-500">{errors.password.message}</div>
       )}
 
-      {errors.root && <div>{errors.root.message}</div>}
       <button
         disabled={isSubmitting}
         type="submit"
         className="flex h-[48px] justify-center items-center md:max-w-[200px] bg-gray-500 text-gray-100 py-3 font-semibold rounded-lg hover:opacity-85 transition duration-300 ease-in-out"
       >
-        {isSubmitting ? "..." : "Login"}
+        {isSubmitting || loginUserMutation.isPending ? <Spinner /> : "Login"}
       </button>
+      {errors?.root && (
+        <div className="text-red-500">
+          {errors.root.errors.map((m, i) => (
+            <p key={i}>{m.message}</p>
+          ))}
+        </div>
+      )}
     </form>
   );
 }

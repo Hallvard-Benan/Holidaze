@@ -26,7 +26,7 @@ export default function HomePage() {
     <>
       <Search onSearch={handleSearch} />
 
-      <div className="container mx-auto grid grid-cols-2 md:grid-cols-3 gap-3">
+      <div className="container mx-auto grid grid-cols-2 gap-3 md:grid-cols-3">
         {data.data.data.map((item) => (
           <Card
             key={item.id}

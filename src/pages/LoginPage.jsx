@@ -1,7 +1,8 @@
 import LoginForm from "../components/Forms/LoginForm";
-import { useLoaderData } from "react-router-dom";
 import RegisterForm from "../components/Forms/RegisterForm";
+import { useLoaderData } from "react-router-dom";
 import { Link } from "react-router-dom";
+
 export async function loader({ params }) {
   const formVersion = params.formVersion;
   return { formVersion };

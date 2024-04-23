@@ -1,0 +1,44 @@
+.rdrDefinedRangesWrapper {
+  display: none;
+}
+
+.rdrCalendarWrapper {
+  width: 100%;
+  background-color: aliceblue;
+  border-radius: 1rem;
+  padding: 0.5rem;
+}
+
+/* Important tag used in order to overwrite inline style tag from component */
+
+.rdrEndEdge,
+.rdrInRange,
+.rdrStartEdge {
+  color: rgb(29, 153, 68) !important;
+}
+
+.rdrDayInPreview,
+.rdrDayStartPreview,
+.rdrDayEndPreview {
+  border-color: white !important;
+}
+
+.rdrDateInput:nth-of-type(1) {
+  position: relative;
+}
+.rdrDateInput:nth-of-type(2) {
+  position: relative;
+}
+
+.rdrDateInput:nth-of-type(1)::before,
+.rdrDateInput:nth-of-type(2)::before {
+  content: "check-out";
+  position: absolute;
+  background: #000;
+  right: 50%;
+  transform: translateX(50%) translateY(-100%);
+}
+
+.rdrDateInput:nth-of-type(1)::before {
+  content: "check-in";
+}

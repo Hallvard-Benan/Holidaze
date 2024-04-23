@@ -74,7 +74,7 @@ export default function LoginForm() {
       <button
         disabled={isSubmitting}
         type="submit"
-        className="flex h-[48px] justify-center items-center md:max-w-[200px] bg-gray-500 text-gray-100 py-3 font-semibold rounded-lg hover:opacity-85 transition duration-300 ease-in-out"
+        className="flex h-[48px] items-center justify-center rounded-lg bg-gray-500 py-3 font-semibold text-gray-100 transition duration-300 ease-in-out hover:opacity-85 md:max-w-[200px]"
       >
         {isSubmitting || loginUserMutation.isPending ? <Spinner /> : "Login"}
       </button>

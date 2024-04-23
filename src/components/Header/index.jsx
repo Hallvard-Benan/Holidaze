@@ -11,7 +11,7 @@ export default function NavBar() {
     navigate(`/venues?search=${searchTerm}`);
   };
   return (
-    <nav className=" text-xl flex justify-between px-4 py-2 bg-slate-200">
+    <nav className=" flex justify-between bg-slate-200 px-4 py-2 text-xl">
       <NavLink
         className={({ isActive }) => (isActive ? "underline" : "")}
         to={"/"}

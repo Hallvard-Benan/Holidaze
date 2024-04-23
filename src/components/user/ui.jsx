@@ -2,9 +2,9 @@ import { Link } from "react-router-dom";
 
 function ProfileUi({ name, avatar, credits, wins, _count, venueManager }) {
   return (
-    <div className="max-w-full grid gap-4 overflow-hidden">
-      <div className="grid md:flex md:justify-center gap-2 md:gap-4">
-        <div className="grid gap-2 justify-items-center">
+    <div className="grid max-w-full gap-4 overflow-hidden">
+      <div className="grid gap-2 md:flex md:justify-center md:gap-4">
+        <div className="grid justify-items-center gap-2">
           <img
             src={
               avatar
@@ -12,17 +12,17 @@ function ProfileUi({ name, avatar, credits, wins, _count, venueManager }) {
                 : "https://cdn-icons-png.flaticon.com/512/17/17004.png"
             }
             alt={avatar ? avatar.alt : "profile image"}
-            className={` h-44 rounded-lg md:h-72 transition-opacity duration-200 `}
+            className={` h-44 rounded-lg transition-opacity duration-200 md:h-72 `}
           />
         </div>
 
         <div className="flex flex-col justify-center gap-4">
-          <h1 className="text-4xl md:text-5xl break-all text-center md:w-[400px]">
+          <h1 className="break-all text-center text-4xl md:w-[400px] md:text-5xl">
             {name}
           </h1>
-          <div className="bg-white rounded-lg p-4 flex justify-evenly gap-16 md:gap-20 mx-auto">
+          <div className="mx-auto flex justify-evenly gap-16 rounded-lg bg-white p-4 md:gap-20">
             <div>
-              <p className="text-lg font-medium text-center md:text-xl">
+              <p className="text-center text-lg font-medium md:text-xl">
                 {venueManager && <Link> My venues</Link>}
               </p>
               <p className="text-muted-foreground text-sm md:text-base">
@@ -30,7 +30,7 @@ function ProfileUi({ name, avatar, credits, wins, _count, venueManager }) {
               </p>
             </div>
             <div>
-              <p className="text-lg font-medium text-center md:text-xl">
+              <p className="text-center text-lg font-medium md:text-xl">
                 ${credits}
               </p>
               <p className="text-muted-foreground text-sm md:text-base">
@@ -38,7 +38,7 @@ function ProfileUi({ name, avatar, credits, wins, _count, venueManager }) {
               </p>
             </div>
             <div>
-              <p className="text-lg md:text-xl font-medium text-center">
+              <p className="text-center text-lg font-medium md:text-xl">
                 {wins}
               </p>
               <p className="text-muted-foreground text-sm md:text-base">Wins</p>

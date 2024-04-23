@@ -4,7 +4,7 @@ const apiKey = import.meta.env.VITE_API_KEY;
 
 export async function fetchAllVenues() {
   const res = await axios.get(
-    `${baseUrl}/holidaze/venues?sort=created&sortOrder=desc&limit=10&page=1`
+    `${baseUrl}/holidaze/venues?sort=created&sortOrder=desc&limit=10&page=1`,
   );
   return res;
 }
@@ -15,7 +15,9 @@ export async function searchVenues(search) {
 }
 
 export async function fetchVenueById(id) {
-  const res = await axios.get(`${baseUrl}/holidaze/venues/${id}`);
+  const res = await axios.get(
+    `${baseUrl}/holidaze/venues/${id}?_bookings=true&_owner=true`,
+  );
   return res;
 }
 
@@ -39,5 +41,18 @@ export async function getUser(name) {
       "X-Noroff-API-Key": apiKey,
     },
   });
+  return res;
+}
+
+export async function makeBooking(data) {
+  const authStorage = window.localStorage.getItem("Auth-storage");
+  const accessToken = JSON.parse(authStorage).state.user.accessToken;
+  const res = await axios.post(`${baseUrl}/holidaze/bookings/`, data, {
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+      "X-Noroff-API-Key": apiKey,
+    },
+  });
+
   return res;
 }

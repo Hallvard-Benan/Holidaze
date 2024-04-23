@@ -205,12 +205,12 @@ export default function RegisterForm() {
       )}
       {/* Similarly add input fields for banner and venueManager */}
 
-      <div className="flex items-center mb-4">
+      <div className="mb-4 flex items-center">
         <input
           id="default-checkbox"
           {...register("venueManager")}
           type="checkbox"
-          className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+          className="h-4 w-4 rounded border-gray-300 bg-gray-100 text-blue-600 focus:ring-2 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:ring-offset-gray-800 dark:focus:ring-blue-600"
         />
         <label
           htmlFor="default-checkbox"
@@ -223,7 +223,7 @@ export default function RegisterForm() {
       <button
         disabled={isSubmitting}
         type="submit"
-        className="flex h-[48px] justify-center items-center md:max-w-[200px] bg-gray-500 text-gray-100 py-3 font-semibold rounded-lg hover:opacity-85 transition duration-300 ease-in-out"
+        className="flex h-[48px] items-center justify-center rounded-lg bg-gray-500 py-3 font-semibold text-gray-100 transition duration-300 ease-in-out hover:opacity-85 md:max-w-[200px]"
       >
         {isSubmitting ||
         registerUserMutation.isPending ||

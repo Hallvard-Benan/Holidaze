@@ -1,7 +1,7 @@
 import { NavLink } from "react-router-dom";
 export default function Footer() {
   return (
-    <nav className="bg-black h-40 text-white text-xl">
+    <nav className="h-40 bg-black text-xl text-white">
       <NavLink className={({ isActive }) => isActive && "underline"} to={"/"}>
         Home
       </NavLink>

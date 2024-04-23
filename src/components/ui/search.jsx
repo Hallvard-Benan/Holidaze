@@ -1,7 +1,7 @@
 export default function Search({ onSearch }) {
   return (
     <form onSubmit={onSearch}>
-      <input type="text" className="border p-3 rounded-md" name="search" />{" "}
+      <input type="text" className="rounded-md border p-3" name="search" />{" "}
       <button>search</button>
     </form>
   );

@@ -7,9 +7,10 @@
   background-color: aliceblue;
   border-radius: 1rem;
   padding: 0.5rem;
+  margin-top: 1.5rem;
 }
 
-/* Important tag used in order to overwrite inline style tag from component */
+/* Important tag must be used in these cases in order to overwrite inline style tag from component */
 
 .rdrEndEdge,
 .rdrInRange,
@@ -23,20 +24,15 @@
   border-color: white !important;
 }
 
-.rdrDateInput:nth-of-type(1) {
-  position: relative;
-}
-.rdrDateInput:nth-of-type(2) {
-  position: relative;
-}
-
 .rdrDateInput:nth-of-type(1)::before,
 .rdrDateInput:nth-of-type(2)::before {
   content: "check-out";
   position: absolute;
-  background: #000;
+  font-size: 16px;
+  color: black;
   right: 50%;
   transform: translateX(50%) translateY(-100%);
+  bottom: 1.5rem;
 }
 
 .rdrDateInput:nth-of-type(1)::before {

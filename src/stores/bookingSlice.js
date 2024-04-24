@@ -2,8 +2,8 @@ export const createBookingSlice = (set) => ({
   bookingFormState: { dateFrom: "", dateTo: "", guests: 0, venueId: "" },
 
   updateVenueId: (id) =>
-    set((state) => ({
-      bookingFormState: { ...state.bookingFormState, venueId: id },
+    set(() => ({
+      bookingFormState: { venueId: id },
     })),
   updateDateTo: (date) =>
     set((state) => ({
@@ -16,5 +16,10 @@ export const createBookingSlice = (set) => ({
   updateGuests: (count) =>
     set((state) => ({
       bookingFormState: { ...state.bookingFormState, guests: count },
+    })),
+
+  clearBookingState: () =>
+    set(() => ({
+      bookingFormState: {},
     })),
 });

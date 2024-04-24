@@ -49,7 +49,7 @@ export default function VenuePage() {
   disabledDates = disabledDates.map((date) => date.toISOString().split("T")[0]);
 
   return (
-    <div className="container mx-auto">
+    <div className="mx-auto w-calc">
       <h1>{post.name}</h1>
       <p>{post.description}</p>
       <p>price: {post.price} kr</p>
@@ -62,6 +62,7 @@ export default function VenuePage() {
       <img src={post.media[0].url} alt="" className="w-96" />
       <BookingForm
         disabledDates={disabledDates}
+        price={post.price}
         venueId={id}
         maxGuests={post.maxGuests}
       />

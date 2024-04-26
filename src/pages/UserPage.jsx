@@ -14,7 +14,7 @@ export default function UserPage() {
 
   const { data, error, status } = useQuery({
     queryKey: ["user", userName],
-    queryFn: () => getUser(userName),
+    queryFn: () => getUser({ name: userName }),
   });
 
   if (status === "pending") return <Spinner />;

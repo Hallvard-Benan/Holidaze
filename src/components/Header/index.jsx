@@ -18,6 +18,7 @@ export default function NavBar() {
       >
         Home
       </NavLink>
+
       <div className="flex gap-2">
         <Search onSearch={handleSearch} />
         {isLoggedIn ? (

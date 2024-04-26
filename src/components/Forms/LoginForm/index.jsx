@@ -1,11 +1,8 @@
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { loginUser } from "../../../api";
-import { useMutation } from "@tanstack/react-query";
-import { useNavigate } from "react-router-dom";
-import { useBoundStore } from "../../../stores/store";
 import Spinner from "../../ui/spinner";
+import useLoginMutation from "../../../hooks/useLoginUserMutation";
 
 const schema = z.object({
   email: z.string().refine((value) => value.endsWith("@stud.noroff.no"), {
@@ -15,28 +12,16 @@ const schema = z.object({
 });
 
 export default function LoginForm() {
-  const { login, updateUser } = useBoundStore();
-  const navigate = useNavigate();
   const {
     register,
     handleSubmit,
     setError,
     formState: { errors, isSubmitting },
   } = useForm({ resolver: zodResolver(schema) });
+  // needs vars from above hooks
 
-  const loginUserMutation = useMutation({
-    mutationFn: loginUser,
-
-    onSuccess: (res) => {
-      updateUser(res.data.data);
-      login();
-      navigate("/");
-    },
-    onError: (res) => {
-      setError("root", {
-        errors: res.response.data.errors,
-      });
-    },
+  const { loginUserMutation } = useLoginMutation({
+    setError,
   });
 
   const onSubmit = async (data) => {

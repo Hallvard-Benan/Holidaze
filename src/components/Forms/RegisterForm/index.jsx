@@ -1,13 +1,11 @@
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { loginUser, registerUser } from "../../../api";
-import { useMutation } from "@tanstack/react-query";
-import { useNavigate } from "react-router-dom";
-import { useBoundStore } from "../../../stores/store";
 import { validateAvatar } from "../../../utils/validation";
 import { useState } from "react";
 import Spinner from "../../ui/spinner";
+import useLoginMutation from "../../../hooks/useLoginUserMutation";
+import useRegisterMutation from "../../../hooks/useRegisterUserMutation";
 
 const schema = z.object({
   name: z.string().regex(/^[a-zA-Z0-9_]+$/, {
@@ -50,10 +48,8 @@ const schema = z.object({
 });
 
 export default function RegisterForm() {
-  const [formData, setFormData] = useState(null); // Declare formData state
+  const [formData, setFormData] = useState(null);
 
-  const { login, updateUser } = useBoundStore();
-  const navigate = useNavigate();
   const {
     register,
     reset,
@@ -62,35 +58,14 @@ export default function RegisterForm() {
     formState: { errors, isSubmitting },
   } = useForm({ resolver: zodResolver(schema) });
 
-  const loginUserMutation = useMutation({
-    mutationFn: loginUser,
-    onSuccess: (res) => {
-      updateUser(res.data.data);
-      login();
-      navigate("/");
-    },
-    onError: (res) => {
-      setError("root", {
-        errors: res.response.data.errors,
-      });
-    },
+  const { loginUserMutation } = useLoginMutation({
+    setError,
   });
 
-  const registerUserMutation = useMutation({
-    mutationFn: registerUser,
-    onSuccess: () => {
-      const loginDetails = {
-        email: formData.email,
-        password: formData.password,
-      };
-
-      loginUserMutation.mutate(loginDetails);
-    },
-    onError: (res) => {
-      setError("root", {
-        errors: res.response.data.errors,
-      });
-    },
+  const { registerUserMutation } = useRegisterMutation({
+    formData,
+    loginUserMutation,
+    setError,
   });
 
   const onSubmit = async (data) => {

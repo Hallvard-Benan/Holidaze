@@ -31,9 +31,14 @@ export async function loginUser(data) {
   return res;
 }
 
-export async function getUser(name) {
-  const authStorage = window.localStorage.getItem("Auth-storage");
-  const accessToken = JSON.parse(authStorage).state.user.accessToken;
+export async function getUser({ name, token }) {
+  let accessToken;
+  if (!token) {
+    const authStorage = window.localStorage.getItem("Auth-storage");
+    accessToken = JSON.parse(authStorage).state.accessToken;
+  } else {
+    accessToken = token;
+  }
 
   const res = await axios.get(`${baseUrl}/holidaze/profiles/${name}`, {
     headers: {
@@ -46,7 +51,7 @@ export async function getUser(name) {
 
 export async function makeBooking(data) {
   const authStorage = window.localStorage.getItem("Auth-storage");
-  const accessToken = JSON.parse(authStorage).state.user.accessToken;
+  const accessToken = JSON.parse(authStorage).state.accessToken;
   const res = await axios.post(`${baseUrl}/holidaze/bookings/`, data, {
     headers: {
       Authorization: `Bearer ${accessToken}`,

@@ -1,11 +1,10 @@
 export const createAuthSlice = (set) => ({
-  isVendor: false,
   isLoggedIn: false,
   user: {},
-  avatar: "",
-  login: () => set(() => ({ isLoggedIn: true })),
-  logout: () => set(() => ({ isLoggedIn: false, user: {} })),
-  setIsVendor: () => () => ({ isVendor: true }),
-  updateUser: (user) => set(() => ({ user: user })),
-  updateAvatar: (avatar) => set(() => ({ avatar: avatar })),
+  accessToken: "",
+
+  login: (token) =>
+    set((state) => ({ ...state, isLoggedIn: true, accessToken: token })),
+  logout: () => set(() => ({ isLoggedIn: false, user: {}, accessToken: null })),
+  updateUser: (user) => set((state) => ({ ...state, user: user })),
 });

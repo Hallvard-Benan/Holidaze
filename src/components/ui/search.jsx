@@ -1,3 +1,4 @@
+import PropTypes from "prop-types";
 export default function Search({ onSearch }) {
   return (
     <form onSubmit={onSearch}>
@@ -6,3 +7,7 @@ export default function Search({ onSearch }) {
     </form>
   );
 }
+
+Search.propTypes = {
+  onSearch: PropTypes.func,
+};

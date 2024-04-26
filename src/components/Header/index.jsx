@@ -5,6 +5,7 @@ import Search from "../ui/search";
 export default function NavBar() {
   const { isLoggedIn, logout, user } = useBoundStore();
   const navigate = useNavigate();
+
   const handleSearch = (e) => {
     e.preventDefault();
     const searchTerm = e.target.search.value;
@@ -18,6 +19,8 @@ export default function NavBar() {
       >
         Home
       </NavLink>
+
+      {user.venueManager && <NavLink to={"/new-venue"}>Upload a venue</NavLink>}
 
       <div className="flex gap-2">
         <Search onSearch={handleSearch} />

@@ -61,3 +61,16 @@ export async function makeBooking(data) {
 
   return res;
 }
+
+export async function createVenue(data) {
+  const authStorage = window.localStorage.getItem("Auth-storage");
+  const accessToken = JSON.parse(authStorage).state.accessToken;
+  const res = await axios.post(`${baseUrl}/holidaze/venues`, data, {
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+      "X-Noroff-API-Key": apiKey,
+    },
+  });
+
+  return res;
+}

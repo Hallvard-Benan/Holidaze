@@ -55,10 +55,11 @@ export default function VenuePage() {
       <p>price: {post.price} kr</p>
       <p>max guests: {post.maxGuests}</p>
       <p>rating: {post.rating}</p>
-      <p>wifi: {post.wifi ? "yes" : "no"}</p>
-      <p>pets: {post.pets ? "yes" : "no"}</p>
-      <p>parking: {post.parking ? "yes" : "no"}</p>
-      <p>breakfast: {post.breakfast ? "yes" : "no"}</p>
+      {post.wifi}
+      <p>wifi: {post.meta.wifi ? "yes" : "no"}</p>
+      <p>pets: {post.meta.pets ? "yes" : "no"}</p>
+      <p>parking: {post.meta.parking ? "yes" : "no"}</p>
+      <p>breakfast: {post.meta.breakfast ? "yes" : "no"}</p>
       <img src={post.media[0].url} alt="" className="w-96" />
       <BookingForm
         disabledDates={disabledDates}

@@ -3,6 +3,7 @@ import Card from "../components/Card";
 import Search from "../components/ui/search";
 import Spinner from "../components/ui/spinner";
 import useAllVenues from "../hooks/useAllVenues";
+import Filters from "../components/ui/filters";
 
 export default function HomePage() {
   const navigate = useNavigate();
@@ -12,7 +13,6 @@ export default function HomePage() {
   if (status === "error")
     return (
       <div>
-        {" "}
         {error.message} {error.response.data.errors[0].message}
       </div>
     );
@@ -25,10 +25,15 @@ export default function HomePage() {
   return (
     <>
       <Search onSearch={handleSearch} />
+      <div>
+        <Filters />
+      </div>
 
-      <div className="container mx-auto grid grid-cols-2 gap-3 md:grid-cols-3">
+      <div className="mx-auto grid w-calc grid-cols-2 gap-3 md:grid-cols-3">
         {data.data.data.map((item) => (
           <Card
+            rating={item.rating}
+            location={item.location.city + ", " + item.location.country}
             key={item.id}
             heading={item.name}
             description={item.description}

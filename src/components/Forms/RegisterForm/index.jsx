@@ -12,12 +12,9 @@ const schema = z.object({
     message:
       "Name must not contain punctuation symbols apart from underscore (_)",
   }),
-  email: z
-    .string()
-    .email({ message: "Invalid email format" })
-    .refine((value) => value.endsWith("@stud.noroff.no"), {
-      message: "Email must be a valid stud.noroff.no email address",
-    }),
+  email: z.string().refine((value) => value.endsWith("@stud.noroff.no"), {
+    message: "Email must be a valid stud.noroff.no email address",
+  }),
   password: z
     .string()
     .min(8, { message: "Password must be at least 8 characters" }),
@@ -182,16 +179,16 @@ export default function RegisterForm() {
 
       <div className="mb-4 flex items-center">
         <input
-          id="default-checkbox"
+          id="venue-manager-check"
           {...register("venueManager")}
           type="checkbox"
           className="h-4 w-4 rounded border-gray-300 bg-gray-100 text-blue-600 focus:ring-2 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:ring-offset-gray-800 dark:focus:ring-blue-600"
         />
         <label
-          htmlFor="default-checkbox"
+          htmlFor="venue-manager-check"
           className="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300"
         >
-          Default checkbox
+          Become venue manager
         </label>
       </div>
 

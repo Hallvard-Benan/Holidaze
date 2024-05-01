@@ -1,21 +1,35 @@
 import React from "react";
 import { Link } from "react-router-dom";
 
-export default function Card({ imgUrl, alt, heading, description, href }) {
+export default function Card({
+  imgUrl,
+  alt,
+  heading,
+  description,
+  href,
+  location,
+  rating,
+}) {
   return (
-    <div className="max-w-sm rounded-lg border border-gray-200 bg-white shadow dark:border-gray-700 dark:bg-gray-800">
-      <a href="#">
-        <img className="rounded-t-lg" src={imgUrl} alt={alt} />
-      </a>
-      <div className="p-5">
-        <Link href="#">
-          <h5 className="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
+    <div className="bg-card grid h-[420px] grid-rows-2 overflow-hidden rounded-lg border border-gray-200 shadow">
+      <Link to={href}>
+        <img
+          className="h-[200px] w-full overflow-hidden rounded-t-lg object-cover"
+          src={imgUrl}
+          alt={alt}
+        />
+      </Link>
+      <div className="flex flex-1 flex-col justify-between p-5">
+        <Link to={href}>
+          <h5 className="text-foreground -foreground mb-2 text-2xl font-bold tracking-tight ">
             {heading}
           </h5>
         </Link>
-        <p className="mb-3 font-normal text-gray-700 dark:text-gray-400">
-          {description}
+        <p className="text-muted-foreground text-top line-clamp-1">
+          {location}
         </p>
+        {rating}
+
         <Link
           to={href}
           className="inline-flex items-center rounded-lg bg-blue-700 px-3 py-2 text-center text-sm font-medium text-white hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"

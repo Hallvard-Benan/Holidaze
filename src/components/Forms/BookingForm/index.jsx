@@ -55,7 +55,6 @@ const BookingForm = ({ disabledDates, venueId, maxGuests, price }) => {
   const isLoggedIn = useBoundStore((state) => state.isLoggedIn);
 
   const handleDateRangeChange = ({ startDate, endDate }) => {
-    console.log("enddate", endDate, "startdate", startDate);
     setBookingFormState((state) => ({
       ...state,
       dateFrom: startDate,
@@ -70,7 +69,7 @@ const BookingForm = ({ disabledDates, venueId, maxGuests, price }) => {
 
   const makeBookingMutation = useMutation({
     mutationFn: makeBooking,
-    onSuccess: (res) => {
+    onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["venue", venueId] });
 
       setError("root", { errors: [] });

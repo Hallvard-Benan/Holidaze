@@ -18,7 +18,6 @@ export default function LoginForm() {
     setError,
     formState: { errors, isSubmitting },
   } = useForm({ resolver: zodResolver(schema) });
-  // needs vars from above hooks
 
   const { loginUserMutation } = useLoginMutation({
     setError,

@@ -6,6 +6,7 @@ export default function Card({
   alt,
   heading,
   description,
+  details,
   href,
   location,
   rating,
@@ -28,7 +29,9 @@ export default function Card({
         <p className="text-muted-foreground text-top line-clamp-1">
           {location}
         </p>
-        {rating}
+        <p>{rating}</p>
+
+        {details && <p>{details}</p>}
 
         <Link
           to={href}

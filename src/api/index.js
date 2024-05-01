@@ -40,12 +40,15 @@ export async function getUser({ name, token }) {
     accessToken = token;
   }
 
-  const res = await axios.get(`${baseUrl}/holidaze/profiles/${name}`, {
-    headers: {
-      Authorization: `Bearer ${accessToken}`,
-      "X-Noroff-API-Key": apiKey,
+  const res = await axios.get(
+    `${baseUrl}/holidaze/profiles/${name}?_bookings=true`,
+    {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        "X-Noroff-API-Key": apiKey,
+      },
     },
-  });
+  );
   return res;
 }
 

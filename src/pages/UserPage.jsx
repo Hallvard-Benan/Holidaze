@@ -36,6 +36,7 @@ export default function UserPage() {
       <div>
         <ProfileUi
           name={userData.name}
+          bookings={userData.bookings}
           avatar={userData.avatar}
           credits={2}
           wins={2}

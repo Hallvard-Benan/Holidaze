@@ -1,6 +1,29 @@
 import { Link } from "react-router-dom";
+import Card from "../Card";
 
-function ProfileUi({ name, avatar, credits, wins, _count, venueManager }) {
+function ProfileUi({ name, avatar, credits, wins, bookings, venueManager }) {
+  function formatDate(dateIn) {
+    const date = new Date(dateIn);
+    const day = date.getDate();
+    const month = date.getMonth() + 1; // Adding 1 to get the correct month
+    const year = date.getFullYear();
+    const dateOut = `${day}.${month}.${year}`;
+    console.log("formatted date after:", dateOut, "Before: ", date);
+    return dateOut;
+  }
+
+  const upComingBookings = bookings.filter((booking) => {
+    const today = new Date();
+    const bookingDate = new Date(booking.dateFrom);
+    return bookingDate > today;
+  });
+
+  const sortedBookings = upComingBookings.sort((bookingA, bookingB) => {
+    const dateA = new Date(bookingA.dateFrom);
+    const dateB = new Date(bookingB.dateFrom);
+    return dateA - dateB; // Sort in ascending order (booking closest to today first)
+  });
+
   return (
     <div className="grid max-w-full gap-4 overflow-hidden">
       <div className="grid gap-2 md:flex md:justify-center md:gap-4">
@@ -43,6 +66,25 @@ function ProfileUi({ name, avatar, credits, wins, _count, venueManager }) {
               </p>
               <p className="text-muted-foreground text-sm md:text-base">Wins</p>
             </div>
+          </div>
+          <div>
+            <h2>Your upcoming bookings</h2>
+            {sortedBookings.map((booking) => (
+              <Card
+                key={booking.id}
+                rating={booking.venue.rating}
+                details={`booked from ${formatDate(booking.dateFrom)} to: ${formatDate(booking.dateTo)}`}
+                imgUrl={booking.venue.media[0].url}
+                alt={booking.venue.media[0]?.alt}
+                location={
+                  booking.venue.location.city +
+                  ", " +
+                  booking.venue.location.country
+                }
+                heading={booking.venue.name}
+                href={`/venues/${booking.venue.id}`}
+              ></Card>
+            ))}
           </div>
         </div>
       </div>

@@ -1,4 +1,4 @@
-import { fetchVenueById } from "../api";
+import { fetchVenueById } from "../api/venues";
 import { useQuery } from "@tanstack/react-query";
 export default function useSingleVenue(id) {
   const { data, status, error } = useQuery({

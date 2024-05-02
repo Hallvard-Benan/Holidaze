@@ -28,9 +28,6 @@ export default function CreateVenueForm() {
   const onSubmit = (e) => {
     e.preventDefault();
 
-    function validate(data) {}
-
-    validate(venueFormData);
     createVenueMutation.mutate(venueFormData);
   };
 

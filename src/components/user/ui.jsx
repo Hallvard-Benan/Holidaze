@@ -8,7 +8,6 @@ function ProfileUi({ name, avatar, credits, wins, bookings, venueManager }) {
     const month = date.getMonth() + 1; // Adding 1 to get the correct month
     const year = date.getFullYear();
     const dateOut = `${day}.${month}.${year}`;
-    console.log("formatted date after:", dateOut, "Before: ", date);
     return dateOut;
   }
 

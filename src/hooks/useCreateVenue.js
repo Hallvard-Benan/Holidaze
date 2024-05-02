@@ -1,6 +1,6 @@
 import { useMutation } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
-import { createVenue } from "../api";
+import { createVenue } from "../api/venues";
 import { useBoundStore } from "../stores/store";
 
 export default function useCreateVenue({ setError }) {

@@ -1,6 +1,6 @@
 import Calendar from "../../DateRangePicker";
 import PropTypes from "prop-types";
-import { makeBooking } from "../../../api";
+import { makeBooking } from "../../../api/bookings";
 import { useForm } from "react-hook-form";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useBoundStore } from "../../../stores/store";
@@ -125,8 +125,6 @@ const BookingForm = ({ disabledDates, venueId, maxGuests, price }) => {
     // Add two hours to both fromDate and toDate
     const utcFromDate = new Date(fromDate.getTime() + 2 * 60 * 60 * 1000); // 2 hours in milliseconds
     const utcToDate = new Date(toDate.getTime() + 2 * 60 * 60 * 1000); // 2 hours in milliseconds
-    console.log("utc from date : " + utcFromDate.toUTCString());
-    console.log("utc to date : " + utcToDate.toUTCString());
 
     makeBookingMutation.mutate({
       ...bookingFormState,

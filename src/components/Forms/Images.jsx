@@ -5,6 +5,7 @@ import { TfiClose } from "react-icons/tfi";
 import { CiCirclePlus } from "react-icons/ci";
 import { Label } from "../ui/label";
 import { validateAvatar } from "../../utils/validation";
+import PropTypes from "prop-types";
 
 function Images({ images = [], onImagesChange }) {
   const [image, setImage] = useState("");
@@ -137,5 +138,14 @@ function Images({ images = [], onImagesChange }) {
     </div>
   );
 }
+Images.propTypes = {
+  images: PropTypes.arrayOf(
+    PropTypes.shape({
+      url: PropTypes.string.isRequired,
+      alt: PropTypes.string.isRequired,
+    }),
+  ),
+  onImagesChange: PropTypes.func.isRequired,
+};
 
 export default Images;

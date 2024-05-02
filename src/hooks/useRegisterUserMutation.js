@@ -1,5 +1,5 @@
 import { useMutation } from "@tanstack/react-query";
-import { registerUser } from "../api";
+import { registerUser } from "../api/auth";
 
 export default function useRegisterMutation({
   formData,

@@ -1,4 +1,4 @@
-import { searchVenues } from "../api";
+import { searchVenues } from "../api/venues";
 import { useQuery } from "@tanstack/react-query";
 export default function useSearchVenues(search) {
   const { data, status, error } = useQuery({

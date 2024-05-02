@@ -1,5 +1,6 @@
 import { useMutation } from "@tanstack/react-query";
-import { loginUser, getUser } from "../api";
+import { loginUser } from "../api/auth";
+import { getUser } from "../api/profiles";
 import { useNavigate } from "react-router-dom";
 import { useBoundStore } from "../stores/store";
 import { useState } from "react";
@@ -17,7 +18,6 @@ export default function useLoginMutation({ setError }) {
       navigate("/");
     },
     onError: (res) => {
-      console.log(res);
       setError("root", {
         errors: res.response.data.errors,
       });

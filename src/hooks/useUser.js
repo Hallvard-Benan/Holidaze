@@ -1,4 +1,4 @@
-import { getUser } from "../api";
+import { getUser } from "../api/profiles";
 import { useQuery } from "@tanstack/react-query";
 export default function useUser(name) {
   const { data, status, error } = useQuery({

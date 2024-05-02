@@ -1,4 +1,4 @@
-import { getUser } from "../api";
+import { getUser } from "../api/profiles.js";
 import { useQuery } from "@tanstack/react-query";
 import { useLoaderData } from "react-router-dom";
 import Spinner from "../components/ui/spinner";
@@ -19,7 +19,6 @@ export default function UserPage() {
 
   if (status === "pending") return <Spinner />;
   if (status === "error") {
-    console.log(error);
     return (
       <div>
         error {error.message}{" "}

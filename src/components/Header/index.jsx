@@ -11,7 +11,6 @@ import {
 import { TfiMenu } from "react-icons/tfi";
 import { FiLogOut } from "react-icons/fi";
 import { LuUser2 } from "react-icons/lu";
-import { FaPlus } from "react-icons/fa";
 import Search from "../ui/search";
 export default function NavBar() {
   const { isLoggedIn, logout, user } = useBoundStore();
@@ -31,14 +30,13 @@ export default function NavBar() {
         Home
       </NavLink>
 
-      {user.venueManager && <NavLink to={"/new-venue"}>Upload a venue</NavLink>}
+      {user.venueManager && <NavLink to={"/new-venue"}>New venue</NavLink>}
 
       <div className="flex gap-2">
-        <Search onSearch={handleSearch} />
+        {/* <Search onSearch={handleSearch} /> */}
         {isLoggedIn ? (
           <>
             <NavLink to={`/profiles/${user.name}`}>
-              <p>{user.name}</p>
               <DropdownMenu>
                 <DropdownMenuTrigger
                   data-cy="open-menu-button"
@@ -46,7 +44,7 @@ export default function NavBar() {
                 >
                   <TfiMenu className="" />
                   <img
-                    className="h-10 w-10 rounded-full object-contain md:h-12 md:w-12"
+                    className="h-10 w-10 rounded-full object-cover md:h-12 md:w-12"
                     src={user.avatar.url}
                   />
                 </DropdownMenuTrigger>
@@ -63,16 +61,16 @@ export default function NavBar() {
                   </Link>
                   <DropdownMenuSeparator />
                   {user.venueManager && (
-                    <Link to="/my-bids">
+                    <Link to={`/profiles/${user.name}/venues`}>
                       <DropdownMenuItem className="px-8 hover:cursor-pointer">
                         My Venues
                       </DropdownMenuItem>
                     </Link>
                   )}
                   <DropdownMenuSeparator />
-                  <Link to="/my-listings">
+                  <Link to="/my-bookings">
                     <DropdownMenuItem className="px-8 hover:cursor-pointer">
-                      My listings
+                      My bookings
                     </DropdownMenuItem>
                   </Link>
                   <DropdownMenuSeparator />

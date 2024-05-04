@@ -6,14 +6,15 @@ import NotFoundPage from "./pages/NotFoundPage";
 import LoginPage from "./pages/LoginPage";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import App from "./App";
-import VenuePage from "./pages/VenuePage";
 
 import { loader as venueLoader } from "./pages/VenuePage";
 import { loader as userLoader } from "./pages/UserPage";
 import { loader as authLoader } from "./pages/LoginPage";
 import UserPage from "./pages/UserPage";
+import VenuePage from "./pages/VenuePage";
 import VenuesPage from "./pages/VenuesPage";
 import CreateVenuePage from "./pages/CreateVenuePage";
+import UserVenuesPage from "./pages/UserVenuesPage";
 
 const router = createBrowserRouter([
   {
@@ -33,6 +34,10 @@ const router = createBrowserRouter([
         path: "/profiles/:userName",
         element: <UserPage />,
         loader: userLoader,
+      },
+      {
+        path: "/profiles/:userName/venues",
+        element: <UserVenuesPage />,
       },
       {
         path: "/new-venue",

@@ -9,8 +9,15 @@ import { Link } from "react-router-dom";
 import { useState, useEffect } from "react";
 
 import { addDays, subDays } from "date-fns";
+import { Button } from "../../ui/button";
 
-const BookingForm = ({ disabledDates, venueId, maxGuests, price }) => {
+const BookingForm = ({
+  disabledDates,
+  venueId,
+  maxGuests,
+  price,
+  disabled,
+}) => {
   const [bookingFormState, setBookingFormState] = useState({
     dateFrom: "",
     dateTo: "",
@@ -157,85 +164,92 @@ const BookingForm = ({ disabledDates, venueId, maxGuests, price }) => {
         />
       </div>
 
-      <div className="grid w-full min-w-[220px] max-w-[350px] gap-4 rounded-md border border-black p-2">
-        <h3 className="col-span-2 text-lg font-semibold">
-          {price} kr per night
-        </h3>
-        <div className="col-span-2 grid">
-          <label htmlFor="guests" className="font-semibold">
-            {" "}
-            Guests:{" "}
-            <span className="font-normal text-gray-600">max {maxGuests}</span>
-          </label>
-          <div className="col-span-2 flex justify-between">
-            <input
-              type="number"
-              min={1}
-              onChange={handleUpdateGuests}
-              max={maxGuests}
-              name="guests"
-              value={bookingFormState.guests}
-              className="border p-2"
-              placeholder="Number of guests"
-            />
-            <div>
-              <button
-                disabled={bookingFormState.guests === maxGuests}
-                type="button"
-                className="h-[45px] w-[45px] rounded-full border border-black text-xl font-bold"
-                onClick={() =>
-                  setBookingFormState((state) => ({
-                    ...state,
-                    guests: state.guests + 1,
-                  }))
-                }
-              >
-                +
-              </button>
-              <button
-                disabled={bookingFormState.guests === 1}
-                type="button"
-                className="h-[45px] w-[45px] rounded-full border border-black text-xl font-bold"
-                onClick={() =>
-                  setBookingFormState((state) => ({
-                    ...state,
-                    guests: state.guests - 1,
-                  }))
-                }
-              >
-                -
-              </button>
+      {!disabled && (
+        <div className="grid w-full min-w-[220px] max-w-[350px] gap-4 rounded-md border border-black p-2">
+          <h3 className="col-span-2 text-lg font-semibold">
+            {price} kr per night
+          </h3>
+          <div className="col-span-2 grid">
+            <label htmlFor="guests" className="font-semibold">
+              {" "}
+              Guests:{" "}
+              <span className="font-normal text-gray-600">max {maxGuests}</span>
+            </label>
+            <div className="col-span-2 flex justify-between">
+              <input
+                type="number"
+                min={1}
+                onChange={handleUpdateGuests}
+                max={maxGuests}
+                name="guests"
+                value={bookingFormState.guests}
+                className="border p-2"
+                placeholder="Number of guests"
+              />
+              <div>
+                <Button
+                  disabled={bookingFormState.guests === maxGuests || disabled}
+                  type="button"
+                  className="h-[45px] w-[45px] rounded-full border border-black text-xl font-bold"
+                  onClick={() =>
+                    setBookingFormState((state) => ({
+                      ...state,
+                      guests: state.guests + 1,
+                    }))
+                  }
+                >
+                  +
+                </Button>
+                <button
+                  disabled={bookingFormState.guests === 1}
+                  type="button"
+                  className="h-[45px] w-[45px] rounded-full border border-black text-xl font-bold"
+                  onClick={() =>
+                    setBookingFormState((state) => ({
+                      ...state,
+                      guests: state.guests - 1,
+                    }))
+                  }
+                >
+                  -
+                </button>
+              </div>
             </div>
           </div>
+
+          <div>Number of nights: {numberOfNights}</div>
+          <div>Total: {totalPrice}</div>
+
+          {errors?.root && (
+            <div className="text-red-500">
+              {errors.root.errors.map((m, i) => (
+                <p key={i}>{m.message}</p>
+              ))}
+            </div>
+          )}
+
+          {isLoggedIn ? (
+            <>
+              <Button
+                disabled={disabled}
+                type="submit"
+                className="col-span-2 rounded-md bg-blue-700 p-4 text-white"
+              >
+                {makeBookingMutation.status === "pending" ? (
+                  <Spinner />
+                ) : (
+                  "Book"
+                )}
+              </Button>
+            </>
+          ) : (
+            <div>
+              <Link to={"/auth/login"}>Log in</Link>
+              <Link to={"/auth/register"}>Register</Link>
+            </div>
+          )}
         </div>
-
-        <div>Number of nights: {numberOfNights}</div>
-        <div>Total: {totalPrice}</div>
-
-        {errors?.root && (
-          <div className="text-red-500">
-            {errors.root.errors.map((m, i) => (
-              <p key={i}>{m.message}</p>
-            ))}
-          </div>
-        )}
-
-        {isLoggedIn ? (
-          <>
-            <button
-              type="submit"
-              className="col-span-2 rounded-md bg-blue-700 p-4 text-white"
-            >
-              {makeBookingMutation.status === "pending" ? <Spinner /> : "Book"}
-            </button>
-          </>
-        ) : (
-          <div>
-            <Link to={"/auth/login"}>Log in</Link>
-            <Link to={"/auth/register"}>Register</Link>
-          </div>
-        )}
-      </div>
+      )}
     </form>
   );
 };

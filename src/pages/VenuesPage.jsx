@@ -14,11 +14,9 @@ export default function VenuesPage() {
     status: allStatus,
   } = useAllVenues();
 
-  // Check if there are no search parameters, then use data from useAllVenues
   if (!searchParams || !search) {
     return <Venues data={allVenues} error={allError} status={allStatus} />;
   }
 
-  // Handle the case when there are search parameters
   return <Venues data={data} error={error} status={status} />;
 }

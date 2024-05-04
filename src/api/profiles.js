@@ -39,7 +39,7 @@ export async function getUser({ name, token }) {
   }
 
   const res = await axios.get(
-    `${baseUrl}/holidaze/profiles/${name}?_bookings=true`,
+    `${baseUrl}/holidaze/profiles/${name}?_bookings=true&_venues=true`,
     {
       headers: {
         Authorization: `Bearer ${accessToken}`,
@@ -61,9 +61,9 @@ export async function getBookingsByUser(user) {
   return res;
 }
 
-export async function updateUser(data) {
+export async function updateProfile(data) {
   const res = await axios.put(
-    `${baseUrl}/holidaze/bookings/${data.id}`,
+    `${baseUrl}/holidaze/profiles/${data.name}`,
     data.body,
     {
       headers: {

@@ -37,6 +37,7 @@ export async function createVenue(data) {
 }
 
 export async function editVenue(data) {
+  console.log(data);
   const authStorage = window.localStorage.getItem("Auth-storage");
   const accessToken = JSON.parse(authStorage).state.accessToken;
   const res = await axios.put(

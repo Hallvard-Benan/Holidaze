@@ -1,8 +1,8 @@
-import { getUser } from "../api/profiles.js";
-import { useQuery } from "@tanstack/react-query";
 import { useLoaderData } from "react-router-dom";
 import Spinner from "../components/ui/spinner";
 import ProfileUi from "../components/user/ui";
+import { useBoundStore } from "../stores/store.js";
+import useUser from "../hooks/useUser.js";
 
 export async function loader({ params }) {
   const userName = params.userName;
@@ -11,11 +11,10 @@ export async function loader({ params }) {
 
 export default function UserPage() {
   const { userName } = useLoaderData();
+  const visitorName = useBoundStore((state) => state.user.name);
+  const isMyProfile = userName === visitorName;
 
-  const { data, error, status } = useQuery({
-    queryKey: ["user", userName],
-    queryFn: () => getUser({ name: userName }),
-  });
+  const { data, error, status } = useUser(userName);
 
   if (status === "pending") return <Spinner />;
   if (status === "error") {
@@ -34,11 +33,12 @@ export default function UserPage() {
     return (
       <div>
         <ProfileUi
+          banner={userData.banner}
           name={userData.name}
           bookings={userData.bookings}
+          venues={userData.venues}
           avatar={userData.avatar}
-          credits={2}
-          wins={2}
+          isMyProfile={isMyProfile}
           _count={userData._count}
         />
       </div>

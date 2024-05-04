@@ -1,34 +1,31 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Images from "../Images";
-
-import { useForm } from "react-hook-form";
 import { useBoundStore } from "../../../stores/store";
 import { InputGroup, TextAreaGroup } from "../../ui/inputGroup";
 import { Button } from "../../ui/button";
-import useCreateVenue from "../../../hooks/useCreateVenue";
 import Spinner from "../../ui/spinner";
 
-export default function CreateVenueForm() {
-  const { updateItem, venueFormData, updateMeta, updateLocation } =
+export default function CreateVenueForm({
+  onSubmit,
+  defaultValues,
+  errors,
+  status,
+}) {
+  const { updateItem, updateMeta, updateLocation, updateVenueForm } =
     useBoundStore();
+  const [images, setImages] = useState(
+    defaultValues ? defaultValues.media : [],
+  );
 
-  const {
-    setError,
-    formState: { errors },
-  } = useForm();
-
-  const [images, setImages] = useState([]);
-  const { createVenueMutation } = useCreateVenue({ setError });
+  useEffect(() => {
+    if (defaultValues) {
+      updateVenueForm(defaultValues);
+    }
+  }, [defaultValues]);
 
   const handleImagesChange = (newImages) => {
     setImages(newImages);
     updateItem({ media: newImages });
-  };
-
-  const onSubmit = (e) => {
-    e.preventDefault();
-
-    createVenueMutation.mutate(venueFormData);
   };
 
   return (
@@ -37,7 +34,7 @@ export default function CreateVenueForm() {
         onChange={(e) => updateItem({ name: e.currentTarget.value })}
         required
         label={"name"}
-        errorMessage={errors.name?.message}
+        {...(defaultValues ? { defaultValue: defaultValues?.name } : {})}
       />
 
       <TextAreaGroup
@@ -45,15 +42,15 @@ export default function CreateVenueForm() {
         onChange={(e) => updateItem({ description: e.currentTarget.value })}
         label={"description"}
         type="textarea"
-        errorMessage={errors.description?.message}
+        {...(defaultValues ? { defaultValue: defaultValues?.description } : {})}
       />
 
       <InputGroup
         required
         onChange={(e) => updateItem({ price: parseInt(e.currentTarget.value) })}
         label={"price"}
+        {...(defaultValues ? { defaultValue: defaultValues?.price } : {})}
         type="number"
-        errorMessage={errors.price?.message}
       />
 
       <InputGroup
@@ -63,19 +60,19 @@ export default function CreateVenueForm() {
         }
         label={"Maximum number of guests"}
         id={"maxGuests"}
+        {...(defaultValues ? { defaultValue: defaultValues.maxGuests } : {})}
         type="number"
         max={100}
-        errorMessage={errors.maxGuests?.message}
       />
 
       <InputGroup
         label={"rating"}
+        {...(defaultValues ? { defaultValue: defaultValues.rating } : {})}
         onChange={(e) =>
           updateItem({ rating: parseInt(e.currentTarget.value) })
         }
         type="number"
         max={5}
-        errorMessage={errors.rating?.message}
       />
 
       <div>
@@ -85,91 +82,105 @@ export default function CreateVenueForm() {
             label={"wifi"}
             onChange={(e) => updateMeta({ wifi: e.currentTarget.checked })}
             type="checkbox"
-            errorMessage={errors.meta?.wifi?.message}
+            {...(defaultValues
+              ? { defaultChecked: defaultValues.meta.wifi }
+              : {})}
           />
           <InputGroup
             label={"parking"}
+            {...(defaultValues
+              ? { defaultChecked: defaultValues.meta.parking }
+              : {})}
             onChange={(e) => updateMeta({ parking: e.currentTarget.checked })}
             type="checkbox"
-            errorMessage={errors.meta?.parking?.message}
           />
           <InputGroup
+            {...(defaultValues
+              ? { defaultChecked: defaultValues.meta.breakfast }
+              : {})}
             label={"breakfast"}
             onChange={(e) => updateMeta({ breakfast: e.currentTarget.checked })}
             type="checkbox"
-            errorMessage={errors.meta?.breakfast?.message}
           />
           <InputGroup
             label={"pets"}
             type="checkbox"
+            {...(defaultValues
+              ? { defaultChecked: defaultValues.meta.pets }
+              : {})}
             onChange={(e) => updateMeta({ pets: e.currentTarget.checked })}
-            errorMessage={errors.meta?.pets?.message}
           />
         </div>
       </div>
 
       <div className="grid grid-cols-2 gap-2">
         <InputGroup
+          {...(defaultValues
+            ? { defaultValue: defaultValues.location.address }
+            : {})}
           label={"address"}
           onChange={(e) => updateLocation({ address: e.currentTarget.value })}
-          errorMessage={errors.location?.address?.message}
         />
         <InputGroup
+          {...(defaultValues
+            ? { defaultValue: defaultValues.location.city }
+            : {})}
           label={"city"}
           onChange={(e) => updateLocation({ city: e.currentTarget.value })}
-          errorMessage={errors.location?.city?.message}
         />
         <InputGroup
           label={"zip"}
+          {...(defaultValues
+            ? { defaultValue: defaultValues.location.zip }
+            : {})}
           onChange={(e) => updateLocation({ zip: e.currentTarget.value })}
-          errorMessage={errors.location?.zip?.message}
         />
         <InputGroup
+          {...(defaultValues
+            ? { defaultValue: defaultValues.location.country }
+            : {})}
           label={"country"}
           onChange={(e) => updateLocation({ country: e.currentTarget.value })}
-          errorMessage={errors.location?.country?.message}
         />
         <InputGroup
           label={"continent"}
+          {...(defaultValues
+            ? { defaultValue: defaultValues.location.continent }
+            : {})}
           onChange={(e) => updateLocation({ continent: e.currentTarget.value })}
-          errorMessage={errors.location?.continent?.message}
         />
       </div>
 
       <InputGroup
         label={"latitude"}
+        {...(defaultValues ? { defaultValue: defaultValues.location.lat } : {})}
         onChange={(e) =>
           updateLocation({ lat: parseInt(e.currentTarget.value) })
         }
         type="number"
-        errorMessage={errors.location?.lat?.message}
       />
 
       <InputGroup
         label={"longitude"}
+        {...(defaultValues ? { defaultValue: defaultValues.location.lng } : {})}
         onChange={(e) =>
-          updateLocation({ long: parseInt(e.currentTarget.value) })
+          updateLocation({ lng: parseInt(e.currentTarget.value) })
         }
         type="number"
-        errorMessage={errors.location?.lng?.message}
       />
 
       <Images images={images} onImagesChange={handleImagesChange} />
 
-      {errors?.root && (
+      {errors && (
         <div className="text-red-500">
-          {errors.root.errors.map((m, i) => (
-            <p key={i}>{m.message}</p>
+          {errors.map(({ message }, i) => (
+            <p key={i}>{message}</p>
           ))}
         </div>
       )}
 
       <Button type="submit">
-        {createVenueMutation.status === "pending" ? (
-          <Spinner></Spinner>
-        ) : (
-          "Submit"
-        )}
+        {status === "pending" ? <Spinner></Spinner> : "Submit"}
       </Button>
     </form>
   );

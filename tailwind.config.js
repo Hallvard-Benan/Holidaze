@@ -41,6 +41,9 @@ export default {
           foreground: "var(--card-foreground)",
         },
       },
+      fontFamily: {
+        body: ["Figtree", "sans"],
+      },
     },
   },
   plugins: [],

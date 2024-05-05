@@ -15,6 +15,7 @@ import VenuePage from "./pages/VenuePage";
 import VenuesPage from "./pages/VenuesPage";
 import CreateVenuePage from "./pages/CreateVenuePage";
 import UserVenuesPage from "./pages/UserVenuesPage";
+import UserBookingsPage from "./pages/UserBookingsPage";
 
 const router = createBrowserRouter([
   {
@@ -38,6 +39,10 @@ const router = createBrowserRouter([
       {
         path: "/profiles/:userName/venues",
         element: <UserVenuesPage />,
+      },
+      {
+        path: "/profiles/:userName/bookings",
+        element: <UserBookingsPage />,
       },
       {
         path: "/new-venue",

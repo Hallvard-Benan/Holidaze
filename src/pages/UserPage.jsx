@@ -17,11 +17,13 @@ export default function UserPage() {
   const { data, error, status } = useUser(userName);
 
   if (status === "pending") return <Spinner />;
+
   if (status === "error") {
+    console.log("data from component error", data);
     return (
       <div>
         error {error.message}{" "}
-        {error.response.data.errors.map((e, i) => (
+        {error.response?.data?.errors.map((e, i) => (
           <p key={i}>{e.message}</p>
         ))}{" "}
       </div>

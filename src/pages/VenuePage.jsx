@@ -1,11 +1,14 @@
 import { Link, useLoaderData } from "react-router-dom";
 import useSingleVenue from "../hooks/useSingleVenue";
+import { FaRegStar } from "react-icons/fa";
+
 import Spinner from "../components/ui/spinner";
+
 import { useBoundStore } from "../stores/store";
 
 import BookingForm from "../components/Forms/BookingForm";
 import { Button } from "../components/ui/button";
-import { formatDate } from "../utils/utils";
+import { cn, formatDate } from "../utils/utils";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -21,6 +24,9 @@ import useDeleteVenue from "../hooks/useDeleteVenue";
 import { useEffect, useState } from "react";
 import CreateVenueForm from "../components/Forms/CreateVenueForm";
 import useUpdateVenue from "../hooks/useUpdateVenue";
+import { ImageCarousel } from "../components/ui/imageCarousel";
+import AmenityIcons from "../components/ui/amenetiesIcons";
+import { Separator } from "../components/ui/seperator";
 
 export async function loader({ params }) {
   const id = params.venueId;
@@ -29,17 +35,18 @@ export async function loader({ params }) {
 
 export default function VenuePage() {
   const user = useBoundStore((state) => state.user);
+  const isLoggedIn = useBoundStore((state) => state.isLoggedIn);
   const updateVenueForm = useBoundStore((state) => state.updateVenueForm);
   const venueFormData = useBoundStore((state) => state.venueFormData);
   const { deleteMutation } = useDeleteVenue();
   const { id } = useLoaderData();
   const { updateVenueMutation } = useUpdateVenue({
     id,
-    setError: () => {
-      console.log("error");
-    },
+    onUpdateSuccess,
+    setError,
   });
   const [isUpdating, setIsUpdating] = useState(false);
+  const [updateError, setUpdateError] = useState([]);
 
   const { data, status, error } = useSingleVenue(id);
 
@@ -99,9 +106,17 @@ export default function VenuePage() {
 
   const handleEdit = (e) => {
     e.preventDefault();
-    console.log(venueFormData);
     updateVenueMutation.mutate({ id: post.id, body: venueFormData });
   };
+
+  function onUpdateSuccess() {
+    setIsUpdating(false);
+  }
+  function setError(error) {
+    setUpdateError(error);
+  }
+
+  console.log(post);
 
   return (
     <div className="mx-auto w-calc">
@@ -110,6 +125,8 @@ export default function VenuePage() {
           <Button onClick={() => setIsUpdating((prev) => !prev)}>Update</Button>
           {isUpdating && (
             <CreateVenueForm
+              status={status}
+              errors={updateError}
               defaultValues={venueFormData}
               onSubmit={handleEdit}
             />
@@ -161,24 +178,51 @@ export default function VenuePage() {
           ))}
         </>
       )}
-      <h1>{post.name}</h1>
-      <p>{post.description}</p>
-      <p>price: {post.price} kr</p>
-      <p>max guests: {post.maxGuests}</p>
-      <p>rating: {post.rating}</p>
-      {post.wifi}
-      <p>wifi: {post.meta.wifi ? "yes" : "no"}</p>
-      <p>pets: {post.meta.pets ? "yes" : "no"}</p>
-      <p>parking: {post.meta.parking ? "yes" : "no"}</p>
-      <p>breakfast: {post.meta.breakfast ? "yes" : "no"}</p>
-      <img src={post.media[0]?.url} alt="" className="w-96" />
-      <BookingForm
-        disabled={isMyVenue}
-        disabledDates={disabledDates}
-        price={post.price}
-        venueId={id}
-        maxGuests={post.maxGuests}
-      />
+      <div className="grid gap-6">
+        <div className="flex justify-center">
+          <ImageCarousel images={post.media} />
+        </div>
+        <div className="flex justify-between">
+          <h1 className="text-2xl md:text-3xl">{post.name}</h1>
+          <p className="text-2xl font-semibold">
+            {post.price} kr /{" "}
+            <span className="text-muted-foreground font-normal">night</span>
+          </p>
+        </div>
+        <div className="flex justify-between">
+          <AmenityIcons meta={post.meta} maxGuests={post.maxGuests} />{" "}
+          <p className="flex items-center gap-2">
+            <FaRegStar /> {post.rating}
+          </p>
+        </div>
+        <BookingForm
+          status={status}
+          disabled={isMyVenue}
+          disabledDates={disabledDates}
+          price={post.price}
+          venueId={id}
+          maxGuests={post.maxGuests}
+        />
+        <Separator />
+
+        <Link
+          to={`/profiles/${post.owner.name}`}
+          className={cn(!isLoggedIn && "pointer-events-none")}
+        >
+          {" "}
+          <img
+            src={post.owner.avatar.url}
+            alt=""
+            className={"h-10 w-10 rounded-full object-cover"}
+          />{" "}
+          {post.owner.name}
+        </Link>
+
+        <p className="bg-card rounded-sm p-4">
+          <h2>Description</h2>
+          {post.description}
+        </p>
+      </div>
     </div>
   );
 }

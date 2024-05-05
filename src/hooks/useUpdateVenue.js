@@ -2,12 +2,13 @@ import { useMutation } from "@tanstack/react-query";
 import { editVenue } from "../api/venues";
 import { useQueryClient } from "@tanstack/react-query";
 
-export default function useUpdateVenue({ id, setError }) {
-  const { invalidateQueries } = useQueryClient();
+export default function useUpdateVenue({ id, setError, onUpdateSuccess }) {
+  const queryClient = useQueryClient();
   const updateVenueMutation = useMutation({
     mutationFn: editVenue,
     onSuccess: () => {
-      invalidateQueries({ queryKey: ["venue", id] });
+      queryClient.invalidateQueries({ queryKey: ["venue", id] });
+      onUpdateSuccess();
     },
     onError: (res) => {
       setError("root", {

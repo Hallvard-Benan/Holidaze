@@ -2,7 +2,7 @@ import axios from "axios";
 const baseUrl = import.meta.env.VITE_BASE_URL;
 const apiKey = import.meta.env.VITE_API_KEY;
 const authStorage = window.localStorage.getItem("Auth-storage");
-const accessToken = JSON.parse(authStorage).state.accessToken;
+const accessToken = JSON.parse(authStorage)?.state.accessToken;
 
 export async function fetchAllVenues() {
   const res = await axios.get(

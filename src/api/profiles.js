@@ -1,10 +1,10 @@
 import axios from "axios";
 const baseUrl = import.meta.env.VITE_BASE_URL;
 const apiKey = import.meta.env.VITE_API_KEY;
-const authStorage = window.localStorage.getItem("Auth-storage");
-const accessToken = JSON.parse(authStorage).state.accessToken;
 
 export async function getVenuesByUser(user) {
+  const authStorage = window.localStorage.getItem("Auth-storage");
+  const accessToken = JSON.parse(authStorage).state.accessToken;
   const res = await axios.get(`${baseUrl}/holidaze/profiles/${user}/venues`, {
     headers: {
       Authorization: `Bearer ${accessToken}`,
@@ -16,6 +16,8 @@ export async function getVenuesByUser(user) {
 }
 
 export async function getAllUsers() {
+  const authStorage = window.localStorage.getItem("Auth-storage");
+  const accessToken = JSON.parse(authStorage).state.accessToken;
   const res = await axios.get(
     `${baseUrl}/holidaze/profiles/?_venues=true&_bookings=true`,
     {
@@ -47,10 +49,13 @@ export async function getUser({ name, token }) {
       },
     },
   );
+  console.log(res);
   return res;
 }
 
 export async function getBookingsByUser(user) {
+  const authStorage = window.localStorage.getItem("Auth-storage");
+  const accessToken = JSON.parse(authStorage).state.accessToken;
   const res = await axios.get(`${baseUrl}/holidaze/profiles/${user}/bookings`, {
     headers: {
       Authorization: `Bearer ${accessToken}`,
@@ -62,6 +67,8 @@ export async function getBookingsByUser(user) {
 }
 
 export async function updateProfile(data) {
+  const authStorage = window.localStorage.getItem("Auth-storage");
+  const accessToken = JSON.parse(authStorage).state.accessToken;
   const res = await axios.put(
     `${baseUrl}/holidaze/profiles/${data.name}`,
     data.body,
@@ -76,6 +83,8 @@ export async function updateProfile(data) {
 }
 
 export async function searchUsers(search) {
+  const authStorage = window.localStorage.getItem("Auth-storage");
+  const accessToken = JSON.parse(authStorage).state.accessToken;
   const res = await axios.get(
     `${baseUrl}/holidaze/profiles/search?q=${search}`,
     {

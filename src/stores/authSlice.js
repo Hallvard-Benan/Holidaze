@@ -6,5 +6,5 @@ export const createAuthSlice = (set) => ({
   login: (token) =>
     set((state) => ({ ...state, isLoggedIn: true, accessToken: token })),
   logout: () => set(() => ({ isLoggedIn: false, user: {}, accessToken: null })),
-  updateUser: (user) => set((state) => ({ ...state, user: user })),
+  updateUser: (newUser) => set((state) => ({ ...state, user: newUser })),
 });

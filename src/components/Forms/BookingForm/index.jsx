@@ -5,11 +5,11 @@ import { useForm } from "react-hook-form";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useBoundStore } from "../../../stores/store";
 import Spinner from "../../ui/spinner";
-import { Link } from "react-router-dom";
 import { useState, useEffect } from "react";
 
 import { addDays, subDays } from "date-fns";
-import { Button } from "../../ui/button";
+
+import BookingFormCard from "../../ui/bookingFormCard";
 
 const BookingForm = ({
   disabledDates,
@@ -19,8 +19,8 @@ const BookingForm = ({
   disabled,
 }) => {
   const [bookingFormState, setBookingFormState] = useState({
-    dateFrom: "",
-    dateTo: "",
+    dateFrom: subDays(new Date(), 0),
+    dateTo: addDays(new Date(), 0),
     guests: 1,
     venueId,
   });
@@ -47,10 +47,17 @@ const BookingForm = ({
       setCalendarState([
         {
           startDate: nextAvailableDate,
-          endDate: addDays(nextAvailableDate, 1),
+          endDate: nextAvailableDate,
           key: "selection",
         },
       ]);
+      setBookingFormState((state) => ({
+        ...state,
+        dateFrom: nextAvailableDate,
+        dateTo: nextAvailableDate,
+      }));
+
+      console.log("", nextAvailableDate);
     }
   }, [disabledDates]);
 
@@ -62,6 +69,7 @@ const BookingForm = ({
   const isLoggedIn = useBoundStore((state) => state.isLoggedIn);
 
   const handleDateRangeChange = ({ startDate, endDate }) => {
+    console.log("date from date range change", startDate);
     setBookingFormState((state) => ({
       ...state,
       dateFrom: startDate,
@@ -130,8 +138,8 @@ const BookingForm = ({
     const toDate = new Date(calendarState[0].endDate);
 
     // Add two hours to both fromDate and toDate
-    const utcFromDate = new Date(fromDate.getTime() + 2 * 60 * 60 * 1000); // 2 hours in milliseconds
-    const utcToDate = new Date(toDate.getTime() + 2 * 60 * 60 * 1000); // 2 hours in milliseconds
+    const utcFromDate = new Date(fromDate.getTime() + 2 * 60 * 60 * 1000);
+    const utcToDate = new Date(toDate.getTime() + 2 * 60 * 60 * 1000);
 
     makeBookingMutation.mutate({
       ...bookingFormState,
@@ -147,13 +155,10 @@ const BookingForm = ({
   );
 
   // Calculate the total price
-  const totalPrice = numberOfNights * price;
+  const totalPrice = numberOfNights > 0 ? numberOfNights * price : price;
 
   return (
-    <form
-      onSubmit={handleBooking}
-      className="flex flex-col flex-wrap items-center gap-2"
-    >
+    <form onSubmit={handleBooking} className="flex items-center gap-2">
       {makeBookingMutation.status === "pending" && <Spinner />}
 
       <div className="">
@@ -165,90 +170,32 @@ const BookingForm = ({
       </div>
 
       {!disabled && (
-        <div className="grid w-full min-w-[220px] max-w-[350px] gap-4 rounded-md border border-black p-2">
-          <h3 className="col-span-2 text-lg font-semibold">
-            {price} kr per night
-          </h3>
-          <div className="col-span-2 grid">
-            <label htmlFor="guests" className="font-semibold">
-              {" "}
-              Guests:{" "}
-              <span className="font-normal text-gray-600">max {maxGuests}</span>
-            </label>
-            <div className="col-span-2 flex justify-between">
-              <input
-                type="number"
-                min={1}
-                onChange={handleUpdateGuests}
-                max={maxGuests}
-                name="guests"
-                value={bookingFormState.guests}
-                className="border p-2"
-                placeholder="Number of guests"
-              />
-              <div>
-                <Button
-                  disabled={bookingFormState.guests === maxGuests || disabled}
-                  type="button"
-                  className="h-[45px] w-[45px] rounded-full border border-black text-xl font-bold"
-                  onClick={() =>
-                    setBookingFormState((state) => ({
-                      ...state,
-                      guests: state.guests + 1,
-                    }))
-                  }
-                >
-                  +
-                </Button>
-                <button
-                  disabled={bookingFormState.guests === 1}
-                  type="button"
-                  className="h-[45px] w-[45px] rounded-full border border-black text-xl font-bold"
-                  onClick={() =>
-                    setBookingFormState((state) => ({
-                      ...state,
-                      guests: state.guests - 1,
-                    }))
-                  }
-                >
-                  -
-                </button>
-              </div>
-            </div>
-          </div>
-
-          <div>Number of nights: {numberOfNights}</div>
-          <div>Total: {totalPrice}</div>
-
-          {errors?.root && (
-            <div className="text-red-500">
-              {errors.root.errors.map((m, i) => (
-                <p key={i}>{m.message}</p>
-              ))}
-            </div>
-          )}
-
-          {isLoggedIn ? (
-            <>
-              <Button
-                disabled={disabled}
-                type="submit"
-                className="col-span-2 rounded-md bg-blue-700 p-4 text-white"
-              >
-                {makeBookingMutation.status === "pending" ? (
-                  <Spinner />
-                ) : (
-                  "Book"
-                )}
-              </Button>
-            </>
-          ) : (
-            <div>
-              <Link to={"/auth/login"}>Log in</Link>
-              <Link to={"/auth/register"}>Register</Link>
-            </div>
-          )}
-        </div>
+        <BookingFormCard
+          guests={bookingFormState.guests}
+          maxGuests={maxGuests}
+          onUpdateGuests={handleUpdateGuests}
+          isLoggedIn={isLoggedIn}
+          onDecreaseGuests={() =>
+            setBookingFormState((state) => ({
+              ...state,
+              guests: state.guests - 1,
+            }))
+          }
+          onIncreaseGuests={() =>
+            setBookingFormState((state) => ({
+              ...state,
+              guests: state.guests + 1,
+            }))
+          }
+          errors={{ root: { errors: [{ message: "something went wrong" }] } }}
+          nights={numberOfNights}
+          price={price}
+          total={totalPrice}
+          disabled={disabled}
+          dateFrom={bookingFormState.dateFrom}
+          dateTo={bookingFormState.dateTo}
+          status={makeBookingMutation.status}
+        />
       )}
     </form>
   );
@@ -259,6 +206,7 @@ BookingForm.propTypes = {
   venueId: PropTypes.string,
   maxGuests: PropTypes.number,
   price: PropTypes.number,
+  disabled: PropTypes.bool,
 };
 
 export default BookingForm;

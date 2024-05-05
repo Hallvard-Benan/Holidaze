@@ -105,7 +105,7 @@ function ProfileUi({
         ))}
       </div>
       <div>
-        <h2 className="text-xl">Your Venues:</h2>
+        <h2 className="text-xl">{name}s Venues:</h2>
         {venues.map((venue) => (
           <Card
             key={venue.id}

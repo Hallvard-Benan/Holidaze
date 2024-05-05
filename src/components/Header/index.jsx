@@ -12,8 +12,12 @@ import { TfiMenu } from "react-icons/tfi";
 import { FiLogOut } from "react-icons/fi";
 import { LuUser2 } from "react-icons/lu";
 import Search from "../ui/search";
+
 export default function NavBar() {
-  const { isLoggedIn, logout, user } = useBoundStore();
+  const isLoggedIn = useBoundStore((state) => state.isLoggedIn);
+  const logout = useBoundStore((state) => state.logout);
+  const user = useBoundStore((state) => state.user);
+
   const navigate = useNavigate();
 
   const handleSearch = (e) => {
@@ -21,6 +25,7 @@ export default function NavBar() {
     const searchTerm = e.target.search.value;
     navigate(`/venues?search=${searchTerm}`);
   };
+
   return (
     <nav className=" flex justify-between bg-slate-200 px-4 py-2 text-xl">
       <NavLink
@@ -45,7 +50,11 @@ export default function NavBar() {
                   <TfiMenu className="" />
                   <img
                     className="h-10 w-10 rounded-full object-cover md:h-12 md:w-12"
-                    src={user.avatar.url}
+                    src={
+                      status === "success"
+                        ? data.data.data.avatar.url
+                        : user.avatar.url
+                    }
                   />
                 </DropdownMenuTrigger>
                 <DropdownMenuContent className="flex flex-col-reverse gap-1 md:flex-col ">
@@ -68,7 +77,7 @@ export default function NavBar() {
                     </Link>
                   )}
                   <DropdownMenuSeparator />
-                  <Link to="/my-bookings">
+                  <Link to={`/profiles/${user.name}/bookings`}>
                     <DropdownMenuItem className="px-8 hover:cursor-pointer">
                       My bookings
                     </DropdownMenuItem>

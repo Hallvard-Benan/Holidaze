@@ -3,6 +3,7 @@ const baseUrl = import.meta.env.VITE_BASE_URL;
 const apiKey = import.meta.env.VITE_API_KEY;
 
 export async function getVenuesByUser(user) {
+  console.log("fetching venues by user");
   const authStorage = window.localStorage.getItem("Auth-storage");
   const accessToken = JSON.parse(authStorage).state.accessToken;
   const res = await axios.get(`${baseUrl}/holidaze/profiles/${user}/venues`, {
@@ -16,6 +17,7 @@ export async function getVenuesByUser(user) {
 }
 
 export async function getAllUsers() {
+  console.log("fetching  users");
   const authStorage = window.localStorage.getItem("Auth-storage");
   const accessToken = JSON.parse(authStorage).state.accessToken;
   const res = await axios.get(
@@ -32,6 +34,7 @@ export async function getAllUsers() {
 }
 
 export async function getUser({ name, token }) {
+  console.log("getting user", name);
   let accessToken;
   if (!token) {
     const authStorage = window.localStorage.getItem("Auth-storage");

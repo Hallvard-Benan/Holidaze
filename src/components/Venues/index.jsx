@@ -1,6 +1,7 @@
 import Card from "../Card";
+import Container from "../ui/container";
 import Spinner from "../ui/spinner";
-export default function Venues({ data, error, status }) {
+export default function Venues({ venues, error, status }) {
   if (status === "pending") return <Spinner />;
   if (status === "error") {
     return (
@@ -9,10 +10,10 @@ export default function Venues({ data, error, status }) {
       </div>
     );
   }
-  if (status === "success") {
+  if (status === "success" && venues) {
     return (
-      <div className="container mx-auto grid grid-cols-2 gap-3 md:grid-cols-3">
-        {data.data.data.map((item) => (
+      <Container className=" grid grid-cols-2 gap-x-1 md:grid-cols-3 md:gap-3">
+        {venues.map((item) => (
           <Card
             key={item.id}
             heading={item.name}
@@ -22,7 +23,7 @@ export default function Venues({ data, error, status }) {
             href={`/venues/${item.id}`}
           />
         ))}
-      </div>
+      </Container>
     );
   }
 }

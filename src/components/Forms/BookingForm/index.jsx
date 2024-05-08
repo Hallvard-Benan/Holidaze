@@ -158,7 +158,10 @@ const BookingForm = ({
   const totalPrice = numberOfNights > 0 ? numberOfNights * price : price;
 
   return (
-    <form onSubmit={handleBooking} className="flex items-center gap-2">
+    <form
+      onSubmit={handleBooking}
+      className="flex flex-col items-center gap-2 sm:flex-row"
+    >
       {makeBookingMutation.status === "pending" && <Spinner />}
 
       <div className="">

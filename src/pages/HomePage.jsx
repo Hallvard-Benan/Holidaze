@@ -1,21 +1,14 @@
 import { useNavigate } from "react-router-dom";
-import Card from "../components/Card";
 import Search from "../components/ui/search";
-import Spinner from "../components/ui/spinner";
 import useAllVenues from "../hooks/useAllVenues";
-import Filters from "../components/ui/filters";
+import FiltersSection from "../components/Filters";
+import Container from "../components/ui/container";
+import Venues from "../components/Venues";
 
 export default function HomePage() {
   const navigate = useNavigate();
-  const { data, status, error } = useAllVenues();
-  if (status === "pending") return <Spinner />;
+  const { status, error, filteredData } = useAllVenues();
 
-  if (status === "error")
-    return (
-      <div>
-        {error.message} {error.response.data.errors[0].message}
-      </div>
-    );
   const handleSearch = (e) => {
     e.preventDefault();
     const searchTerm = e.target.search.value;
@@ -23,26 +16,13 @@ export default function HomePage() {
   };
 
   return (
-    <>
-      <Search onSearch={handleSearch} />
-      <div>
-        <Filters />
+    <Container>
+      <div className="flex justify-between">
+        <Search onSearch={handleSearch} />
+        <FiltersSection />
       </div>
 
-      <div className="mx-auto grid w-calc grid-cols-2 gap-3 md:grid-cols-3">
-        {data.data.data.map((item) => (
-          <Card
-            rating={item.rating}
-            location={item.location.city + ", " + item.location.country}
-            key={item.id}
-            heading={item.name}
-            description={item.description}
-            imgUrl={item.media[0]?.url}
-            alt={item.media[0]?.alt}
-            href={`/venues/${item.id}`}
-          />
-        ))}
-      </div>
-    </>
+      <Venues venues={filteredData} status={status} error={error} />
+    </Container>
   );
 }

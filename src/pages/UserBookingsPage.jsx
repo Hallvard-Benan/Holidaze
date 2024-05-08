@@ -1,13 +1,18 @@
-import useUser from "../hooks/useUser";
 import Spinner from "../components/ui/spinner";
 import Card from "../components/Card";
-import { formatDate } from "../utils/utils";
+import { cn, formatDate } from "../utils/utils";
 import { useParams } from "react-router-dom";
+import useUpcomingBookings from "../hooks/useUpcomingBookings";
+import Container from "../components/ui/container";
+import { CiCalendar } from "react-icons/ci";
+import { useState } from "react";
+import GridViewButtons from "../components/ui/grid-view-buttons";
 
 export default function UserBookingsPage() {
   const { userName } = useParams();
+  const [gridView, setGridView] = useState(false);
 
-  const { data, status, error } = useUser(userName);
+  const { bookings, status, error } = useUpcomingBookings(userName);
 
   if (status === "pending") return <Spinner />;
   if (status === "error")
@@ -20,40 +25,47 @@ export default function UserBookingsPage() {
       </div>
     );
 
-  const sortedBookings = filterBookings(data.data.data.bookings);
+  const toggleGridView = () => {
+    setGridView((prev) => !prev);
+  };
 
   return (
-    <div>
-      {sortedBookings.map((booking) => (
-        <Card
-          key={booking.id}
-          rating={booking.venue.rating}
-          details={`booked from ${formatDate(booking.dateFrom)} to: ${formatDate(booking.dateTo)}`}
-          imgUrl={booking.venue.media[0].url}
-          alt={booking.venue.media[0]?.alt}
-          location={
-            booking.venue.location.city + ", " + booking.venue.location.country
-          }
-          heading={booking.venue.name}
-          href={`/venues/${booking.venue.id}`}
-        ></Card>
-      ))}
-    </div>
+    <Container>
+      <div className="flex justify-between">
+        <h1 className="text-3xl font-semibold">Your Upcoming Bookings</h1>
+        <GridViewButtons
+          onClickGrid={toggleGridView}
+          onClickList={toggleGridView}
+          gridView={gridView}
+        />
+      </div>{" "}
+      <div
+        className={cn(
+          "grid gap-3 gap-y-6 transition-all duration-200 md:gap-y-8",
+          gridView && "grid-cols-2 md:grid-cols-3",
+        )}
+      >
+        {bookings.map((booking) => (
+          <div key={booking.id}>
+            <div className="flex items-center gap-2">
+              <CiCalendar />
+              {`From ${formatDate(booking.dateFrom)} to: ${formatDate(booking.dateTo)}`}
+            </div>
+            <Card
+              rating={booking.venue.rating}
+              imgUrl={booking.venue.media[0].url}
+              alt={booking.venue.media[0]?.alt}
+              location={
+                booking.venue.location.city +
+                ", " +
+                booking.venue.location.country
+              }
+              heading={booking.venue.name}
+              href={`/venues/${booking.venue.id}`}
+            ></Card>
+          </div>
+        ))}
+      </div>
+    </Container>
   );
-}
-
-function filterBookings(bookingsToFilter) {
-  const upComingBookings = bookingsToFilter.filter((booking) => {
-    const today = new Date();
-    const bookingDate = new Date(booking.dateFrom);
-    return bookingDate > today;
-  });
-
-  const sortedBookings = upComingBookings.sort((bookingA, bookingB) => {
-    const dateA = new Date(bookingA.dateFrom);
-    const dateB = new Date(bookingB.dateFrom);
-    return dateA - dateB;
-  });
-
-  return sortedBookings;
 }

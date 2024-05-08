@@ -12,7 +12,7 @@ export default function Card({
   rating,
 }) {
   return (
-    <div className="bg-card grid h-[420px] grid-rows-2 overflow-hidden rounded-lg border border-gray-200 shadow">
+    <div className="bg-card grid h-[420px] grid-rows-2 overflow-hidden  rounded-lg border border-gray-200 shadow">
       <Link to={href}>
         <img
           className="h-[200px] w-full overflow-hidden rounded-t-lg object-cover"
@@ -20,9 +20,9 @@ export default function Card({
           alt={alt}
         />
       </Link>
-      <div className="flex flex-1 flex-col justify-between p-5">
-        <Link to={href}>
-          <h5 className="text-foreground -foreground mb-2 text-2xl font-bold tracking-tight ">
+      <div className="flex max-w-full flex-1 flex-col justify-between overflow-hidden p-5">
+        <Link to={href} className="w-full overflow-hidden break-words">
+          <h5 className="text-foreground whitespace-no-wrap mb-2 line-clamp-2 max-w-full overflow-hidden break-words text-2xl font-bold tracking-tight">
             {heading}
           </h5>
         </Link>
@@ -30,9 +30,7 @@ export default function Card({
           {location}
         </p>
         <p>{rating}</p>
-
         {details && <p>{details}</p>}
-
         <Link
           to={href}
           className="inline-flex items-center rounded-lg bg-blue-700 px-3 py-2 text-center text-sm font-medium text-white hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"

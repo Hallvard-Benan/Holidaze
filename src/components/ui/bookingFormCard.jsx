@@ -5,6 +5,7 @@ import { Link } from "react-router-dom";
 import Spinner from "./spinner";
 import { formatDate } from "../../utils/utils";
 import { Separator } from "./seperator";
+import NumberButtons from "./numberButtons";
 
 export default function BookingFormCard({
   status,
@@ -45,39 +46,12 @@ export default function BookingFormCard({
           </label>
           <p className="font-normal text-gray-600">Max {maxGuests}</p>
         </div>
-        <div className="flex items-center justify-center">
-          <Button
-            disabled={guests === maxGuests || disabled}
-            type="button"
-            variant="outline"
-            className="border-muted-foreground h-[45px] w-[45px] rounded-full border text-xl font-bold"
-            onClick={onIncreaseGuests}
-          >
-            <p>+</p>
-          </Button>
-
-          <Input
-            className="flex items-center justify-center pr-0 text-center"
-            type="number"
-            min={1}
-            onChange={onUpdateGuests}
-            max={maxGuests}
-            name="guests"
-            disabled
-            value={guests}
-            placeholder="Number of guests"
-          />
-
-          <Button
-            disabled={guests === 1}
-            type="button"
-            variant="outline"
-            className="h-[45px] w-[45px] rounded-full border border-black text-xl font-bold"
-            onClick={onDecreaseGuests}
-          >
-            -
-          </Button>
-        </div>
+        <NumberButtons
+          onIncrease={onIncreaseGuests}
+          onDecrease={onDecreaseGuests}
+          maxValue={maxGuests}
+          value={guests}
+        />
       </div>
 
       <Separator />

@@ -3,9 +3,24 @@ import { DateRangePicker } from "react-date-range";
 import "react-date-range/dist/styles.css"; // main css file
 import "react-date-range/dist/theme/default.css"; // theme css file
 import "./style.css";
+import { useEffect, useState } from "react";
 
 const Calendar = ({ disabledDates, state, handleOnChange }) => {
-  // Determine the number of months based on screen width
+  const [windowWidth, setWindowWidth] = useState(window.innerWidth);
+  const isSmallScreen = windowWidth < 960;
+  const numMonths = isSmallScreen ? 1 : 2;
+
+  useEffect(() => {
+    const handleResize = () => {
+      setWindowWidth(window.innerWidth);
+    };
+
+    window.addEventListener("resize", handleResize);
+
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
 
   return (
     <DateRangePicker
@@ -13,7 +28,7 @@ const Calendar = ({ disabledDates, state, handleOnChange }) => {
       onChange={handleOnChange}
       showSelectionPreview={true}
       moveRangeOnFirstSelection={false}
-      months={2}
+      months={numMonths}
       ranges={state}
       editableDateInputs
       disabledDates={disabledDates}

@@ -178,7 +178,7 @@ export default function VenuePage() {
           ))}
         </>
       )}
-      <div className="grid gap-6">
+      <div className="grid gap-8">
         <div className="flex justify-center">
           <ImageCarousel images={post.media} />
         </div>

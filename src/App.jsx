@@ -6,9 +6,15 @@ import Footer from "./components/Footer";
 function App() {
   return (
     <div className="grid min-h-screen grid-rows-[auto,1fr,auto] ">
-      <NavBar />
-      <Outlet />
-      <Footer />
+      <header>
+        <NavBar />
+      </header>
+      <main>
+        <Outlet />
+      </main>
+      <footer>
+        <Footer />
+      </footer>
     </div>
   );
 }

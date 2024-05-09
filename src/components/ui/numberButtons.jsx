@@ -9,8 +9,6 @@ export default function NumberButtons({
   maxValue,
   disabled,
 }) {
-  console.log(value);
-
   return (
     <div className="flex items-center justify-center">
       <Button
@@ -19,7 +17,6 @@ export default function NumberButtons({
         variant="outline"
         className="border-muted-foreground h-[45px] w-[45px] rounded-full border text-xl font-bold"
         onClick={() => {
-          console.log("value", value);
           onIncrease();
         }}
       >
@@ -42,7 +39,6 @@ export default function NumberButtons({
         variant="outline"
         className="h-[45px] w-[45px] rounded-full border border-black text-xl font-bold"
         onClick={() => {
-          console.log("value", value);
           onDecrease();
         }}
       >

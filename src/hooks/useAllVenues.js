@@ -22,15 +22,25 @@ export default function useAllVenues() {
 
 function filterVenues(data, filters) {
   const filteredVenues = data.filter((item) => {
+    const priceInRange =
+      item.price <= filters.maxPrice && item.price >= filters.minPrice;
+    const maxGuestsInRange = item.maxGuests >= filters.maxGuests;
+    const petsMatch = !filters.pets || item.meta.pets === filters.pets;
+    const wifiMatch = !filters.wifi || item.meta.wifi === filters.wifi;
+    const parkingMatch =
+      !filters.parking || item.meta.parking === filters.parking;
+    const breakfastMatch =
+      !filters.breakfast || item.meta.breakfast === filters.breakfast;
+
     return (
-      item.price <= filters.maxPrice &&
-      item.price >= filters.minPrice &&
-      item.maxGuests >= filters.maxGuests &&
-      (!filters.pets || item.meta.pets === filters.pets) &&
-      (!filters.wifi || item.meta.wifi === filters.wifi) &&
-      (!filters.parking || item.meta.parking === filters.parking) &&
-      (!filters.breakfast || item.meta.breakfast === filters.breakfast)
+      priceInRange &&
+      maxGuestsInRange &&
+      petsMatch &&
+      wifiMatch &&
+      parkingMatch &&
+      breakfastMatch
     );
   });
+
   return filteredVenues;
 }

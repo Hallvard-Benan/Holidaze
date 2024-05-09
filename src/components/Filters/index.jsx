@@ -22,15 +22,19 @@ export default function FiltersSection() {
   const filtersOpen = useBoundStore((state) => state.filtersOpen);
   const toggleFiltersOpen = useBoundStore((state) => state.toggleFiltersOpen);
   const updatePriceRange = useBoundStore((state) => state.updatePriceRange);
-  const filters = useBoundStore((state) => state.filters);
+  const filterForm = useBoundStore((state) => state.filterForm);
   const updateFilters = useBoundStore((state) => state.updateFilters);
   const increaseGuests = useBoundStore((state) => state.increaseGuests);
   const decreaseGuests = useBoundStore((state) => state.decreaseGuests);
   const updateMinPrice = useBoundStore((state) => state.updateMinPrice);
   const updateMaxPrice = useBoundStore((state) => state.updateMaxPrice);
-  const updateMeta = useBoundStore((state) => state.updateMeta);
+  const updatePets = useBoundStore((state) => state.updatePets);
+  const updateParking = useBoundStore((state) => state.updateParking);
+  const updateWifi = useBoundStore((state) => state.updateWifi);
+  const updateBreakfast = useBoundStore((state) => state.updateBreakfast);
 
   const handleUpdate = () => {
+    updateFilters();
     toggleFiltersOpen();
   };
 
@@ -41,7 +45,12 @@ export default function FiltersSection() {
 
   return (
     <>
-      <Button onClick={toggleFiltersOpen} variant="outline">
+      <Button
+        onClick={toggleFiltersOpen}
+        variant="outline"
+        className="flex items-center gap-2"
+      >
+        <p>Filters</p>
         <IoFilter />
       </Button>
       <div
@@ -81,7 +90,7 @@ export default function FiltersSection() {
           </FilterGrouping>
           <FilterGrouping title={"Guests"}>
             <NumberButtons
-              value={filters.maxGuests}
+              value={filterForm.maxGuests}
               maxValue={100}
               onDecrease={decreaseGuests}
               onIncrease={increaseGuests}
@@ -92,40 +101,40 @@ export default function FiltersSection() {
               <CheckBoxGroup
                 type="checkbox"
                 name="pets"
-                onCheckedChange={(e) => updateMeta(e, "pets")}
+                onCheckedChange={(e) => updatePets(e)}
                 label="Pets"
-                defaultChecked={filters.pets}
+                checked={filterForm.pets}
               />
               <CheckBoxGroup
                 type="checkbox"
                 name="wifi"
-                onCheckedChange={(e) => updateMeta(e, "wifi")}
+                onCheckedChange={(e) => updateWifi(e)}
                 label="Wifi"
-                defaultChecked={filters.Wifi}
+                checked={filterForm.wifi}
               />
               <CheckBoxGroup
                 type="checkbox"
                 name="breakfast"
-                onCheckedChange={(e) => updateMeta(e, "breakfast")}
+                onCheckedChange={(e) => updateBreakfast(e)}
                 label="Breakfast"
-                defaultChecked={filters.breakfast}
+                checked={filterForm.breakfast}
               />
               <CheckBoxGroup
                 type="checkbox"
                 name="parking"
                 onCheckedChange={(e) => {
-                  updateMeta(e, "parking");
+                  updateParking(e);
                 }}
                 label="Parking"
-                defaultChecked={filters.parking}
+                checked={filterForm.parking}
               />
             </div>
           </FilterGrouping>
 
           <FilterGrouping title={"Price Range"}>
             <PriceSlider
-              minPrice={filters.minPrice}
-              maxPrice={filters.maxPrice}
+              minPrice={filterForm.minPrice}
+              maxPrice={filterForm.maxPrice}
               onMinValueChange={(value) => {
                 updateMinPrice(value);
               }}
@@ -137,7 +146,7 @@ export default function FiltersSection() {
           </FilterGrouping>
         </ul>
         <Button onClick={handleUpdate} className="w-full">
-          update filters
+          Apply Updated Filters
         </Button>
       </div>
     </>

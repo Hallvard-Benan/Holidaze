@@ -8,20 +8,31 @@ export const createVenueSlice = (set) => ({
 
   updateItem: (item) =>
     set((state) => ({
-      venueFormData: { ...state.venueFormData, ...item },
+      venueFormData: {
+        ...state.venueFormData,
+        ...item,
+      },
     })),
+
   updateMeta: (item) =>
     set((state) => ({
       venueFormData: {
         ...state.venueFormData,
-        meta: { ...state.venueFormData.meta, ...item },
+        meta: {
+          ...state.venueFormData.meta,
+          ...item,
+        },
       },
     })),
+
   updateLocation: (item) =>
     set((state) => ({
       venueFormData: {
         ...state.venueFormData,
-        location: { ...state.venueFormData.location, ...item },
+        location: {
+          ...state.venueFormData.location,
+          ...item,
+        },
       },
     })),
 

@@ -1,4 +1,16 @@
-export const createFilterSlice = (set) => ({
+export const createFilterSlice = (set, get) => ({
+  defaultFilters: {
+    maxGuests: 0,
+    maxPrice: 10000,
+    minPrice: 0,
+    pets: false,
+    parking: false,
+    wifi: false,
+    dateFrom: "",
+    dateTo: "",
+    breakfast: false,
+  },
+
   filters: {
     maxGuests: 0,
     maxPrice: 10000,
@@ -10,6 +22,18 @@ export const createFilterSlice = (set) => ({
     dateTo: "",
     breakfast: false,
   },
+  filterForm: {
+    maxGuests: 0,
+    maxPrice: 10000,
+    minPrice: 0,
+    pets: false,
+    parking: false,
+    wifi: false,
+    dateFrom: "",
+    dateTo: "",
+    breakfast: false,
+  },
+
   sort: { by: "abc", order: "desc" },
   filtersOpen: false,
 
@@ -17,9 +41,9 @@ export const createFilterSlice = (set) => ({
     set((state) => ({
       filtersOpen: !state.filtersOpen,
     })),
-  updateFilters: (options) =>
+  updateFilters: () =>
     set(() => ({
-      filters: options,
+      filters: get().filterForm,
     })),
   updateSort: (choice) =>
     set(() => ({
@@ -27,62 +51,66 @@ export const createFilterSlice = (set) => ({
     })),
 
   updatePriceRange: ({ min, max }) => {
-    set((state) => ({
-      filters: { ...state.filters, minPrice: min, maxPrice: max },
-    }));
+    set((state) => {
+      state.filterForm.minPrice = min;
+      state.filterForm.maxPrice = max;
+    });
+  },
+
+  removeIndividual: (target) => {
+    set((state) => {
+      const defaultValue = get().defaultFilters[target];
+      state.filterForm[target] = defaultValue;
+      state.filters[target] = defaultValue;
+    });
   },
 
   decreaseGuests: () => {
-    set((state) => ({
-      filters: { ...state.filters, maxGuests: state.filters.maxGuests - 1 },
-    }));
+    set((state) => {
+      state.filterForm.maxGuests--;
+    });
   },
 
   increaseGuests: () => {
-    set((state) => ({
-      filters: { ...state.filters, maxGuests: state.filters.maxGuests + 1 },
-    }));
+    set((state) => {
+      state.filterForm.maxGuests++;
+    });
   },
 
   updateMaxPrice: (value) =>
-    set((state) => ({
-      filters: { ...state.filters, maxPrice: value },
-    })),
+    set((state) => {
+      state.filterForm.maxPrice = value;
+    }),
 
-  updateMeta: (value, target) => {
-    console.log(value, target);
-    switch (target) {
-      case "pets":
-        set((state) => ({
-          filters: { ...state.filters, pets: value },
-        }));
-        break;
-      case "parking":
-        set((state) => ({
-          filters: { ...state.filters, parking: value },
-        }));
-        break;
-      case "wifi":
-        set((state) => ({
-          filters: { ...state.filters, wifi: value },
-        }));
-        break;
-      case "breakfast":
-        set((state) => ({
-          filters: { ...state.filters, breakfast: value },
-        }));
-        break;
-      default:
-        console.log(value, target);
-        break;
-    }
-  },
+  updatePets: (value) =>
+    set((state) => {
+      state.filterForm.pets = value;
+    }),
+
+  updateParking: (value) =>
+    set((state) => {
+      state.filterForm.parking = value;
+    }),
+
+  updateWifi: (value) =>
+    set((state) => {
+      state.filterForm.wifi = value;
+    }),
+
+  updateBreakfast: (value) =>
+    set((state) => {
+      state.filterForm.breakfast = value;
+    }),
 
   updateMinPrice: (value) =>
-    set((state) => ({
-      filters: {
-        ...state.filters,
-        minPrice: value,
-      },
-    })),
+    set((state) => {
+      state.filterForm.minPrice = value;
+    }),
+
+  clearFilters: () =>
+    set((state) => {
+      const defaultFilters = get().defaultFilters;
+      state.filters = defaultFilters;
+      state.filterForm = defaultFilters;
+    }),
 });

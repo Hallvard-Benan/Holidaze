@@ -12,7 +12,7 @@ export default function Venues({ venues, error, status }) {
   }
   if (status === "success" && venues) {
     return (
-      <Container className=" grid grid-cols-2 gap-x-1 md:grid-cols-3 md:gap-3">
+      <div className=" grid grid-cols-2 gap-x-1 md:grid-cols-3 md:gap-3">
         {venues.map((item) => (
           <Card
             key={item.id}
@@ -20,10 +20,11 @@ export default function Venues({ venues, error, status }) {
             description={item.description}
             imgUrl={item.media[0]?.url}
             alt={item.media[0]?.alt}
+            details={item.price}
             href={`/venues/${item.id}`}
           />
         ))}
-      </Container>
+      </div>
     );
   }
 }

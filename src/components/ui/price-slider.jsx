@@ -18,7 +18,11 @@ export default function PriceSlider({
   const handleMaxValueChange = (e) => {
     const value = parseInt(e.target.value);
 
-    if (value > 10000 || !value) return;
+    if (value > 10000 || value < 0) return;
+    if (!value) {
+      onMaxValueChange(0);
+      return;
+    }
 
     onMaxValueChange(value);
   };
@@ -32,25 +36,32 @@ export default function PriceSlider({
         value={[minPrice, maxPrice]}
         max={10000}
         step={1}
+        maxValue={toString(maxPrice)}
         onValueChange={handleSliderChange}
       />
 
       <div className="flex items-center gap-1">
-        <Input
-          type="number"
-          name="minValue"
-          max={10000}
-          value={minPrice}
-          onChange={handleMinValueChange}
-        />
+        <div className="relative  w-full after:absolute after:left-3 after:top-1/2 after:-translate-y-1/2 after:content-['Kr']">
+          <Input
+            type="number"
+            name="minValue"
+            className="px-8"
+            max={10000}
+            value={minPrice}
+            onChange={handleMinValueChange}
+          />
+        </div>
         -
-        <Input
-          type="number"
-          name="maxValue"
-          value={maxPrice}
-          max={10000}
-          onChange={handleMaxValueChange}
-        />
+        <div className="relative  w-full after:absolute after:left-3 after:top-1/2 after:-translate-y-1/2 after:content-['Kr']">
+          <Input
+            type="number"
+            name="maxValue"
+            className="px-8"
+            value={maxPrice}
+            max={10000}
+            onChange={handleMaxValueChange}
+          />
+        </div>
       </div>
     </div>
   );

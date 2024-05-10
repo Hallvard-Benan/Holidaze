@@ -1,57 +1,109 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import { FaRegStar } from "react-icons/fa";
+
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+} from "../ui/carousel";
+import { cn } from "../../utils/utils";
 
 export default function Card({
-  imgUrl,
-  alt,
+  images,
   heading,
   description,
+  price,
   details,
   href,
   location,
   rating,
 }) {
+  const [api, setApi] = React.useState();
+  const [current, setCurrent] = React.useState(0);
+  const [count, setCount] = React.useState(0);
+  React.useEffect(() => {
+    if (!api) {
+      return;
+    }
+
+    setCount(api.scrollSnapList().length);
+    setCurrent(api.selectedScrollSnap() + 1);
+
+    api.on("select", () => {
+      setCurrent(api.selectedScrollSnap() + 1);
+    });
+  }, [api]);
+
+  const isLastImage = current === images?.length;
+  const isFirstImage = current === 1;
+
   return (
-    <div className="bg-card grid h-[420px] grid-rows-2 overflow-hidden  rounded-lg border border-gray-200 shadow">
-      <Link to={href}>
-        <img
-          className="h-[200px] w-full overflow-hidden rounded-t-lg object-cover"
-          src={imgUrl}
-          alt={alt}
-        />
-      </Link>
-      <div className="flex max-w-full flex-1 flex-col justify-between overflow-hidden p-5">
-        <Link to={href} className="w-full overflow-hidden break-words">
-          <h5 className="text-foreground whitespace-no-wrap mb-2 line-clamp-2 max-w-full overflow-hidden break-words text-2xl font-bold tracking-tight">
-            {heading}
-          </h5>
-        </Link>
-        <p className="text-muted-foreground text-top line-clamp-1">
-          {location}
-        </p>
-        <p>{rating}</p>
-        {details && <p>{details}</p>}
+    <div className="bg-card group grid h-[450px] grid-rows-[300px,auto] overflow-hidden rounded-lg border border-gray-200 shadow">
+      <Carousel setApi={setApi} className="m-0  w-full">
+        <CarouselContent className=" m-0 h-[300px] w-full">
+          {images?.map((img, index) => (
+            <CarouselItem key={index} className="m-0 h-full w-full p-0 ">
+              <Link to={href}>
+                <img
+                  src={img.url}
+                  alt={img.alt}
+                  className="h-full w-full object-cover"
+                />
+              </Link>
+            </CarouselItem>
+          ))}
+        </CarouselContent>
+        {images?.length > 1 && (
+          <>
+            {!isFirstImage && (
+              <CarouselPrevious className="absolute bottom-1/2 left-0 opacity-0 transition-all duration-300 hover:scale-105 disabled:opacity-0 group-hover:opacity-100" />
+            )}
+            {!isLastImage && (
+              <CarouselNext className=" absolute bottom-1/2 right-0 opacity-0 transition-all duration-300  hover:scale-105 disabled:opacity-0 group-hover:opacity-100" />
+            )}
+            <div className="absolute bottom-1 left-1/2 flex -translate-x-1/2 items-center gap-2">
+              {Array.from(Array(images?.length).keys()).map((i) => (
+                <div
+                  className={cn(
+                    " h-2 w-2 rounded-full bg-muted opacity-65",
+                    i === current - 1 && "opacity-100",
+                  )}
+                  key={i}
+                ></div>
+              ))}
+            </div>
+          </>
+        )}
+      </Carousel>
+      <div className="flex max-w-full flex-col justify-between overflow-hidden p-4">
         <Link
           to={href}
-          className="inline-flex items-center rounded-lg bg-blue-700 px-3 py-2 text-center text-sm font-medium text-white hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+          className="flex w-full justify-between overflow-hidden break-words"
         >
-          Read more
-          <svg
-            className="ms-2 h-3.5 w-3.5 rtl:rotate-180"
-            aria-hidden="true"
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 14 10"
-          >
-            <path
-              stroke="currentColor"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth="2"
-              d="M1 5h12m0 0L9 1m4 4L9 9"
-            />
-          </svg>
+          <h5 className="text-foreground whitespace-no-wrap mb-2 line-clamp-2 max-w-full overflow-hidden break-words text-xl font-bold tracking-tight">
+            {heading}
+          </h5>
+          {rating > 0 && (
+            <p className=" flex items-center gap-1">
+              <FaRegStar />
+              <span className="text-muted-foreground">{rating}</span>{" "}
+            </p>
+          )}
         </Link>
+        <div className="">
+          <p className="text-muted-foreground text-top line-clamp-1">
+            {location.city &&
+              location.city !== "string" &&
+              location?.city + ", " + location?.country}
+          </p>
+          <p>
+            {price.toLocaleString()} kr{" "}
+            <span className="text-muted-foreground">/ night</span>
+          </p>
+        </div>
       </div>
     </div>
   );

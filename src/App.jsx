@@ -5,7 +5,7 @@ import Footer from "./components/Footer";
 
 function App() {
   return (
-    <div className="grid min-h-screen grid-rows-[auto,1fr,auto] ">
+    <div className="bg-background grid min-h-screen grid-rows-[auto,1fr,auto]">
       <header>
         <NavBar />
       </header>

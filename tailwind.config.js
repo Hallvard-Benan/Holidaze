@@ -4,7 +4,8 @@ export default {
   theme: {
     extend: {
       width: {
-        calc: "calc(min(100vw - 20px, 1050px));",
+        calc: "calc(min(100vw - 30px, 1200px))",
+        "calc-md": "calc(min(100vw - 60px, 1200px))",
       },
       colors: {
         border: "var(--border)",

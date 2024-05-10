@@ -19,7 +19,6 @@ export default function UserPage() {
   if (status === "pending") return <Spinner />;
 
   if (status === "error") {
-    console.log("data from component error", data);
     return (
       <div>
         error {error.message}{" "}
@@ -40,6 +39,7 @@ export default function UserPage() {
           bookings={userData.bookings}
           venues={userData.venues}
           avatar={userData.avatar}
+          venueManager={userData.venueManager}
           isMyProfile={isMyProfile}
           _count={userData._count}
         />

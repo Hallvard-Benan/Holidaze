@@ -2,6 +2,7 @@ import { FaWifi } from "react-icons/fa6";
 import { CiParking1 } from "react-icons/ci";
 import { PiForkKnife, PiPawPrint, PiBed } from "react-icons/pi";
 import { createElement } from "react";
+import { cn } from "../../utils/utils";
 
 export function AmenityIcon({ icon, text }) {
   return (
@@ -12,7 +13,7 @@ export function AmenityIcon({ icon, text }) {
   );
 }
 
-export default function AmenityIcons({ meta, maxGuests }) {
+export default function AmenityIcons({ meta, maxGuests, direction }) {
   const amenities = [
     { name: "Wifi", value: meta.wifi, icon: FaWifi },
     { name: "Parking", value: meta.parking, icon: CiParking1 },
@@ -22,7 +23,12 @@ export default function AmenityIcons({ meta, maxGuests }) {
   ];
 
   return (
-    <div className="flex gap-4">
+    <div
+      className={cn(
+        "flex w-fit gap-4 whitespace-nowrap",
+        direction === "horizontal" && "flex-col",
+      )}
+    >
       {amenities.map(
         (item) =>
           item.value && (

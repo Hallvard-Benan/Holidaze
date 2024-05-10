@@ -53,13 +53,9 @@ export default function UserBookingsPage() {
             </div>
             <Card
               rating={booking.venue.rating}
-              imgUrl={booking.venue.media[0].url}
-              alt={booking.venue.media[0]?.alt}
-              location={
-                booking.venue.location.city +
-                ", " +
-                booking.venue.location.country
-              }
+              images={booking.venue.media}
+              location={booking.venue.location}
+              price={booking.venue.price}
               heading={booking.venue.name}
               href={`/venues/${booking.venue.id}`}
             ></Card>

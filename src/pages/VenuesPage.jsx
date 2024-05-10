@@ -2,8 +2,11 @@ import useSearchVenues from "../hooks/useSearchVenues";
 import useAllVenues from "../hooks/useAllVenues";
 import Venues from "../components/Venues";
 import { Link, useSearchParams } from "react-router-dom";
-import { Button } from "../components/ui/button";
 import { useEffect } from "react";
+import Container from "../components/ui/container";
+import FiltersSection from "../components/Filters";
+import { ChosenFilters } from "../components/ChosenFilters";
+import Search from "../components/ui/search";
 
 export function SearchedVenues({ search }) {
   const { data, error, status } = useSearchVenues(search);
@@ -27,13 +30,22 @@ export default function VenuesPage() {
   useEffect(() => {}, [searchParams]);
 
   if (!search) {
-    return <FilteredVenues />;
+    return (
+      <Container>
+        <Search />
+        <div className="flex justify-between">
+          <ChosenFilters />
+          <FiltersSection />
+        </div>
+        <FilteredVenues />
+      </Container>
+    );
   }
 
   return (
-    <>
+    <Container>
       <Link to={"/venues"}> clear</Link>
       <SearchedVenues search={search} />{" "}
-    </>
+    </Container>
   );
 }

@@ -23,11 +23,24 @@ export function ChosenFilters() {
     updateFilters();
   };
 
+  const hasBeenFiltered =
+    maxGuests > 1 ||
+    maxPrice < 10000 ||
+    minPrice > 1 ||
+    pets ||
+    parking ||
+    wifi ||
+    breakfast ||
+    dateFrom ||
+    dateTo;
+
   return (
     <div className="flex items-center gap-4">
-      <Button variant="outline" onClick={clearFilters}>
-        Clear filters X
-      </Button>
+      {hasBeenFiltered && (
+        <Button variant="outline" className="bg-inherit" onClick={clearFilters}>
+          Clear Filters
+        </Button>
+      )}
       {maxGuests > 1 && (
         <ChosenFilterButton onDelete={() => handleDelete("maxGuests")}>
           {" "}
@@ -72,7 +85,7 @@ export function ChosenFilters() {
 
 export function ChosenFilterButton({ onDelete, children }) {
   return (
-    <div className="flex gap-2 rounded-full bg-muted px-4 py-2">
+    <div className="border-muted-foreground flex gap-2 rounded-full border bg-muted px-4 py-2 text-sm">
       {children}
       <button onClick={onDelete}>x</button>
     </div>

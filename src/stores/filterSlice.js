@@ -1,6 +1,6 @@
 export const createFilterSlice = (set, get) => ({
   defaultFilters: {
-    maxGuests: 0,
+    maxGuests: 1,
     maxPrice: 10000,
     minPrice: 0,
     pets: false,
@@ -12,7 +12,7 @@ export const createFilterSlice = (set, get) => ({
   },
 
   filters: {
-    maxGuests: 0,
+    maxGuests: 1,
     maxPrice: 10000,
     minPrice: 0,
     pets: false,
@@ -23,7 +23,7 @@ export const createFilterSlice = (set, get) => ({
     breakfast: false,
   },
   filterForm: {
-    maxGuests: 0,
+    maxGuests: 1,
     maxPrice: 10000,
     minPrice: 0,
     pets: false,
@@ -67,6 +67,7 @@ export const createFilterSlice = (set, get) => ({
 
   decreaseGuests: () => {
     set((state) => {
+      if (state.guests === 1) return;
       state.filterForm.maxGuests--;
     });
   },

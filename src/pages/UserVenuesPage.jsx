@@ -6,5 +6,5 @@ export default function UserVenuesPage() {
   const { userName } = useParams();
   const { data, error, status } = useVenuesByProfile(userName);
 
-  return <Venues data={data} error={error} status={status} />;
+  return <Venues venues={data?.data?.data} error={error} status={status} />;
 }

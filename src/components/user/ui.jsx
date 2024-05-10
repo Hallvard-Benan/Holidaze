@@ -75,44 +75,41 @@ function ProfileUi({
               </div>
               <div>
                 <p className="text-center text-lg font-medium md:text-xl">
-                  {_count.venues}
+                  {_count.bookings}
                 </p>
                 <p className="text-muted-foreground text-sm md:text-base">
-                  Wins
+                  Bookings
                 </p>
               </div>
             </div>
           </div>
         </div>
       </div>
-      <div>
-        <h2 className="text-xl">Your upcoming bookings:</h2>
-        {sortedBookings.map((booking) => (
-          <Card
-            key={booking.id}
-            rating={booking.venue.rating}
-            details={`booked from ${formatDate(booking.dateFrom)} to: ${formatDate(booking.dateTo)}`}
-            imgUrl={booking.venue.media[0].url}
-            alt={booking.venue.media[0]?.alt}
-            location={
-              booking.venue.location.city +
-              ", " +
-              booking.venue.location.country
-            }
-            heading={booking.venue.name}
-            href={`/venues/${booking.venue.id}`}
-          ></Card>
-        ))}
-      </div>
+      {isMyProfile && (
+        <div>
+          <h2 className="text-xl">Your upcoming bookings:</h2>
+          {sortedBookings.map((booking) => (
+            <Card
+              key={booking.id}
+              rating={booking.venue.rating}
+              images={booking.venue.media}
+              price={booking.venue.price}
+              location={booking.venue.location}
+              heading={booking.venue.name}
+              href={`/venues/${booking.venue.id}`}
+            ></Card>
+          ))}
+        </div>
+      )}
       <div>
         <h2 className="text-xl">{name}s Venues:</h2>
         {venues.map((venue) => (
           <Card
             key={venue.id}
             rating={venue.rating}
-            imgUrl={venue.media[0]?.url}
-            alt={venue.media[0]?.alt}
-            location={venue.location.city + ", " + venue.location.country}
+            images={venue.media}
+            location={venue.location}
+            price={venue.price}
             heading={venue.name}
             href={`/venues/${venue.id}`}
           ></Card>

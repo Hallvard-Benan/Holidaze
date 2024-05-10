@@ -1,6 +1,7 @@
 import { Link, useLoaderData } from "react-router-dom";
 import useSingleVenue from "../hooks/useSingleVenue";
 import { FaRegStar } from "react-icons/fa";
+import { MdVerifiedUser } from "react-icons/md";
 
 import Spinner from "../components/ui/spinner";
 
@@ -47,6 +48,7 @@ export default function VenuePage() {
   });
   const [isUpdating, setIsUpdating] = useState(false);
   const [updateError, setUpdateError] = useState([]);
+  const [fullDescription, setFullDescription] = useState(false);
 
   const { data, status, error } = useSingleVenue(id);
 
@@ -116,10 +118,8 @@ export default function VenuePage() {
     setUpdateError(error);
   }
 
-  console.log(post);
-
   return (
-    <div className="mx-auto w-calc">
+    <div className="md:w-calc-md mx-auto w-calc">
       {isMyVenue && (
         <>
           <Button onClick={() => setIsUpdating((prev) => !prev)}>Update</Button>
@@ -184,13 +184,12 @@ export default function VenuePage() {
         </div>
         <div className="flex justify-between">
           <h1 className="text-2xl md:text-3xl">{post.name}</h1>
+        </div>
+        <div className="flex justify-between">
           <p className="text-2xl font-semibold">
             {post.price} kr /{" "}
             <span className="text-muted-foreground font-normal">night</span>
           </p>
-        </div>
-        <div className="flex justify-between">
-          <AmenityIcons meta={post.meta} maxGuests={post.maxGuests} />{" "}
           <p className="flex items-center gap-2">
             <FaRegStar /> {post.rating}
           </p>
@@ -205,23 +204,52 @@ export default function VenuePage() {
         />
         <Separator />
 
-        <Link
-          to={`/profiles/${post.owner.name}`}
-          className={cn(!isLoggedIn && "pointer-events-none")}
-        >
-          {" "}
-          <img
-            src={post.owner.avatar.url}
-            alt=""
-            className={"h-10 w-10 rounded-full object-cover"}
-          />{" "}
-          {post.owner.name}
-        </Link>
-
-        <p className="bg-card rounded-sm p-4">
-          <h2>Description</h2>
-          {post.description}
-        </p>
+        <section className="flex flex-col items-center gap-6 pb-8 ">
+          <div className="flex w-full flex-col gap-8 sm:flex-row">
+            <Link
+              to={`/profiles/${post.owner.name}`}
+              className={
+                (cn(!isLoggedIn && "pointer-events-none"),
+                "mx-auto grid  min-w-72 gap-2 rounded-md border p-6")
+              }
+            >
+              <div className=" flex flex-col items-center justify-center gap-2">
+                <img
+                  src={post.owner.avatar.url}
+                  alt=""
+                  className={"h-20 w-20 rounded-full object-cover"}
+                />{" "}
+                <p className="text-xl font-medium">{post.owner.name}</p>{" "}
+                <p className=" text-2xl text-primary">
+                  <MdVerifiedUser />
+                </p>
+              </div>
+            </Link>
+            <div className="grid flex-grow gap-6">
+              <AmenityIcons meta={post.meta} maxGuests={post.maxGuests} />
+              <div
+                className={cn(
+                  " bg-card grid w-full gap-2 overflow-hidden rounded-md p-2",
+                  fullDescription && "h-auto",
+                )}
+              >
+                <h2 className="text-lg font-medium">About This Venue</h2>
+                <p
+                  className={cn(
+                    " line-clamp-6 overflow-hidden",
+                    fullDescription && "line-clamp-none",
+                  )}
+                >
+                  {post.description}
+                </p>
+                <button onClick={() => setFullDescription((prev) => !prev)}>
+                  {" "}
+                  read more...
+                </button>
+              </div>
+            </div>
+          </div>
+        </section>
       </div>
     </div>
   );

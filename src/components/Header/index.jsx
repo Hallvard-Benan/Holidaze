@@ -12,6 +12,7 @@ import { TfiMenu } from "react-icons/tfi";
 import { FiLogOut } from "react-icons/fi";
 import { LuUser2 } from "react-icons/lu";
 import Search from "../ui/search";
+import { cn } from "../../utils/utils";
 
 export default function NavBar() {
   const isLoggedIn = useBoundStore((state) => state.isLoggedIn);
@@ -27,9 +28,11 @@ export default function NavBar() {
   };
 
   return (
-    <nav className=" flex justify-between bg-slate-200 px-4 py-2 text-xl">
+    <nav className=" mx-auto flex w-calc items-center justify-between px-4 py-2 text-xl">
       <NavLink
-        className={({ isActive }) => (isActive ? "underline" : "")}
+        className={cn(
+          ({ isActive }) => (isActive ? "font-bold " : "", "bg-primary"),
+        )}
         to={"/"}
       >
         Home
@@ -37,7 +40,7 @@ export default function NavBar() {
 
       {user.venueManager && <NavLink to={"/new-venue"}>New venue</NavLink>}
 
-      <div className="flex gap-2">
+      <div className="flex items-center gap-2">
         {/* <Search onSearch={handleSearch} /> */}
         {isLoggedIn ? (
           <>
@@ -98,13 +101,19 @@ export default function NavBar() {
           <>
             {" "}
             <NavLink
-              className={({ isActive }) => (isActive ? "underline" : "")}
+              className={cn(
+                ({ isActive }) => (isActive ? "underline" : "", "bg-primary"),
+                "text-primary-foreground rounded-md bg-primary px-4 py-2",
+              )}
               to={"/auth/login"}
             >
               Login
             </NavLink>
             <NavLink
-              className={({ isActive }) => (isActive ? "underline" : "")}
+              className={cn(
+                ({ isActive }) => (isActive ? "font-bold" : "", "bg-primary"),
+                "text-primary-foreground rounded-md bg-primary px-4 py-2",
+              )}
               to={"/auth/register"}
             >
               Register

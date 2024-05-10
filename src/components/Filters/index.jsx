@@ -62,7 +62,7 @@ export default function FiltersSection() {
         onClick={toggleFiltersOpen}
       ></div>
       <div
-        className={`fixed right-0 top-0 z-50 flex h-screen w-[800px] max-w-[97vw] flex-col  justify-between overflow-y-scroll bg-gray-100 px-2 py-6 transition-all duration-500 md:p-8 lg:h-[100dvh] ${
+        className={`fixed right-0 top-0 z-50 flex h-[100dvh] w-[800px] max-w-[97vw] flex-col  justify-between overflow-y-scroll bg-gray-100 px-2 py-6 transition-all duration-500 md:p-8 lg:h-[100dvh] ${
           filtersOpen
             ? "translate-x-0 opacity-100"
             : "translate-x-full opacity-0"

@@ -85,8 +85,8 @@ export function ChosenFilters() {
 
 export function ChosenFilterButton({ onDelete, children }) {
   return (
-    <div className="border-muted-foreground flex gap-2 rounded-full border bg-muted px-4 py-2 text-sm">
-      {children}
+    <div className="border-muted-foreground flex gap-2 rounded-full border bg-secondary px-4 py-2 text-sm text-primary">
+      <p>{children}</p>
       <button onClick={onDelete}>x</button>
     </div>
   );

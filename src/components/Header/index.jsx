@@ -8,10 +8,12 @@ import {
   DropdownMenuTrigger,
   DropdownMenuSeparator,
 } from "../ui/dropdown-menu";
-import { TfiMenu } from "react-icons/tfi";
 import { FiLogOut } from "react-icons/fi";
 import { LuUser2 } from "react-icons/lu";
-import Search from "../ui/search";
+import { FaSearch } from "react-icons/fa";
+
+import { FaPlus } from "react-icons/fa";
+
 import { cn } from "../../utils/utils";
 
 export default function NavBar() {
@@ -21,6 +23,10 @@ export default function NavBar() {
 
   const navigate = useNavigate();
 
+  const handleLogout = () => {
+    logout();
+    navigate("/");
+  };
   const handleSearch = (e) => {
     e.preventDefault();
     const searchTerm = e.target.search.value;
@@ -28,83 +34,88 @@ export default function NavBar() {
   };
 
   return (
-    <nav className=" mx-auto flex w-calc items-center justify-between px-4 py-2 text-xl">
-      <NavLink
-        className={cn(
-          ({ isActive }) => (isActive ? "font-bold " : "", "bg-primary"),
-        )}
-        to={"/"}
-      >
-        Home
+    <nav className=" bg-card mx-auto flex items-center justify-between px-4 py-2 text-xl md:w-calc">
+      <NavLink className={cn("font-bold italic")} to={"/"}>
+        Holiday Helper
       </NavLink>
 
-      {user.venueManager && <NavLink to={"/new-venue"}>New venue</NavLink>}
+      {user.venueManager && (
+        <NavLink
+          className={
+            "text-primary-foreground flex items-center gap-2 rounded-full bg-primary p-2 px-4"
+          }
+          to={"/new-venue"}
+        >
+          <p className="text-sm sm:text-base md:text-lg">New venue</p>{" "}
+          <FaPlus />
+        </NavLink>
+      )}
+
+      <NavLink to={"/venues"} className="text-muted-foreground">
+        <FaSearch />
+      </NavLink>
 
       <div className="flex items-center gap-2">
         {/* <Search onSearch={handleSearch} /> */}
         {isLoggedIn ? (
           <>
-            <NavLink to={`/profiles/${user.name}`}>
-              <DropdownMenu>
-                <DropdownMenuTrigger
-                  data-cy="open-menu-button"
-                  className="flex items-center gap-1 text-2xl"
-                >
-                  <TfiMenu className="" />
+            <DropdownMenu>
+              <DropdownMenuTrigger
+                data-cy="open-menu-button"
+                className="flex items-center gap-1 text-2xl"
+              >
+                <div className="flex h-[2.8rem] w-[2.8rem] items-center justify-center rounded-full border border-primary">
                   <img
-                    className="h-10 w-10 rounded-full object-cover md:h-12 md:w-12"
+                    className="h-10 w-10 rounded-full object-cover"
                     src={
                       status === "success"
                         ? data.data.data.avatar.url
                         : user.avatar.url
                     }
                   />
-                </DropdownMenuTrigger>
-                <DropdownMenuContent className="flex flex-col-reverse gap-1 md:flex-col ">
-                  <Link to={`/profiles/${user.name}`}>
-                    <DropdownMenuItem className="flex flex-col hover:cursor-pointer md:flex-col-reverse">
-                      <div className="flex items-center gap-1 px-6">
-                        <p>My Profile</p> <LuUser2></LuUser2>
-                      </div>
-                      <div className="text-muted-foreground grid justify-items-center">
-                        <p>{user.name}</p>
-                      </div>
-                    </DropdownMenuItem>
-                  </Link>
-                  <DropdownMenuSeparator />
-                  {user.venueManager && (
-                    <Link to={`/profiles/${user.name}/venues`}>
-                      <DropdownMenuItem className="px-8 hover:cursor-pointer">
-                        My Venues
-                      </DropdownMenuItem>
-                    </Link>
-                  )}
-                  <DropdownMenuSeparator />
-                  <Link to={`/profiles/${user.name}/bookings`}>
-                    <DropdownMenuItem className="px-8 hover:cursor-pointer">
-                      My bookings
-                    </DropdownMenuItem>
-                  </Link>
-                  <DropdownMenuSeparator />
-                  <DropdownMenuItem
-                    data-cy="logout-button"
-                    className="px-8 text-destructive hover:cursor-pointer"
-                    onClick={logout}
-                  >
-                    Logout <FiLogOut />
+                </div>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent className="flex flex-col-reverse gap-1 md:flex-col ">
+                <Link to={`/profiles/${user.name}`}>
+                  <DropdownMenuItem className="flex flex-col hover:cursor-pointer md:flex-col-reverse">
+                    <div className="flex items-center gap-1 px-6">
+                      <p>My Profile</p> <LuUser2></LuUser2>
+                    </div>
+                    <div className="text-muted-foreground grid justify-items-center">
+                      <p>{user.name}</p>
+                    </div>
                   </DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
-            </NavLink>
+                </Link>
+                <DropdownMenuSeparator />
+                {user.venueManager && (
+                  <Link to={`/profiles/${user.name}/venues`}>
+                    <DropdownMenuItem className="px-8 hover:cursor-pointer">
+                      My Venues
+                    </DropdownMenuItem>
+                  </Link>
+                )}
+                <DropdownMenuSeparator />
+                <Link to={`/profiles/${user.name}/bookings`}>
+                  <DropdownMenuItem className="px-8 hover:cursor-pointer">
+                    My bookings
+                  </DropdownMenuItem>
+                </Link>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem
+                  data-cy="logout-button"
+                  className="px-8 text-destructive hover:cursor-pointer"
+                  onClick={handleLogout}
+                >
+                  Logout <FiLogOut />
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
           </>
         ) : (
           <>
             {" "}
             <NavLink
-              className={cn(
-                ({ isActive }) => (isActive ? "underline" : "", "bg-primary"),
-                "text-primary-foreground rounded-md bg-primary px-4 py-2",
-              )}
+              className={cn(" px-4 py-2 text-primary")}
               to={"/auth/login"}
             >
               Login
@@ -112,7 +123,7 @@ export default function NavBar() {
             <NavLink
               className={cn(
                 ({ isActive }) => (isActive ? "font-bold" : "", "bg-primary"),
-                "text-primary-foreground rounded-md bg-primary px-4 py-2",
+                "text-primary-foreground rounded-full bg-primary px-4 py-2",
               )}
               to={"/auth/register"}
             >

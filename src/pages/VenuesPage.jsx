@@ -10,7 +10,14 @@ import Search from "../components/ui/search";
 
 export function SearchedVenues({ search }) {
   const { data, error, status } = useSearchVenues(search);
-  return <Venues venues={data?.data.data} error={error} status={status} />;
+  return (
+    <Venues
+      meta={data?.data.meta}
+      data={data?.data.data}
+      error={error}
+      status={status}
+    />
+  );
 }
 
 export function FilteredVenues() {
@@ -18,9 +25,12 @@ export function FilteredVenues() {
     filteredData: allVenues,
     error: allError,
     status: allStatus,
+    meta,
   } = useAllVenues();
 
-  return <Venues venues={allVenues} error={allError} status={allStatus} />;
+  return (
+    <Venues meta={meta} data={allVenues} error={allError} status={allStatus} />
+  );
 }
 
 export default function VenuesPage() {

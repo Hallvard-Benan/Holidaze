@@ -6,12 +6,15 @@ export async function getVenuesByUser(user) {
   console.log("fetching venues by user");
   const authStorage = window.localStorage.getItem("Auth-storage");
   const accessToken = JSON.parse(authStorage).state.accessToken;
-  const res = await axios.get(`${baseUrl}/holidaze/profiles/${user}/venues`, {
-    headers: {
-      Authorization: `Bearer ${accessToken}`,
-      "X-Noroff-API-Key": apiKey,
+  const res = await axios.get(
+    `${baseUrl}/holidaze/profiles/${user}/venues?_bookings=true`,
+    {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        "X-Noroff-API-Key": apiKey,
+      },
     },
-  });
+  );
 
   return res;
 }

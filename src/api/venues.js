@@ -4,10 +4,10 @@ const apiKey = import.meta.env.VITE_API_KEY;
 const authStorage = window.localStorage.getItem("Auth-storage");
 const accessToken = JSON.parse(authStorage)?.state.accessToken;
 
-export async function fetchAllVenues() {
+export async function fetchAllVenues({ pageNumber, perPage }) {
   console.log("fetching all venues");
   const res = await axios.get(
-    `${baseUrl}/holidaze/venues?sort=created&sortOrder=desc&limit=100&page=1`,
+    `${baseUrl}/holidaze/venues?sort=created&sortOrder=desc&limit=${perPage}&page=${pageNumber}`,
   );
   return res;
 }

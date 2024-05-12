@@ -2,14 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { FaRegStar } from "react-icons/fa";
 
-import {
-  Carousel,
-  CarouselContent,
-  CarouselItem,
-  CarouselNext,
-  CarouselPrevious,
-} from "../ui/carousel";
-import { cn } from "../../utils/utils";
+import { CardImageCarousel } from "../ui/cardImageCarousel";
 
 export default function Card({
   images,
@@ -21,63 +14,9 @@ export default function Card({
   location,
   rating,
 }) {
-  const [api, setApi] = React.useState();
-  const [current, setCurrent] = React.useState(0);
-  const [count, setCount] = React.useState(0);
-  React.useEffect(() => {
-    if (!api) {
-      return;
-    }
-
-    setCount(api.scrollSnapList().length);
-    setCurrent(api.selectedScrollSnap() + 1);
-
-    api.on("select", () => {
-      setCurrent(api.selectedScrollSnap() + 1);
-    });
-  }, [api]);
-
-  const isLastImage = current === images?.length;
-  const isFirstImage = current === 1;
-
   return (
     <div className="bg-card group grid h-[450px] grid-rows-[300px,auto] overflow-hidden rounded-lg border border-gray-200 shadow">
-      <Carousel setApi={setApi} className="m-0  w-full">
-        <CarouselContent className=" m-0 h-[300px] w-full">
-          {images?.map((img, index) => (
-            <CarouselItem key={index} className="m-0 h-full w-full p-0 ">
-              <Link to={href}>
-                <img
-                  src={img.url}
-                  alt={img.alt}
-                  className="h-full w-full object-cover"
-                />
-              </Link>
-            </CarouselItem>
-          ))}
-        </CarouselContent>
-        {images?.length > 1 && (
-          <>
-            {!isFirstImage && (
-              <CarouselPrevious className="absolute bottom-1/2 left-0 opacity-0 transition-all duration-300 hover:scale-105 disabled:opacity-0 group-hover:opacity-100" />
-            )}
-            {!isLastImage && (
-              <CarouselNext className=" absolute bottom-1/2 right-0 opacity-0 transition-all duration-300  hover:scale-105 disabled:opacity-0 group-hover:opacity-100" />
-            )}
-            <div className="absolute bottom-1 left-1/2 flex -translate-x-1/2 items-center gap-2">
-              {Array.from(Array(images?.length).keys()).map((i) => (
-                <div
-                  className={cn(
-                    " h-2 w-2 rounded-full bg-muted opacity-65",
-                    i === current - 1 && "opacity-100",
-                  )}
-                  key={i}
-                ></div>
-              ))}
-            </div>
-          </>
-        )}
-      </Carousel>
+      <CardImageCarousel images={images} href={href} />
       <div className="flex max-w-full flex-col justify-between overflow-hidden p-4">
         <Link
           to={href}

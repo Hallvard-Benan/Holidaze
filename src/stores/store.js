@@ -5,6 +5,7 @@ import { persist } from "zustand/middleware";
 import { createVenueSlice } from "./venueFormSlice";
 import { immer } from "zustand/middleware/immer";
 import { createFilterSlice } from "./filterSlice";
+import { createPaginationSlice } from "./paginationSlice";
 
 export const useBoundStore = create(
   immer(
@@ -14,6 +15,7 @@ export const useBoundStore = create(
         ...createFilterSlice(...a),
         ...createBookingSlice(...a),
         ...createVenueSlice(...a),
+        ...createPaginationSlice(...a),
       }),
       {
         name: "Auth-storage",

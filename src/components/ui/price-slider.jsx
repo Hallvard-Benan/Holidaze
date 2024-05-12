@@ -36,7 +36,7 @@ export default function PriceSlider({
         value={[minPrice, maxPrice]}
         max={10000}
         step={1}
-        maxValue={toString(maxPrice)}
+        maxvalue={maxPrice}
         onValueChange={handleSliderChange}
       />
 

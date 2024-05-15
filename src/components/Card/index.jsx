@@ -16,7 +16,7 @@ export default function Card({
 }) {
   return (
     <div className="bg-card group grid h-[450px] grid-rows-[300px,auto] overflow-hidden rounded-lg border border-gray-200 shadow">
-      <CardImageCarousel images={images} href={href} />
+      <CardImageCarousel images={images} href={href} className={" h-[300px]"} />
       <div className="flex max-w-full flex-col justify-between overflow-hidden p-4">
         <Link
           to={href}

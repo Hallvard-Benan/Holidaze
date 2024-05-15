@@ -32,7 +32,7 @@ export function CardImageCarousel({ images, href, className }) {
 
   return (
     <>
-      <Carousel setApi={setApi} className="group  m-0 w-full">
+      <Carousel setApi={setApi} className="group  m-0 h-full w-auto">
         <CarouselContent className={cn(" m-0 h-[250px] w-full", className)}>
           {images?.map((img, index) => (
             <CarouselItem key={index} className="m-0 h-full w-full p-0 ">

@@ -5,14 +5,21 @@ import { useParams } from "react-router-dom";
 import useUpcomingBookings from "../hooks/useUpcomingBookings";
 import Container from "../components/ui/container";
 import { CiCalendar } from "react-icons/ci";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import GridViewButtons from "../components/ui/grid-view-buttons";
+import { Button } from "../components/ui/button";
+import useDeleteBooking from "../hooks/useDeleteBookings";
 
 export default function UserBookingsPage() {
   const { userName } = useParams();
   const [gridView, setGridView] = useState(false);
 
+  const { deleteMutation } = useDeleteBooking();
+
   const { bookings, status, error } = useUpcomingBookings(userName);
+  useEffect(() => {
+    document.title = "Holiday Helper | Bookings";
+  }, []);
 
   if (status === "pending") return <Spinner />;
   if (status === "error")
@@ -27,6 +34,10 @@ export default function UserBookingsPage() {
 
   const toggleGridView = () => {
     setGridView((prev) => !prev);
+  };
+
+  const handleDelete = (id) => {
+    deleteMutation.mutate(id);
   };
 
   return (
@@ -47,9 +58,18 @@ export default function UserBookingsPage() {
       >
         {bookings.map((booking) => (
           <div key={booking.id}>
-            <div className="flex items-center gap-2">
-              <CiCalendar />
-              {`From ${formatDate(booking.dateFrom)} to: ${formatDate(booking.dateTo)}`}
+            <div className="flex justify-between">
+              <div className="flex gap-2">
+                <CiCalendar />
+                {`From ${formatDate(booking.dateFrom)} to: ${formatDate(booking.dateTo)}`}
+              </div>
+
+              <Button
+                variant="destructive"
+                onClick={() => handleDelete(booking.id)}
+              >
+                delete
+              </Button>
             </div>
             <Card
               rating={booking.venue.rating}

@@ -3,6 +3,7 @@ import Spinner from "../components/ui/spinner";
 import ProfileUi from "../components/user/ui";
 import { useBoundStore } from "../stores/store.js";
 import useUser from "../hooks/useUser.js";
+import { useEffect } from "react";
 
 export async function loader({ params }) {
   const userName = params.userName;
@@ -13,6 +14,9 @@ export default function UserPage() {
   const { userName } = useLoaderData();
   const visitorName = useBoundStore((state) => state.user.name);
   const isMyProfile = userName === visitorName;
+  useEffect(() => {
+    document.title = `Holiday Helper | ${userName}`;
+  }, [userName]);
 
   const { data, error, status } = useUser(userName);
 

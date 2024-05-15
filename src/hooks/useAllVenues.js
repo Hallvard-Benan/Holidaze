@@ -12,7 +12,7 @@ export default function useAllVenues() {
 
   const { data, status, error } = useQuery({
     queryKey: ["venues", pageNumber, perPage],
-    queryFn: () => fetchAllVenues({ pageNumber, perPage }),
+    queryFn: () => fetchAllVenues({ pageParam: pageNumber, perPage }),
   });
   const filters = useBoundStore((state) => state.filters);
 

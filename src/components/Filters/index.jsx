@@ -8,6 +8,7 @@ import NumberButtons from "../ui/numberButtons";
 import PriceSlider from "../ui/price-slider";
 import { CheckBoxGroup, InputGroup } from "../ui/inputGroup";
 import { useEffect } from "react";
+import { ChosenFilters } from "../ChosenFilters";
 
 export function FilterGrouping({ children, title }) {
   return (
@@ -43,13 +44,28 @@ export default function FiltersSection() {
     else document.body.style.overflow = "auto";
   }, [filtersOpen]);
 
+  const numOfFilters =
+    (filterForm.maxGuests > 1 ? 1 : 0) +
+    (filterForm.maxPrice < 10000 ? 1 : 0) +
+    (filterForm.minPrice > 1 ? 1 : 0) +
+    (filterForm.pets ? 1 : 0) +
+    (filterForm.parking ? 1 : 0) +
+    (filterForm.wifi ? 1 : 0) +
+    (filterForm.breakfast ? 1 : 0) +
+    (filterForm.dateFrom ? 1 : 0) +
+    (filterForm.dateTo ? 1 : 0);
+
   return (
     <>
       <Button
         onClick={toggleFiltersOpen}
-        variant="outline"
-        className="flex items-center gap-2"
+        className={cn("flex items-center gap-2")}
       >
+        {numOfFilters > 0 && (
+          <p className="text-secondary-foreground flex h-6 w-6 items-center justify-center rounded-full bg-secondary p-2">
+            {numOfFilters}
+          </p>
+        )}
         <p>Filters</p>
         <IoFilter />
       </Button>
@@ -76,6 +92,8 @@ export default function FiltersSection() {
         </div>
 
         <ul className="flex min-w-full flex-grow flex-col gap-8 overflow-y-auto py-4">
+          <ChosenFilters />
+
           <FilterGrouping title={"Dates"}>
             <div className="flex  gap-4">
               <InputGroup

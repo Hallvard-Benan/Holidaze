@@ -53,6 +53,10 @@ export default function VenuePage() {
   const { data, status, error } = useSingleVenue(id);
 
   useEffect(() => {
+    if (data) document.title = data.data.data.name;
+  }, [data]);
+
+  useEffect(() => {
     if (data)
       updateVenueForm({
         name: data.data.data.name,
@@ -199,6 +203,7 @@ export default function VenuePage() {
           disabled={isMyVenue}
           disabledDates={disabledDates}
           price={post.price}
+          name={user.name}
           venueId={id}
           maxGuests={post.maxGuests}
         />

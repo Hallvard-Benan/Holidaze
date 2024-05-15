@@ -15,6 +15,7 @@ const BookingForm = ({
   disabledDates,
   venueId,
   maxGuests,
+  name,
   price,
   disabled,
 }) => {
@@ -56,8 +57,6 @@ const BookingForm = ({
         dateFrom: nextAvailableDate,
         dateTo: nextAvailableDate,
       }));
-
-      console.log("", nextAvailableDate);
     }
   }, [disabledDates]);
 
@@ -86,6 +85,7 @@ const BookingForm = ({
     mutationFn: makeBooking,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["venue", venueId] });
+      queryClient.invalidateQueries({ queryKey: ["user", name] });
 
       setError("root", { errors: [] });
     },
@@ -121,7 +121,7 @@ const BookingForm = ({
           },
         ],
       });
-      return; // Exit function without submitting the form
+      return;
     }
 
     if (bookingFormState.guests < 1 || bookingFormState.guests > maxGuests) {

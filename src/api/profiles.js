@@ -55,7 +55,6 @@ export async function getUser({ name, token }) {
       },
     },
   );
-  console.log(res);
   return res;
 }
 

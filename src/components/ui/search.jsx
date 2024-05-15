@@ -1,18 +1,22 @@
 import PropTypes from "prop-types";
 import { Button } from "./button";
+import { FaSearch } from "react-icons/fa";
+
 export default function Search({ onSearch }) {
   return (
     <form
       onSubmit={onSearch}
-      className="flex items-center gap-2 rounded-md bg-muted p-2 px-6"
+      className="relative flex w-full max-w-full items-center gap-2"
     >
       <input
         type="text"
-        className="rounded-md border p-3 sm:w-60"
+        className="focus-within:bg-card w-full max-w-full rounded-full  border bg-muted p-3 pl-8"
         name="search"
         placeholder="What are you looking for?"
       />
-      <Button className="h-[48px] text-lg">Search</Button>
+      <button className="text-muted-foreground absolute left-2">
+        <FaSearch />
+      </button>
     </form>
   );
 }

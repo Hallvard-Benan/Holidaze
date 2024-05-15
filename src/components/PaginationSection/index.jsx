@@ -1,3 +1,4 @@
+import { cn } from "../../utils/utils";
 import {
   Pagination,
   PaginationContent,
@@ -25,7 +26,7 @@ export default function PaginationSection({
             <PaginationItem>
               <PaginationPrevious onClick={() => onChange(current - 1)} />
             </PaginationItem>
-            <PaginationItem>
+            <PaginationItem className="hidden">
               <PaginationLink onClick={() => onChange(1)}>1</PaginationLink>
             </PaginationItem>{" "}
           </>
@@ -33,7 +34,9 @@ export default function PaginationSection({
         <PaginationItem className="text-primary-foreground bg-primary">
           <PaginationLink>{current}</PaginationLink>
         </PaginationItem>
-        <PaginationItem>
+        <PaginationItem
+          className={cn("hidden", current + 1 !== pageCount && "block")}
+        >
           <PaginationEllipsis />
         </PaginationItem>
         <PaginationItem>

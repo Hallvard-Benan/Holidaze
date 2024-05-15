@@ -1,6 +1,7 @@
 import useUpcomingBookings from "../../hooks/useUpcomingBookings";
 import { useBoundStore } from "../../stores/store";
 import Spinner from "../ui/spinner";
+import UpcomingBookingSkeleton from "./loading";
 import BookingsCarouselUi from "./ui";
 
 export default function UpcomingBookingsCarousel() {
@@ -9,7 +10,7 @@ export default function UpcomingBookingsCarousel() {
   const { status, error, bookings } = useUpcomingBookings(userName);
 
   if (status === "error") return <div>error</div>;
-  if (status === "pending") return <Spinner />;
+  if (status === "pending") return <UpcomingBookingSkeleton />;
 
   return <BookingsCarouselUi bookings={bookings} />;
 }

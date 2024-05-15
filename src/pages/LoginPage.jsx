@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import LoginForm from "../components/Forms/LoginForm";
 import RegisterForm from "../components/Forms/RegisterForm";
 import { useLoaderData } from "react-router-dom";
@@ -10,7 +11,9 @@ export async function loader({ params }) {
 
 export default function LoginPage() {
   const { formVersion } = useLoaderData();
-
+  useEffect(() => {
+    document.title = "Holiday Helper | Login";
+  }, []);
   return (
     <div className="container mx-auto">
       {formVersion === "login" ? (

@@ -39,7 +39,7 @@ export default function Venues({ status, error, data, meta }) {
             />
           ))}
         </div>
-        <select
+        {/* <select
           name=""
           id=""
           value={perPage}
@@ -59,7 +59,7 @@ export default function Venues({ status, error, data, meta }) {
           previous={meta.previousPage}
           next={meta.nextPage}
           pageCount={meta.pageCount}
-        />
+        /> */}
       </>
     );
   }

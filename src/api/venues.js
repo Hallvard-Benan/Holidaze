@@ -4,10 +4,10 @@ const apiKey = import.meta.env.VITE_API_KEY;
 const authStorage = window.localStorage.getItem("Auth-storage");
 const accessToken = JSON.parse(authStorage)?.state.accessToken;
 
-export async function fetchAllVenues({ pageNumber, perPage }) {
+export async function fetchAllVenues({ pageParam, perPage }) {
   console.log("fetching all venues");
   const res = await axios.get(
-    `${baseUrl}/holidaze/venues?sort=created&sortOrder=desc&limit=${perPage}&page=${pageNumber}`,
+    `${baseUrl}/holidaze/venues?sort=created&sortOrder=desc&limit=${perPage}&page=${pageParam}`,
   );
   return res;
 }
@@ -20,8 +20,11 @@ export async function fetchVenueById(id) {
   return res;
 }
 
-export async function searchVenues(search) {
-  const res = await axios.get(`${baseUrl}/holidaze/venues/search?q=${search}`);
+export async function searchVenues({ pageParam, search }) {
+  const res = await axios.get(
+    `${baseUrl}/holidaze/venues/search?q=${search}&limit=20&page=${pageParam}`,
+  );
+  console.log(pageParam, search, "data from search: ", res);
   return res;
 }
 

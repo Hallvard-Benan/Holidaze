@@ -7,44 +7,125 @@ import Container from "../components/ui/container";
 import FiltersSection from "../components/Filters";
 import { ChosenFilters } from "../components/ChosenFilters";
 import Search from "../components/ui/search";
+import { useInView } from "react-intersection-observer";
+import GridViewButtons from "../components/ui/grid-view-buttons";
+import Spinner from "../components/ui/spinner";
+import useInfiniteVenues from "../hooks/useInfiniteVenues";
+import { useBoundStore } from "../stores/store";
 
 export function SearchedVenues({ search }) {
-  const { data, error, status } = useSearchVenues(search);
+  const { data, error, status, fetchNextPage, isFetchingNextPage } =
+    useSearchVenues(search);
+  const { ref, inView } = useInView();
+
+  useEffect(() => {
+    if (inView) {
+      fetchNextPage();
+    }
+  }, [inView, fetchNextPage]);
+
+  if (status === "pending") return <div>...loading</div>;
+  if (status === "error") return <div>...error</div>;
+
   return (
-    <Venues
-      meta={data?.data.meta}
-      data={data?.data.data}
-      error={error}
-      status={status}
-    />
+    <div className="grid gap-2">
+      {data.pages.map((page) => (
+        <Venues
+          key={page?.data.meta?.currentPage}
+          meta={page?.data.meta}
+          data={page.data.data}
+          error={error}
+          status={status}
+        />
+      ))}
+      <div ref={ref}>
+        {isFetchingNextPage && (
+          <div className="p-8">
+            <Spinner />
+          </div>
+        )}
+      </div>
+    </div>
   );
 }
 
 export function FilteredVenues() {
+  const { ref, inView } = useInView();
+  const filters = useBoundStore((state) => state.filters);
   const {
-    filteredData: allVenues,
-    error: allError,
-    status: allStatus,
+    data,
+    error,
+    status,
     meta,
-  } = useAllVenues();
+    filteredData,
+    isFetchingNextPage,
+    fetchNextPage,
+  } = useInfiniteVenues();
 
+  useEffect(() => {
+    if (inView) {
+      fetchNextPage();
+    }
+  }, [inView, fetchNextPage]);
+
+  if (status === "pending") return <div>...loading</div>;
+  if (status === "error") return <div>...error</div>;
   return (
-    <Venues meta={meta} data={allVenues} error={allError} status={allStatus} />
+    <div className="grid gap-2">
+      {data.pages.map((page) => {
+        const filteredData = filterVenues(page.data.data, filters);
+        console.log(filteredData);
+        return (
+          <Venues
+            key={page.data.meta.currentPage}
+            data={filteredData}
+            error={error}
+            status={status}
+            meta={page.data.meta}
+          />
+        );
+      })}
+      <div ref={ref}>
+        {isFetchingNextPage && (
+          <div className="p-8">
+            <Spinner />
+          </div>
+        )}
+      </div>
+    </div>
   );
 }
 
 export default function VenuesPage() {
   const [searchParams] = useSearchParams({ search: "" });
   const search = searchParams.get("search");
+  const filters = useBoundStore((state) => state.filters);
+  const hasBeenFiltered =
+    filters.maxGuests > 1 ||
+    filters.maxPrice < 10000 ||
+    filters.minPrice > 1 ||
+    filters.pets ||
+    filters.parking ||
+    filters.wifi ||
+    filters.breakfast ||
+    filters.dateFrom ||
+    filters.dateTo;
 
-  useEffect(() => {}, [searchParams]);
+  useEffect(() => {
+    document.title = "Holiday Helper | venues";
+  }, []);
 
   if (!search) {
     return (
       <Container>
-        <Search />
-        <div className="flex justify-between">
-          <ChosenFilters />
+        <div className="max-w-full sm:hidden">
+          <Search />
+        </div>
+        <div className="flex w-full items-center justify-between gap-2 overflow-hidden">
+          <GridViewButtons />
+          <div className="hidden w-full sm:flex">
+            <Search />
+          </div>
           <FiltersSection />
         </div>
         <FilteredVenues />
@@ -58,4 +139,29 @@ export default function VenuesPage() {
       <SearchedVenues search={search} />{" "}
     </Container>
   );
+}
+
+function filterVenues(data, filters) {
+  const filteredVenues = data.filter((item) => {
+    const priceInRange =
+      item.price <= filters.maxPrice && item.price >= filters.minPrice;
+    const maxGuestsInRange = item.maxGuests >= filters.maxGuests;
+    const petsMatch = !filters.pets || item.meta.pets === filters.pets;
+    const wifiMatch = !filters.wifi || item.meta.wifi === filters.wifi;
+    const parkingMatch =
+      !filters.parking || item.meta.parking === filters.parking;
+    const breakfastMatch =
+      !filters.breakfast || item.meta.breakfast === filters.breakfast;
+
+    return (
+      priceInRange &&
+      maxGuestsInRange &&
+      petsMatch &&
+      wifiMatch &&
+      parkingMatch &&
+      breakfastMatch
+    );
+  });
+
+  return filteredVenues;
 }

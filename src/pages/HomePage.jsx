@@ -3,7 +3,7 @@ import Search from "../components/ui/search";
 import FiltersSection from "../components/Filters";
 import Container from "../components/ui/container";
 
-import { lazy, Suspense } from "react";
+import { lazy, Suspense, useEffect } from "react";
 import { ChosenFilters } from "../components/ChosenFilters";
 import { Button } from "../components/ui/button";
 import { useBoundStore } from "../stores/store";
@@ -30,6 +30,10 @@ export default function HomePage() {
     navigate(`/venues?search=${searchTerm}`);
   };
 
+  useEffect(() => {
+    document.title = "Holiday Helper | Home";
+  }, []);
+
   return (
     <Container>
       {!isLoggedIn ? (
@@ -41,10 +45,12 @@ export default function HomePage() {
       ) : (
         <>
           <h2>Welcome, {userName} </h2>
-          {bookingsNumber && bookingsNumber > 0 && (
+          {bookingsNumber && bookingsNumber > 0 ? (
             <Suspense fallback={<div>Loading...</div>}>
               <UpComingBookings />
             </Suspense>
+          ) : (
+            <></>
           )}
 
           {venuesNumber > 0 && (
@@ -55,9 +61,8 @@ export default function HomePage() {
         </>
       )}
 
-      <div className="flex flex-wrap justify-center">
-        <Search onSearch={handleSearch} />
-        <FiltersSection />
+      <div className="flex justify-center">
+        <Search onSearch={handleSearch} /> <FiltersSection />
       </div>
       {!isLoggedIn && (
         <div className="flex justify-center gap-2">
@@ -69,10 +74,6 @@ export default function HomePage() {
         </div>
       )}
       <div className="grid gap-2">
-        <div className="flex justify-between">
-          <ChosenFilters />
-          <FiltersSection />
-        </div>
         <FilteredVenues />
       </div>
     </Container>

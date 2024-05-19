@@ -60,10 +60,7 @@ export default function NavBar() {
         {isLoggedIn ? (
           <>
             <DropdownMenu>
-              <DropdownMenuTrigger
-                data-cy="open-menu-button"
-                className="flex items-center gap-1 text-2xl"
-              >
+              <DropdownMenuTrigger className="flex items-center gap-1 text-2xl">
                 <div className="flex h-[2.8rem] w-[2.8rem] items-center justify-center rounded-full border border-primary">
                   <img
                     className="h-10 w-10 rounded-full object-cover"

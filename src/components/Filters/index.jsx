@@ -59,7 +59,7 @@ export default function FiltersSection() {
     <>
       <Button
         onClick={toggleFiltersOpen}
-        className={cn("flex items-center gap-2")}
+        className={cn("flex items-center gap-2", [])}
       >
         {numOfFilters > 0 && (
           <p className="text-secondary-foreground flex h-6 w-6 items-center justify-center rounded-full bg-secondary p-2">

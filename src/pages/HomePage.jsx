@@ -9,6 +9,7 @@ import { Button } from "../components/ui/button";
 import { useBoundStore } from "../stores/store";
 import YourVenuesDashboard from "../components/YourVenuesDashboard";
 import { FilteredVenues } from "./VenuesPage";
+import { Separator } from "@radix-ui/react-separator";
 
 const UpComingBookings = lazy(
   () => import("../components/UpcomingBookingsCarousel"),
@@ -35,7 +36,7 @@ export default function HomePage() {
   }, []);
 
   return (
-    <Container>
+    <Container className={"gap-16 py-4"}>
       {!isLoggedIn ? (
         <div className="relative grid gap-4 py-6 text-center">
           <h1 className="text-balance text-3xl font-extrabold leading-relaxed sm:text-5xl sm:leading-relaxed">
@@ -43,27 +44,29 @@ export default function HomePage() {
           </h1>
         </div>
       ) : (
-        <>
-          <h2>Welcome, {userName} </h2>
-          {bookingsNumber && bookingsNumber > 0 ? (
-            <Suspense fallback={<div>Loading...</div>}>
-              <UpComingBookings />
-            </Suspense>
-          ) : (
-            <></>
-          )}
-
-          {venuesNumber > 0 && (
-            <div>
-              <YourVenuesDashboard userName={userName} />
-            </div>
-          )}
-        </>
+        <div className="grid gap-8">
+          <h2>Welcome, {userName}!</h2>
+          <div className="relative flex w-full max-w-full flex-col gap-16 overflow-hidden md:flex-row">
+            {bookingsNumber && bookingsNumber > 0 ? (
+              <Suspense fallback={<div>Loading...</div>}>
+                <UpComingBookings />
+              </Suspense>
+            ) : (
+              <></>
+            )}
+            <Separator
+              orientation="vertical"
+              className=" absolute  left-1/2 hidden h-full w-[1px] -translate-x-1/2  bg-[#E8E8E8] md:block"
+            />
+            {venuesNumber > 0 && (
+              <div className="w-full">
+                <YourVenuesDashboard userName={userName} />
+              </div>
+            )}
+          </div>
+        </div>
       )}
 
-      <div className="flex justify-center">
-        <Search onSearch={handleSearch} /> <FiltersSection />
-      </div>
       {!isLoggedIn && (
         <div className="flex justify-center gap-2">
           <p className="text-muted-foreground">
@@ -73,7 +76,10 @@ export default function HomePage() {
           <Button variant="outline">Log In</Button>
         </div>
       )}
-      <div className="grid gap-2">
+      <div className="grid gap-8">
+        <div className="flex justify-center">
+          <Search onSearch={handleSearch} /> <FiltersSection />
+        </div>
         <FilteredVenues />
       </div>
     </Container>

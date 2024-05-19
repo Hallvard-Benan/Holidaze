@@ -4,7 +4,7 @@ export default function Container({ className, children }) {
   return (
     <div
       className={cn(
-        " sm:w-calc-md mx-auto grid w-calc gap-6 overflow-hidden bg-secondary py-8",
+        " sm:w-calc-md mx-auto grid w-calc  overflow-hidden ",
         className,
       )}
     >

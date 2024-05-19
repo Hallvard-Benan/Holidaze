@@ -1,11 +1,13 @@
 import React from "react";
 import useVenuesByProfile from "../../hooks/useVenuesByProfile";
 import Spinner from "../ui/spinner";
+import { Button } from "../ui/button";
+import VenuesDashboardSkeleton from "./loading";
 
 export default function YourVenuesDashboard({ userName }) {
   const { data, error, status } = useVenuesByProfile(userName);
 
-  if (status === "pending") return <Spinner />;
+  if (status === "pending") return <VenuesDashboardSkeleton />;
   if (status === "error") return <div>error</div>;
 
   const bookingsCount = data.data.data.reduce(
@@ -37,9 +39,39 @@ export default function YourVenuesDashboard({ userName }) {
   }, 0);
 
   return (
-    <div className="flex gap-2 rounded-md border p-4">
-      Your venues have <span className="font-bold">{bookingsCount}</span>{" "}
-      bookings see all + {incomingMoney.toLocaleString()} kr
+    <div className="grid h-full w-full grid-rows-[auto,1fr,auto]  gap-8 ">
+      <h3 className="text-center text-xl font-semibold">Your Venues</h3>
+      <div className="flex gap-4 md:gap-8">
+        <VenuesDashboardCard>
+          <h4 className="text-xl font-bold md:text-2xl">{bookingsCount}</h4>
+          <p className="text-muted-foreground text-sm  md:text-base">
+            Upcoming Bookings
+          </p>
+        </VenuesDashboardCard>
+        <VenuesDashboardCard>
+          <h4 className="text-xl font-bold md:text-2xl">
+            {incomingMoney.toLocaleString()} kr
+          </h4>
+          <p className="text-muted-foreground text-sm md:text-base">
+            Total Revenue
+          </p>
+        </VenuesDashboardCard>
+      </div>
+
+      <Button
+        variant="outline"
+        className="border-muted-foreground h-14 rounded-xl bg-secondary text-primary"
+      >
+        See more
+      </Button>
+    </div>
+  );
+}
+
+export function VenuesDashboardCard({ children }) {
+  return (
+    <div className="bg-card flex h-full w-full flex-col items-center justify-center gap-4 rounded-xl p-4 md:p-0">
+      {children}
     </div>
   );
 }

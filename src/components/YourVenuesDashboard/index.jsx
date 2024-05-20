@@ -4,7 +4,7 @@ import Spinner from "../ui/spinner";
 import { Button } from "../ui/button";
 import VenuesDashboardSkeleton from "./loading";
 
-export default function YourVenuesDashboard({ userName }) {
+export default function YourVenuesDashboard({ userName, venuesNumber }) {
   const { data, error, status } = useVenuesByProfile(userName);
 
   if (status === "pending") return <VenuesDashboardSkeleton />;
@@ -62,7 +62,7 @@ export default function YourVenuesDashboard({ userName }) {
         variant="outline"
         className="border-muted-foreground h-14 rounded-xl bg-secondary text-primary"
       >
-        See more
+        {venuesNumber > 0 ? "See More" : "Add New Venue"}
       </Button>
     </div>
   );

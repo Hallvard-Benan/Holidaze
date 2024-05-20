@@ -8,6 +8,7 @@ export default function useUser(name) {
       console.log("getting user");
       return getUser({ name });
     },
+    enabled: !!name,
   });
 
   return { data, status, error };

@@ -19,7 +19,7 @@ export function FilterGrouping({ children, title }) {
   );
 }
 
-export default function FiltersSection() {
+export default function FiltersSection({ onSubmit }) {
   const filtersOpen = useBoundStore((state) => state.filtersOpen);
   const toggleFiltersOpen = useBoundStore((state) => state.toggleFiltersOpen);
   const updatePriceRange = useBoundStore((state) => state.updatePriceRange);
@@ -37,6 +37,7 @@ export default function FiltersSection() {
   const handleUpdate = () => {
     updateFilters();
     toggleFiltersOpen();
+    onSubmit && onSubmit();
   };
 
   useEffect(() => {

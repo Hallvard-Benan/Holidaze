@@ -37,8 +37,6 @@ function CountdownTimer({ endsAt, longFormat, className, mediumFormat }) {
     return <p className={` ${className}`}>Checkin time has passed</p>;
   }
 
-  const shortTimeLeft = timeRemaining.days < 1 && "text-destructive";
-
   return (
     <div className={`flex gap-2 font-medium ${className}`}>
       {longFormat === true && <p className="font font-normal">Checkin in:</p>}

@@ -15,6 +15,7 @@ import { FaSearch } from "react-icons/fa";
 import { FaPlus } from "react-icons/fa";
 
 import { cn } from "../../utils/utils";
+import Search from "../ui/search";
 
 export default function NavBar() {
   const isLoggedIn = useBoundStore((state) => state.isLoggedIn);
@@ -36,7 +37,11 @@ export default function NavBar() {
   return (
     <nav className=" bg-card mx-auto flex items-center justify-between px-4 py-2 text-xl md:w-calc">
       <NavLink className={cn("font-bold italic")} to={"/"}>
-        Holiday Helper
+        <img
+          src="/holidayhelper-logo.svg"
+          alt="Holiday Helper Logo"
+          className="size-10"
+        />
       </NavLink>
 
       {user.venueManager && (
@@ -51,12 +56,14 @@ export default function NavBar() {
         </NavLink>
       )}
 
-      <NavLink to={"/venues"} className="text-muted-foreground">
+      <NavLink to={"/venues"} className="text-muted-foreground md:hidden">
         <FaSearch />
       </NavLink>
 
-      <div className="flex items-center gap-2">
-        {/* <Search onSearch={handleSearch} /> */}
+      <div className="flex items-center gap-4">
+        <div className="hidden w-60 md:block">
+          <Search onSearch={handleSearch} variant="header" />
+        </div>
         {isLoggedIn ? (
           <>
             <DropdownMenu>

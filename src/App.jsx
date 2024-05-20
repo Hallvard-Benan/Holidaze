@@ -20,7 +20,7 @@ function App() {
 
   return (
     <div className="grid h-[100dvh] bg-background ">
-      <header className="fixed bottom-0 z-50 w-full sm:bottom-auto">
+      <header className="fixed bottom-0 z-40 w-full sm:bottom-auto">
         <NavBar />
       </header>
 

@@ -49,7 +49,7 @@ const InputGroup = React.forwardRef(
           )}
         />
         {description && (
-          <p className="text-muted-foreground text-sm">{description}</p>
+          <p className="text-sm text-muted-foreground">{description}</p>
         )}
         {errorMessage && (
           <p className="text-sm text-destructive">{errorMessage}</p>
@@ -81,7 +81,7 @@ const TextAreaGroup = React.forwardRef(
     ref,
   ) => {
     return (
-      <div className="grid gap-2">
+      <div className="grid justify-items-center gap-2">
         <Label htmlFor={id ? id : label}>
           {required && <span className="text-muted-foreground">*</span>}
           {label}
@@ -106,7 +106,7 @@ const TextAreaGroup = React.forwardRef(
           }
         />
         {description && (
-          <p className="text-muted-foreground text-sm">{description}</p>
+          <p className="text-sm text-muted-foreground">{description}</p>
         )}
         {errorMessage && (
           <p className="text-sm text-destructive">{errorMessage}</p>
@@ -138,7 +138,7 @@ const CheckBoxGroup = React.forwardRef(
     ref,
   ) => {
     return (
-      <div className="grid gap-2">
+      <div className="grid justify-items-center gap-2">
         <Label htmlFor={id ? id : label}>
           {required && <span className="text-muted-foreground">*</span>}
           {label}
@@ -163,7 +163,7 @@ const CheckBoxGroup = React.forwardRef(
           }
         />
         {description && (
-          <p className="text-muted-foreground text-sm">{description}</p>
+          <p className="text-sm text-muted-foreground">{description}</p>
         )}
         {errorMessage && (
           <p className="text-sm text-destructive">{errorMessage}</p>

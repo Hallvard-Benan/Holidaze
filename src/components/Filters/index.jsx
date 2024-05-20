@@ -12,7 +12,7 @@ import { ChosenFilters } from "../ChosenFilters";
 
 export function FilterGrouping({ children, title }) {
   return (
-    <div className="bg-card grid gap-2 rounded-md p-4">
+    <div className="grid gap-2 rounded-md pt-4">
       <h3 className="text-lg">{title}</h3>
       {children}
     </div>
@@ -63,7 +63,7 @@ export default function FiltersSection({ onSubmit }) {
         className={cn("flex items-center gap-2", [])}
       >
         {numOfFilters > 0 && (
-          <p className="text-secondary-foreground flex h-6 w-6 items-center justify-center rounded-full bg-secondary p-2">
+          <p className="flex h-6 w-6 items-center justify-center rounded-full bg-secondary p-2 text-secondary-foreground">
             {numOfFilters}
           </p>
         )}
@@ -78,23 +78,23 @@ export default function FiltersSection({ onSubmit }) {
         )}
         onClick={toggleFiltersOpen}
       ></div>
+
       <div
-        className={`fixed right-0 top-0 z-50 flex h-[100dvh] w-[800px] max-w-[97vw] flex-col  justify-between overflow-y-scroll bg-gray-100 px-2 py-6 transition-all duration-500 md:p-8 lg:h-[100dvh] ${
+        className={`md: fixed bottom-0 left-1/2 z-50 flex h-[85dvh] w-[600px] max-w-[100vw] -translate-x-1/2 flex-col justify-between overflow-y-scroll rounded-t-xl  bg-gray-100 pt-6  transition-all duration-300 ease-out sm:left-auto sm:right-0 sm:top-0 sm:h-[100dvh] sm:rounded-l-xl sm:rounded-tr-none lg:h-[100dvh] ${
           filtersOpen
-            ? "translate-x-0 opacity-100"
-            : "translate-x-full opacity-0"
+            ? "translate-y-0 opacity-100 sm:translate-x-0"
+            : "translate-y-full opacity-0 sm:translate-x-full sm:translate-y-0"
         }`}
       >
-        <div className="flex justify-between">
-          <h2 className="mb-2 text-2xl font-medium">Filters</h2>
+        <div className="flex justify-between px-4 sm:px-8">
+          <h2 className="mb-2  text-2xl font-medium">Filters</h2>
           <button onClick={toggleFiltersOpen} className="text-2xl">
             <IoClose />
           </button>
         </div>
 
-        <ul className="flex min-w-full flex-grow flex-col gap-8 overflow-y-auto py-4">
-          <ChosenFilters />
-
+        <ul className="flex min-w-full flex-grow flex-col gap-4 divide-y overflow-y-auto px-4 py-4 sm:gap-8 sm:px-8">
+          <ChosenFilters className={"px-4 sm:px-8"} />
           <FilterGrouping title={"Dates"}>
             <div className="flex  gap-4">
               <InputGroup
@@ -116,7 +116,7 @@ export default function FiltersSection({ onSubmit }) {
             />
           </FilterGrouping>
           <FilterGrouping title={"Amenities"}>
-            <div className="grid grid-cols-2 sm:grid-cols-4">
+            <div className="mx-auto grid grid-cols-2 gap-x-16 gap-y-8 sm:grid-cols-4">
               <CheckBoxGroup
                 type="checkbox"
                 name="pets"
@@ -164,9 +164,11 @@ export default function FiltersSection({ onSubmit }) {
             />
           </FilterGrouping>
         </ul>
-        <Button onClick={handleUpdate} className="w-full">
-          Apply Updated Filters
-        </Button>
+        <div className="border-t p-4">
+          <Button onClick={handleUpdate} className="w-full">
+            Apply Updated Filters
+          </Button>
+        </div>
       </div>
     </>
   );

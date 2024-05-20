@@ -2,7 +2,7 @@ import { useBoundStore } from "../../stores/store";
 import { cn } from "../../utils/utils";
 import { Button } from "../ui/button";
 
-export function ChosenFilters() {
+export function ChosenFilters({ className }) {
   const {
     maxGuests,
     maxPrice,
@@ -40,6 +40,7 @@ export function ChosenFilters() {
       className={cn(
         "flex max-w-full flex-col  gap-4",
         !hasBeenFiltered && "hidden",
+        className,
       )}
     >
       <div className="flex gap-2 overflow-x-auto">
@@ -93,7 +94,7 @@ export function ChosenFilters() {
 
 export function ChosenFilterButton({ onDelete, children }) {
   return (
-    <div className="border-muted-foreground flex gap-2 rounded-full border bg-secondary px-4 py-2 text-sm text-primary">
+    <div className="flex gap-2 rounded-full border border-muted-foreground bg-secondary px-4 py-2 text-sm text-primary">
       <p className="flex text-nowrap">{children}</p>
       <button onClick={onDelete}>x</button>
     </div>

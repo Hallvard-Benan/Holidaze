@@ -1,6 +1,6 @@
 import useSearchVenues from "../hooks/useSearchVenues";
 import useAllVenues from "../hooks/useAllVenues";
-import Venues from "../components/Venues";
+import Venues, { PaginatedVenues } from "../components/Venues";
 import { Link, useSearchParams } from "react-router-dom";
 import { useEffect } from "react";
 import Container from "../components/ui/container";
@@ -12,6 +12,7 @@ import GridViewButtons from "../components/ui/grid-view-buttons";
 import Spinner from "../components/ui/spinner";
 import useInfiniteVenues from "../hooks/useInfiniteVenues";
 import { useBoundStore } from "../stores/store";
+import SkeletonVenues from "../components/Venues/loading";
 
 export function SearchedVenues({ search }) {
   const { data, error, status, fetchNextPage, isFetchingNextPage } =
@@ -24,20 +25,35 @@ export function SearchedVenues({ search }) {
     }
   }, [inView, fetchNextPage]);
 
-  if (status === "pending") return <div>...loading</div>;
-  if (status === "error") return <div>...error</div>;
-
+  if (status === "pending") return <SkeletonVenues />;
+  if (status === "error") {
+    return (
+      <div>
+        {error.message} {error.response.data.errors[0].message}
+      </div>
+    );
+  }
   return (
     <div className="grid gap-2">
-      {data.pages.map((page) => (
-        <Venues
-          key={page?.data.meta?.currentPage}
-          meta={page?.data.meta}
-          data={page.data.data}
-          error={error}
-          status={status}
-        />
-      ))}
+      <div className="flex gap-2">
+        <h1>
+          {data.pages[0].data.meta.totalCount} Results for: &rdquo;{search}
+          &rdquo;
+        </h1>
+        <Link to={"/venues"}>X</Link>
+      </div>
+
+      <VenuesGrid>
+        {data.pages.map((page) => (
+          <Venues
+            key={page?.data.meta?.currentPage}
+            meta={page?.data.meta}
+            data={page.data.data}
+            error={error}
+            status={status}
+          />
+        ))}
+      </VenuesGrid>
       <div ref={ref}>
         {isFetchingNextPage && (
           <div className="p-8">
@@ -57,7 +73,7 @@ export function FilteredVenues() {
     error,
     status,
     meta,
-    filteredData,
+    // filteredData,
     isFetchingNextPage,
     fetchNextPage,
   } = useInfiniteVenues();
@@ -68,32 +84,36 @@ export function FilteredVenues() {
     }
   }, [inView, fetchNextPage]);
 
-  if (status === "pending") return <div>...loading</div>;
-  if (status === "error") return <div>...error</div>;
-  return (
-    <div className="grid gap-2">
-      {data.pages.map((page) => {
-        const filteredData = filterVenues(page.data.data, filters);
-        console.log(filteredData);
-        return (
-          <Venues
-            key={page.data.meta.currentPage}
-            data={filteredData}
-            error={error}
-            status={status}
-            meta={page.data.meta}
-          />
-        );
-      })}
-      <div ref={ref}>
-        {isFetchingNextPage && (
-          <div className="p-8">
-            <Spinner />
-          </div>
-        )}
+  if (status === "pending") return <SkeletonVenues />;
+  if (status === "error") {
+    return (
+      <div>
+        {error.message} {error.response.data.errors[0].message}
       </div>
-    </div>
-  );
+    );
+  }
+  if (status === "success" && data)
+    return (
+      <VenuesGrid>
+        {data?.pages?.map((page) => {
+          const filteredData = filterVenues(page.data.data, filters);
+          return (
+            <Venues
+              key={page.data.meta.currentPage}
+              data={filteredData}
+              meta={page.data.meta}
+            />
+          );
+        })}
+        <div ref={ref}>
+          {isFetchingNextPage && (
+            <div className="p-8">
+              <Spinner />
+            </div>
+          )}
+        </div>
+      </VenuesGrid>
+    );
 }
 
 export default function VenuesPage() {
@@ -115,6 +135,25 @@ export default function VenuesPage() {
     document.title = "Holiday Helper | venues";
   }, []);
 
+  if (!hasBeenFiltered && !search)
+    return (
+      <Container>
+        <Container>
+          <div className="max-w-full sm:hidden">
+            <Search />
+          </div>
+          <div className="flex w-full items-center justify-between gap-2 overflow-hidden">
+            <GridViewButtons />
+            <div className="hidden w-full sm:flex">
+              <Search />
+            </div>
+            <FiltersSection />
+          </div>
+          <PaginatedVenues></PaginatedVenues>
+        </Container>
+      </Container>
+    );
+
   if (!search) {
     return (
       <Container>
@@ -135,7 +174,16 @@ export default function VenuesPage() {
 
   return (
     <Container>
-      <Link to={"/venues"}> clear</Link>
+      <div className="max-w-full sm:hidden">
+        <Search />
+      </div>
+      <div className="flex w-full items-center justify-between gap-2 overflow-hidden">
+        <GridViewButtons />
+        <div className="hidden w-full sm:flex">
+          <Search />
+        </div>
+        <FiltersSection />
+      </div>
       <SearchedVenues search={search} />{" "}
     </Container>
   );
@@ -164,4 +212,12 @@ function filterVenues(data, filters) {
   });
 
   return filteredVenues;
+}
+
+export function VenuesGrid({ children }) {
+  return (
+    <div className=" grid grid-cols-2 gap-4 md:grid-cols-3 xl:grid-cols-4">
+      {children}
+    </div>
+  );
 }

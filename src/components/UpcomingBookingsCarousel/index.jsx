@@ -19,7 +19,7 @@ export default function UpcomingBookingsCarousel() {
           No Upcoming trips yet
         </div>
         <div className="flex aspect-video w-full flex-col items-center gap-4">
-          <img src="/public/traveling-transparrent.png" alt="" />
+          <img src="/traveling-transparrent.png" alt="" />
           <Button>Browse destinations</Button>
         </div>
       </div>

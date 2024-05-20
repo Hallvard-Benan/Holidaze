@@ -9,8 +9,8 @@ import { useEffect } from "react";
 function App() {
   const user = useBoundStore((state) => state.user);
   const updateUser = useBoundStore((state) => state.updateUser);
+  const { data } = useUser(user?.name);
 
-  const { data } = useUser(user.name);
   useEffect(() => {
     if (data) {
       console.log("fetching my own user");
@@ -19,14 +19,15 @@ function App() {
   }, [data, updateUser]);
 
   return (
-    <div className="bg-background grid min-h-screen grid-rows-[auto,1fr,auto]">
-      <header>
+    <div className="grid h-[100dvh] bg-background ">
+      <header className="fixed bottom-0 z-50 w-full sm:bottom-auto">
         <NavBar />
       </header>
-      <main>
+
+      <main className="pb-8 sm:mt-[62px]">
         <Outlet />
       </main>
-      <footer>
+      <footer className="pb-[62px] sm:pb-0">
         <Footer />
       </footer>
     </div>

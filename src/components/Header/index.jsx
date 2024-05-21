@@ -38,7 +38,7 @@ export default function NavBar() {
 
   console.log("matches", matches);
 
-  const activeStyles = "text-primary underline";
+  const activeStyles = "text-primary";
 
   const currentPath = matches[1].pathname;
 
@@ -80,7 +80,9 @@ export default function NavBar() {
         >
           <p className="text-xs sm:text-base md:text-lg">New venue</p>{" "}
           <div className="flex size-8 items-center justify-center">
-            <FaPlus size={"20px"} />
+            <div className="size-[27px] sm:size-5">
+              <FaPlus size={"100%"} />
+            </div>
           </div>
         </NavLink>
       )}

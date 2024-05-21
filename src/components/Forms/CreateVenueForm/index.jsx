@@ -4,12 +4,22 @@ import { useBoundStore } from "../../../stores/store";
 import { InputGroup, TextAreaGroup } from "../../ui/inputGroup";
 import { Button } from "../../ui/button";
 import Spinner from "../../ui/spinner";
+import { useMultistepForm } from "../../../hooks/useMultiStepForm";
+import {
+  AmenitiesStep,
+  DetailsStep,
+  ImagesStep,
+  LocationStep,
+  ReviewStep,
+} from "./steps";
+import ProgressBar from "../../ui/progressBar";
 
 export default function CreateVenueForm({
   onSubmit,
   defaultValues,
   errors,
   status,
+  setError,
 }) {
   const { updateItem, updateMeta, updateLocation, updateVenueForm } =
     useBoundStore();
@@ -17,171 +27,77 @@ export default function CreateVenueForm({
     defaultValues ? defaultValues.media : [],
   );
 
+  const handleImagesChange = (newImages) => {
+    setImages(newImages);
+    updateItem({ media: newImages });
+  };
+  const steps = [
+    <DetailsStep
+      updateItem={updateItem}
+      defaultValues={defaultValues}
+      key={0}
+    />,
+    <AmenitiesStep
+      updateItem={updateItem}
+      updateMeta={updateMeta}
+      defaultValues={defaultValues}
+      key={1}
+    />,
+    <LocationStep
+      key={2}
+      updateLocation={updateLocation}
+      defaultValues={defaultValues}
+    />,
+    <ImagesStep
+      key={3}
+      handleImagesChange={handleImagesChange}
+      images={images}
+    />,
+    <ReviewStep key={4} />,
+  ];
+  const { step, goTo, back, next, currentStep, isFirstStep, isLastStep } =
+    useMultistepForm(steps);
+
   useEffect(() => {
     if (defaultValues) {
       updateVenueForm(defaultValues);
     }
   }, [defaultValues]);
 
-  const handleImagesChange = (newImages) => {
-    setImages(newImages);
-    updateItem({ media: newImages });
-  };
+  useEffect(() => {
+    if (!isLastStep) setError("");
+  }, [isLastStep]);
 
   return (
-    <form className="mx-auto grid w-calc gap-4" onSubmit={onSubmit}>
-      <InputGroup
-        onChange={(e) => updateItem({ name: e.currentTarget.value })}
-        required
-        label={"name"}
-        {...(defaultValues ? { defaultValue: defaultValues?.name } : {})}
-      />
-
-      <TextAreaGroup
-        required
-        onChange={(e) => updateItem({ description: e.currentTarget.value })}
-        label={"description"}
-        type="textarea"
-        {...(defaultValues ? { defaultValue: defaultValues?.description } : {})}
-      />
-
-      <InputGroup
-        required
-        onChange={(e) => updateItem({ price: parseInt(e.currentTarget.value) })}
-        label={"price"}
-        {...(defaultValues ? { defaultValue: defaultValues?.price } : {})}
-        type="number"
-      />
-
-      <InputGroup
-        required
-        onChange={(e) =>
-          updateItem({ maxGuests: parseInt(e.currentTarget.value) })
-        }
-        label={"Maximum number of guests"}
-        id={"maxGuests"}
-        {...(defaultValues ? { defaultValue: defaultValues.maxGuests } : {})}
-        type="number"
-        max={100}
-      />
-
-      <InputGroup
-        label={"rating"}
-        {...(defaultValues ? { defaultValue: defaultValues.rating } : {})}
-        onChange={(e) =>
-          updateItem({ rating: parseInt(e.currentTarget.value) })
-        }
-        type="number"
-        max={5}
-      />
-
-      <div>
-        <h3>Amenities</h3>
-        <div className="flex justify-evenly">
-          <InputGroup
-            label={"wifi"}
-            onChange={(e) => updateMeta({ wifi: e.currentTarget.checked })}
-            type="checkbox"
-            {...(defaultValues
-              ? { defaultChecked: defaultValues.meta.wifi }
-              : {})}
-          />
-          <InputGroup
-            label={"parking"}
-            {...(defaultValues
-              ? { defaultChecked: defaultValues.meta.parking }
-              : {})}
-            onChange={(e) => updateMeta({ parking: e.currentTarget.checked })}
-            type="checkbox"
-          />
-          <InputGroup
-            {...(defaultValues
-              ? { defaultChecked: defaultValues.meta.breakfast }
-              : {})}
-            label={"breakfast"}
-            onChange={(e) => updateMeta({ breakfast: e.currentTarget.checked })}
-            type="checkbox"
-          />
-          <InputGroup
-            label={"pets"}
-            type="checkbox"
-            {...(defaultValues
-              ? { defaultChecked: defaultValues.meta.pets }
-              : {})}
-            onChange={(e) => updateMeta({ pets: e.currentTarget.checked })}
-          />
+    <form className=" mx-auto mt-[0.5rem] grid h-[calc(100dvh-100px)] max-h-[100dvh] w-calc max-w-[800px] grid-rows-[1fr,auto] gap-4 rounded-xl bg-card p-8 sm:h-[calc(100dvh-80px)] ">
+      <div className="overflow-y-auto">{step}</div>
+      <div className="grid gap-4">
+        {errors && (
+          <div className="text-red-500">
+            {errors.map(({ message }, i) => (
+              <p key={i}>{message}</p>
+            ))}
+          </div>
+        )}
+        <ProgressBar max={steps.length} current={currentStep + 1} />
+        <div className="flex w-full justify-between">
+          <Button variant="outline" type="button" onClick={back}>
+            back
+          </Button>
+          <h2>
+            {currentStep + 1} / {steps.length}
+          </h2>
+          {!isLastStep ? (
+            <Button variant="outline" type="button" onClick={next}>
+              next
+            </Button>
+          ) : (
+            <Button disabled={!isLastStep} type="button" onClick={onSubmit}>
+              {status !== "pending" ? "Submit" : <Spinner />}
+            </Button>
+          )}
         </div>
       </div>
-
-      <div className="grid grid-cols-2 gap-2">
-        <InputGroup
-          {...(defaultValues
-            ? { defaultValue: defaultValues.location.address }
-            : {})}
-          label={"address"}
-          onChange={(e) => updateLocation({ address: e.currentTarget.value })}
-        />
-        <InputGroup
-          {...(defaultValues
-            ? { defaultValue: defaultValues.location.city }
-            : {})}
-          label={"city"}
-          onChange={(e) => updateLocation({ city: e.currentTarget.value })}
-        />
-        <InputGroup
-          label={"zip"}
-          {...(defaultValues
-            ? { defaultValue: defaultValues.location.zip }
-            : {})}
-          onChange={(e) => updateLocation({ zip: e.currentTarget.value })}
-        />
-        <InputGroup
-          {...(defaultValues
-            ? { defaultValue: defaultValues.location.country }
-            : {})}
-          label={"country"}
-          onChange={(e) => updateLocation({ country: e.currentTarget.value })}
-        />
-        <InputGroup
-          label={"continent"}
-          {...(defaultValues
-            ? { defaultValue: defaultValues.location.continent }
-            : {})}
-          onChange={(e) => updateLocation({ continent: e.currentTarget.value })}
-        />
-      </div>
-
-      <InputGroup
-        label={"latitude"}
-        {...(defaultValues ? { defaultValue: defaultValues.location.lat } : {})}
-        onChange={(e) =>
-          updateLocation({ lat: parseInt(e.currentTarget.value) })
-        }
-        type="number"
-      />
-
-      <InputGroup
-        label={"longitude"}
-        {...(defaultValues ? { defaultValue: defaultValues.location.lng } : {})}
-        onChange={(e) =>
-          updateLocation({ lng: parseInt(e.currentTarget.value) })
-        }
-        type="number"
-      />
-
-      <Images images={images} onImagesChange={handleImagesChange} />
-
-      {errors && (
-        <div className="text-red-500">
-          {errors.map(({ message }, i) => (
-            <p key={i}>{message}</p>
-          ))}
-        </div>
-      )}
-
-      <Button type="submit">
-        {status === "pending" ? <Spinner></Spinner> : "Submit"}
-      </Button>
     </form>
   );
 }

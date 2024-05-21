@@ -17,6 +17,7 @@ const InputGroup = React.forwardRef(
       placeholder,
       onBlur,
       type,
+      className,
       success,
       description,
       ...props
@@ -46,6 +47,7 @@ const InputGroup = React.forwardRef(
             errorMessage && "border-destructive",
             success && "border-green-500",
             "h-[48px]",
+            className,
           )}
         />
         {description && (
@@ -72,8 +74,8 @@ const TextAreaGroup = React.forwardRef(
       value,
       required,
       placeholder,
+      className,
       onBlur,
-      type,
       success,
       description,
       ...props
@@ -81,7 +83,7 @@ const TextAreaGroup = React.forwardRef(
     ref,
   ) => {
     return (
-      <div className="grid justify-items-center gap-2">
+      <div className="grid  gap-2">
         <Label htmlFor={id ? id : label}>
           {required && <span className="text-muted-foreground">*</span>}
           {label}
@@ -92,18 +94,18 @@ const TextAreaGroup = React.forwardRef(
           ref={ref}
           id={id ? id : label}
           name={id ? id : label}
-          type={type ? type : "text"}
           autoComplete={autocomplete}
           onChange={onChange}
           value={value}
           required={required}
           placeholder={placeholder}
           onBlur={onBlur}
-          className={
-            (errorMessage && "border-destructive") ||
-            (success && "border-green-500") ||
-            ""
-          }
+          className={cn(
+            "w-full rounded-md border border-input bg-background px-3 py-2 text-base",
+            errorMessage && "border-destructive",
+            success && "border-green-500",
+            className,
+          )}
         />
         {description && (
           <p className="text-sm text-muted-foreground">{description}</p>

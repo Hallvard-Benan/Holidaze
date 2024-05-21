@@ -4,18 +4,18 @@ import { useBoundStore } from "../stores/store";
 
 export default function CreateVenuePage() {
   const venueFormData = useBoundStore((state) => state.venueFormData);
-  const { createVenueMutation } = useCreateVenue();
+  const { createVenueMutation, error, setError } = useCreateVenue();
   const handleCreateVenue = (e) => {
     e.preventDefault();
-
     createVenueMutation.mutate(venueFormData);
   };
 
   return (
     <CreateVenueForm
       onSubmit={handleCreateVenue}
-      errors={createVenueMutation.response?.data?.errors}
+      errors={error?.response?.data?.errors}
       status={createVenueMutation.status}
+      setError={setError}
     />
   );
 }

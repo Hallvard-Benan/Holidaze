@@ -24,7 +24,7 @@ function App() {
         <NavBar />
       </header>
 
-      <main className="pb-8 sm:mt-[62px]">
+      <main className="pb-8 sm:mt-[64px]">
         <Outlet />
       </main>
       <footer className="pb-[62px] sm:pb-0">

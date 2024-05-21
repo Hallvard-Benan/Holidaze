@@ -65,6 +65,12 @@ export const createFilterSlice = (set, get) => ({
     });
   },
 
+  cancelFilterForm: () => {
+    set((state) => {
+      state.filterForm = state.filters;
+    });
+  },
+
   decreaseGuests: () => {
     set((state) => {
       if (state.guests === 1) return;

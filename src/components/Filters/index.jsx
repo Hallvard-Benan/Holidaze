@@ -9,6 +9,7 @@ import PriceSlider from "../ui/price-slider";
 import { CheckBoxGroup, InputGroup } from "../ui/inputGroup";
 import { useEffect } from "react";
 import { ChosenFilters } from "../ChosenFilters";
+import AreYouSure from "../ui/areYouSure";
 
 export function FilterGrouping({ children, title }) {
   return (
@@ -33,6 +34,8 @@ export default function FiltersSection({ onSubmit }) {
   const updateParking = useBoundStore((state) => state.updateParking);
   const updateWifi = useBoundStore((state) => state.updateWifi);
   const updateBreakfast = useBoundStore((state) => state.updateBreakfast);
+  const cancelFilterForm = useBoundStore((state) => state.cancelFilterForm);
+  const filters = useBoundStore((state) => state.filters);
 
   const handleUpdate = () => {
     updateFilters();
@@ -46,15 +49,15 @@ export default function FiltersSection({ onSubmit }) {
   }, [filtersOpen]);
 
   const numOfFilters =
-    (filterForm.maxGuests > 1 ? 1 : 0) +
-    (filterForm.maxPrice < 10000 ? 1 : 0) +
-    (filterForm.minPrice > 1 ? 1 : 0) +
-    (filterForm.pets ? 1 : 0) +
-    (filterForm.parking ? 1 : 0) +
-    (filterForm.wifi ? 1 : 0) +
-    (filterForm.breakfast ? 1 : 0) +
-    (filterForm.dateFrom ? 1 : 0) +
-    (filterForm.dateTo ? 1 : 0);
+    (filters.maxGuests > 1 ? 1 : 0) +
+    (filters.maxPrice < 10000 ? 1 : 0) +
+    (filters.minPrice > 1 ? 1 : 0) +
+    (filters.pets ? 1 : 0) +
+    (filters.parking ? 1 : 0) +
+    (filters.wifi ? 1 : 0) +
+    (filters.breakfast ? 1 : 0) +
+    (filters.dateFrom ? 1 : 0) +
+    (filters.dateTo ? 1 : 0);
 
   return (
     <>
@@ -70,15 +73,32 @@ export default function FiltersSection({ onSubmit }) {
         <p>Filters</p>
         <IoFilter />
       </Button>
-      <div
-        className={cn(
-          ` fixed left-0 top-0 z-40 h-screen w-screen overflow-auto bg-gray-700 opacity-0 transition-opacity duration-500 ${
-            filtersOpen ? "opacity-50" : "pointer-events-none opacity-0"
-          }`,
-        )}
-        onClick={toggleFiltersOpen}
-      ></div>
-
+      {Object.entries(filterForm).toString() !==
+      Object.entries(filters).toString() ? (
+        <AreYouSure
+          buttonText={<IoClose />}
+          title={"Save changes?"}
+          description={"Do you want to apply the filters before you exit?"}
+          onConfirm={handleUpdate}
+          onCancel={toggleFiltersOpen}
+          cancelText={"Discard"}
+          className={cn(
+            ` fixed left-0 top-0 z-40 h-screen w-screen overflow-auto bg-gray-700 opacity-0 transition-opacity duration-500 ${
+              filtersOpen ? "opacity-50" : "pointer-events-none opacity-0"
+            }`,
+          )}
+          confirmText={"Apply"}
+        />
+      ) : (
+        <div
+          className={cn(
+            ` fixed left-0 top-0 z-40 h-screen w-screen overflow-auto bg-gray-700 opacity-0 transition-opacity duration-500 ${
+              filtersOpen ? "opacity-50" : "pointer-events-none opacity-0"
+            }`,
+          )}
+          onClick={toggleFiltersOpen}
+        ></div>
+      )}
       <div
         className={`md: fixed bottom-0 left-1/2 z-50 flex h-[85dvh] w-[600px] max-w-[100vw] -translate-x-1/2 flex-col justify-between overflow-y-scroll rounded-t-xl  bg-gray-100 pt-6  transition-all duration-300 ease-out sm:left-auto sm:right-0 sm:top-0 sm:h-[100dvh] sm:rounded-l-xl sm:rounded-tr-none lg:h-[100dvh] ${
           filtersOpen
@@ -88,9 +108,23 @@ export default function FiltersSection({ onSubmit }) {
       >
         <div className="flex justify-between px-4 sm:px-8">
           <h2 className="mb-2  text-2xl font-medium">Filters</h2>
-          <button onClick={toggleFiltersOpen} className="text-2xl">
-            <IoClose />
-          </button>
+          {Object.entries(filterForm).toString() !==
+          Object.entries(filters).toString() ? (
+            <AreYouSure
+              buttonText={<IoClose />}
+              title={"Save changes?"}
+              description={"Do you want to apply the filters before you exit?"}
+              onConfirm={handleUpdate}
+              onCancel={toggleFiltersOpen}
+              className={"bg-inherit text-inherit "}
+              confirmText={"Apply"}
+              cancelText={"Discard"}
+            />
+          ) : (
+            <button type="button" onClick={toggleFiltersOpen}>
+              <IoClose />
+            </button>
+          )}
         </div>
 
         <ul className="flex min-w-full flex-grow flex-col gap-4 divide-y overflow-y-auto px-4 py-4 sm:gap-8 sm:px-8">

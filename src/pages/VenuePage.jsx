@@ -28,6 +28,7 @@ import useUpdateVenue from "../hooks/useUpdateVenue";
 import { ImageCarousel } from "../components/ui/imageCarousel";
 import AmenityIcons from "../components/ui/amenetiesIcons";
 import { Separator } from "../components/ui/seperator";
+import AreYouSure from "../components/ui/areYouSure";
 
 export async function loader({ params }) {
   const id = params.venueId;
@@ -123,7 +124,7 @@ export default function VenuePage() {
   }
 
   return (
-    <div className="md:w-calc-md mx-auto w-calc">
+    <div className="mx-auto w-calc md:w-calc-md">
       {isMyVenue && (
         <>
           <Button onClick={() => setIsUpdating((prev) => !prev)}>Update</Button>
@@ -135,30 +136,14 @@ export default function VenuePage() {
               onSubmit={handleEdit}
             />
           )}
-          <AlertDialog>
-            <AlertDialogTrigger variant="destructive">
-              Delete this venue
-            </AlertDialogTrigger>
-            <AlertDialogContent>
-              <AlertDialogHeader>
-                <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
-                <AlertDialogDescription>
-                  This action cannot be undone. This will permanently delete
-                  this venue
-                </AlertDialogDescription>
-              </AlertDialogHeader>
-              <AlertDialogFooter>
-                <AlertDialogCancel>Cancel</AlertDialogCancel>
-                <AlertDialogAction onClick={handleDelete}>
-                  {deleteMutation.status === "pending" ? (
-                    <Spinner></Spinner>
-                  ) : (
-                    "Continue"
-                  )}
-                </AlertDialogAction>
-              </AlertDialogFooter>
-            </AlertDialogContent>
-          </AlertDialog>
+          <AreYouSure
+            buttonText={"Delete this venue"}
+            title={"Are you absolutely sure?"}
+            description=" This action cannot be undone. This will permanently delete this venue"
+            onConfirm={handleDelete}
+            className={"bg-destructive"}
+            status={deleteMutation.status}
+          />
           bookings:
           {post.bookings.map((booking) => (
             <div className="bg-card p-6" key={booking.id}>
@@ -192,7 +177,7 @@ export default function VenuePage() {
         <div className="flex justify-between">
           <p className="text-2xl font-semibold">
             {post.price} kr /{" "}
-            <span className="text-muted-foreground font-normal">night</span>
+            <span className="font-normal text-muted-foreground">night</span>
           </p>
           <p className="flex items-center gap-2">
             <FaRegStar /> {post.rating}
@@ -234,7 +219,7 @@ export default function VenuePage() {
               <AmenityIcons meta={post.meta} maxGuests={post.maxGuests} />
               <div
                 className={cn(
-                  " bg-card grid w-full gap-2 overflow-hidden rounded-md p-2",
+                  " grid w-full gap-2 overflow-hidden rounded-md bg-card p-2",
                   fullDescription && "h-auto",
                 )}
               >

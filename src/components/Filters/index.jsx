@@ -78,13 +78,15 @@ export default function FiltersSection({ onSubmit }) {
         <AreYouSure
           buttonText={<IoClose />}
           title={"Save changes?"}
-          description={"Do you want to apply the filters before you exit?"}
+          description={"Do you want to apply the filters before you?"}
           onConfirm={handleUpdate}
           onCancel={toggleFiltersOpen}
           cancelText={"Discard"}
           className={cn(
             ` fixed left-0 top-0 z-40 h-screen w-screen overflow-auto bg-gray-700 opacity-0 transition-opacity duration-500 ${
-              filtersOpen ? "opacity-50" : "pointer-events-none opacity-0"
+              filtersOpen
+                ? "rounded-none opacity-50 hover:opacity-50"
+                : "pointer-events-none opacity-0"
             }`,
           )}
           confirmText={"Apply"}
@@ -113,7 +115,7 @@ export default function FiltersSection({ onSubmit }) {
             <AreYouSure
               buttonText={<IoClose />}
               title={"Save changes?"}
-              description={"Do you want to apply the filters before you exit?"}
+              description={"Do you want to apply the filters before you?"}
               onConfirm={handleUpdate}
               onCancel={toggleFiltersOpen}
               className={"bg-inherit text-inherit "}

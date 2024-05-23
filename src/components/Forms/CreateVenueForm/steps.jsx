@@ -4,65 +4,78 @@ import { FaWifi } from "react-icons/fa6";
 import { CiParking1 } from "react-icons/ci";
 import { PiForkKnife, PiPawPrint, PiBed } from "react-icons/pi";
 import { FaRegStar } from "react-icons/fa";
+import { useState } from "react";
+import { useBoundStore } from "../../../stores/store";
+import NumberButtons from "../../ui/numberButtons";
 
-export function DetailsStep({ updateItem, defaultValues }) {
+export function DetailsStep({
+  updateItem,
+  defaultValues,
+  errorMessages,
+  maxGuests,
+  increaseItem,
+  decreaseItem,
+}) {
+  console.log(defaultValues);
   return (
     <FormStepContainer title={"Details"}>
-      {" "}
       <InputGroup
-        onChange={(e) => updateItem({ name: e.currentTarget.value })}
+        success={errorMessages?.name?.isValid}
+        onChange={(e) => {
+          updateItem({ name: e.currentTarget.value });
+        }}
         required
+        errorMessage={errorMessages?.name?.message}
         label="Name"
-        id={"name"}
-        {...(defaultValues ? { defaultValue: defaultValues?.name } : {})}
+        id="name"
+        value={defaultValues.name}
       />
       <TextAreaGroup
+        success={errorMessages?.description?.isValid}
+        errorMessage={errorMessages?.description?.message}
         required
         onChange={(e) => updateItem({ description: e.currentTarget.value })}
         id={"description"}
         label="Description"
         type="textarea"
-        {...(defaultValues ? { defaultValue: defaultValues?.description } : {})}
+        value={defaultValues.description}
       />
       <InputGroup
+        errorMessage={errorMessages?.price?.message}
+        success={errorMessages?.price?.isValid}
         required
         onChange={(e) => updateItem({ price: parseInt(e.currentTarget.value) })}
         id={"price"}
         label="Price"
-        {...(defaultValues ? { defaultValue: defaultValues?.price } : {})}
         type="number"
+        value={defaultValues.price}
       />
-      <InputGroup
-        required
-        onChange={(e) =>
-          updateItem({ maxGuests: parseInt(e.currentTarget.value) })
-        }
-        label={"Maximum number of guests"}
-        id={"maxGuests"}
-        {...(defaultValues ? { defaultValue: defaultValues.maxGuests } : {})}
-        type="number"
-        max={100}
+      <NumberButtons
+        value={maxGuests}
+        onIncrease={() => increaseItem("maxGuests")}
+        onDecrease={() => decreaseItem("maxGuests")}
       />
     </FormStepContainer>
   );
 }
 
-export function AmenitiesStep({ updateItem, defaultValues, updateMeta }) {
+export function AmenitiesStep({
+  defaultValues,
+  updateMeta,
+  increaseItem,
+  decreaseItem,
+  rating,
+}) {
   return (
     <FormStepContainer title={"Amenities"}>
       <div>
         <IconContainer>
           <FaRegStar />
         </IconContainer>
-        <InputGroup
-          id={"rating"}
-          label="Rating"
-          {...(defaultValues ? { defaultValue: defaultValues.rating } : {})}
-          onChange={(e) =>
-            updateItem({ rating: parseInt(e.currentTarget.value) })
-          }
-          type="number"
-          max={5}
+        <NumberButtons
+          value={rating}
+          onIncrease={() => increaseItem("rating")}
+          onDecrease={() => decreaseItem("rating")}
         />
       </div>
 
@@ -77,9 +90,7 @@ export function AmenitiesStep({ updateItem, defaultValues, updateMeta }) {
               label="Wifi"
               onChange={(e) => updateMeta({ wifi: e.currentTarget.checked })}
               type="checkbox"
-              {...(defaultValues
-                ? { defaultChecked: defaultValues.meta.wifi }
-                : {})}
+              checked={defaultValues.meta.wifi}
             />
           </AmenityContainer>
           <AmenityContainer>
@@ -89,9 +100,7 @@ export function AmenitiesStep({ updateItem, defaultValues, updateMeta }) {
             <InputGroup
               id={"parking"}
               label="Parking"
-              {...(defaultValues
-                ? { defaultChecked: defaultValues.meta.parking }
-                : {})}
+              checked={defaultValues.meta.parking}
               onChange={(e) => updateMeta({ parking: e.currentTarget.checked })}
               type="checkbox"
             />
@@ -101,9 +110,7 @@ export function AmenitiesStep({ updateItem, defaultValues, updateMeta }) {
               <PiBed />
             </IconContainer>
             <InputGroup
-              {...(defaultValues
-                ? { defaultChecked: defaultValues.meta.breakfast }
-                : {})}
+              checked={defaultValues.meta.breakfast}
               id={"breakfast"}
               label="Breakfast"
               onChange={(e) =>
@@ -120,9 +127,7 @@ export function AmenitiesStep({ updateItem, defaultValues, updateMeta }) {
               id={"pets"}
               type="checkbox"
               label="Pets"
-              {...(defaultValues
-                ? { defaultChecked: defaultValues.meta.pets }
-                : {})}
+              checked={defaultValues.meta.pets}
               onChange={(e) => updateMeta({ pets: e.currentTarget.checked })}
             />
           </AmenityContainer>
@@ -138,17 +143,13 @@ export function LocationStep({ updateLocation, defaultValues }) {
       <div className="grid grid-cols-2 gap-2">
         <InputGroup
           className="w-22"
-          {...(defaultValues
-            ? { defaultValue: defaultValues.location.address }
-            : {})}
+          value={defaultValues.location.address}
           id={"address"}
           label="Address"
           onChange={(e) => updateLocation({ address: e.currentTarget.value })}
         />
         <InputGroup
-          {...(defaultValues
-            ? { defaultValue: defaultValues.location.city }
-            : {})}
+          value={defaultValues.location.city}
           id={"city"}
           label="City"
           onChange={(e) => updateLocation({ city: e.currentTarget.value })}
@@ -156,15 +157,11 @@ export function LocationStep({ updateLocation, defaultValues }) {
         <InputGroup
           id={"zip"}
           label="Zip Code"
-          {...(defaultValues
-            ? { defaultValue: defaultValues.location.zip }
-            : {})}
+          value={defaultValues.location.zip}
           onChange={(e) => updateLocation({ zip: e.currentTarget.value })}
         />
         <InputGroup
-          {...(defaultValues
-            ? { defaultValue: defaultValues.location.country }
-            : {})}
+          value={defaultValues.location.country}
           id={"country"}
           label="Country"
           onChange={(e) => updateLocation({ country: e.currentTarget.value })}
@@ -172,16 +169,14 @@ export function LocationStep({ updateLocation, defaultValues }) {
         <InputGroup
           id={"continent"}
           label="Continent"
-          {...(defaultValues
-            ? { defaultValue: defaultValues.location.continent }
-            : {})}
+          value={defaultValues.location.continent}
           onChange={(e) => updateLocation({ continent: e.currentTarget.value })}
         />
       </div>
       <InputGroup
         id={"latitude"}
-        label="Longitude"
-        {...(defaultValues ? { defaultValue: defaultValues.location.lat } : {})}
+        label="Latitude"
+        value={defaultValues.location.lat}
         onChange={(e) =>
           updateLocation({ lat: parseInt(e.currentTarget.value) })
         }
@@ -190,8 +185,8 @@ export function LocationStep({ updateLocation, defaultValues }) {
 
       <InputGroup
         id={"longitude"}
-        label="Latitude"
-        {...(defaultValues ? { defaultValue: defaultValues.location.lng } : {})}
+        label="Longitude"
+        value={defaultValues.location.lng}
         onChange={(e) =>
           updateLocation({ lng: parseInt(e.currentTarget.value) })
         }

@@ -138,19 +138,17 @@ export default function VenuesPage() {
   if (!hasBeenFiltered && !search)
     return (
       <Container>
-        <Container>
-          <div className="max-w-full sm:hidden">
+        <div className="max-w-full sm:hidden">
+          <Search />
+        </div>
+        <div className="flex w-full items-center justify-between gap-2 overflow-hidden">
+          <GridViewButtons />
+          <div className="hidden w-full sm:flex">
             <Search />
           </div>
-          <div className="flex w-full items-center justify-between gap-2 overflow-hidden">
-            <GridViewButtons />
-            <div className="hidden w-full sm:flex">
-              <Search />
-            </div>
-            <FiltersSection />
-          </div>
-          <PaginatedVenues></PaginatedVenues>
-        </Container>
+          <FiltersSection />
+        </div>
+        <PaginatedVenues />
       </Container>
     );
 

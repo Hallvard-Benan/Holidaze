@@ -16,6 +16,7 @@ import { FaPlus } from "react-icons/fa";
 
 import { cn } from "../../utils/utils";
 import Search from "../ui/search";
+import UserDropDown from "./menu";
 
 export default function NavBar() {
   const isLoggedIn = useBoundStore((state) => state.isLoggedIn);
@@ -36,8 +37,6 @@ export default function NavBar() {
 
   const matches = useMatches();
 
-  console.log("matches", matches);
-
   const activeStyles = "text-primary";
 
   const currentPath = matches[1].pathname;
@@ -52,7 +51,12 @@ export default function NavBar() {
         : routes.find((item) => currentPath.includes(item));
 
   return (
-    <nav className=" mx-auto grid grid-cols-4 items-center justify-between justify-items-center bg-card py-2 text-xl sm:flex sm:px-4 md:w-calc">
+    <nav
+      className={cn(
+        " relative mx-auto grid grid-cols-4 items-center justify-between justify-items-center bg-card py-2 text-xl sm:flex sm:px-4 ",
+        currentPath === "/" && !isLoggedIn && "sm:bg-transparent ",
+      )}
+    >
       <NavLink
         to={"/"}
         className={cn(
@@ -70,22 +74,26 @@ export default function NavBar() {
         <p className="text-xs sm:hidden">Home</p>{" "}
       </NavLink>
 
-      {user.venueManager && (
-        <NavLink
-          className={cn(
-            "flex flex-col-reverse items-center gap-1 rounded-full bg-transparent p-2 text-muted-foreground sm:flex-row sm:gap-2 sm:bg-primary sm:px-4 sm:py-1.5 sm:text-primary-foreground",
-            activeRoute === "new-venue" && activeStyles,
-          )}
-          to={"/new-venue"}
-        >
-          <p className="text-xs sm:text-base md:text-lg">New venue</p>{" "}
-          <div className="flex size-8 items-center justify-center">
-            <div className="size-[27px] sm:size-5">
-              <FaPlus size={"100%"} />
-            </div>
+      <NavLink
+        className={cn(
+          "flex flex-col-reverse items-center gap-1 rounded-full bg-transparent p-2 text-muted-foreground sm:flex-row sm:gap-2 sm:bg-primary sm:px-4 sm:py-1.5 sm:text-primary-foreground",
+          activeRoute === "new-venue" && activeStyles,
+        )}
+        to={
+          isLoggedIn && user.venueManager
+            ? "/new-venue"
+            : !isLoggedIn
+              ? "/auth/register"
+              : "/become-host"
+        }
+      >
+        <p className="text-xs sm:text-base md:text-lg">New venue</p>{" "}
+        <div className="flex size-8 items-center justify-center">
+          <div className="size-[27px] sm:size-5">
+            <FaPlus size={"100%"} />
           </div>
-        </NavLink>
-      )}
+        </div>
+      </NavLink>
 
       <NavLink
         to={"/venues"}
@@ -101,81 +109,27 @@ export default function NavBar() {
       </NavLink>
 
       <div className="flex items-center gap-4">
-        <div className="hidden w-60 md:block">
+        <div className=" hidden w-60 md:block">
           <Search onSearch={handleSearch} variant="header" />
         </div>
-        {isLoggedIn ? (
-          <DropdownMenu>
-            <DropdownMenuTrigger
-              className={cn(
-                "flex flex-col items-center gap-1 text-xs text-muted-foreground sm:flex-row",
-                activeRoute === "profiles" && activeStyles,
-              )}
-            >
-              <div
-                className={cn(
-                  "flex size-8  items-center justify-center rounded-full border border-primary sm:size-[2.8rem]",
-                )}
-              >
-                <img
-                  className="size-8 rounded-full object-cover sm:size-10"
-                  src={
-                    status === "success"
-                      ? data.data.data.avatar.url
-                      : user.avatar.url
-                  }
-                />
-              </div>
-              <p className="sm:hidden ">Profile</p>{" "}
-            </DropdownMenuTrigger>
-            <DropdownMenuContent className="flex flex-col-reverse gap-1 md:flex-col ">
-              <Link to={`/profiles/${user.name}`}>
-                <DropdownMenuItem className="flex flex-col hover:cursor-pointer md:flex-col-reverse">
-                  <div className="flex items-center gap-1 px-6">
-                    <p>My Profile</p> <LuUser2></LuUser2>
-                  </div>
-                  <div className="grid justify-items-center text-muted-foreground">
-                    <p>{user.name}</p>
-                  </div>
-                </DropdownMenuItem>
-              </Link>
-              <DropdownMenuSeparator />
-              {user.venueManager && (
-                <Link to={`/profiles/${user.name}/venues`}>
-                  <DropdownMenuItem className="px-8 hover:cursor-pointer">
-                    My Venues
-                  </DropdownMenuItem>
-                </Link>
-              )}
-              <DropdownMenuSeparator />
-              <Link to={`/profiles/${user.name}/bookings`}>
-                <DropdownMenuItem className="px-8 hover:cursor-pointer">
-                  My bookings
-                </DropdownMenuItem>
-              </Link>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem
-                data-cy="logout-button"
-                className="px-8 text-destructive hover:cursor-pointer"
-                onClick={handleLogout}
-              >
-                Logout <FiLogOut />
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
-        ) : (
+        <UserDropDown
+          user={user}
+          handleLogout={handleLogout}
+          activeRoute={activeRoute}
+          activeStyles={activeStyles}
+          isLoggedIn={isLoggedIn}
+        />
+        {!isLoggedIn && (
           <>
-            {" "}
             <NavLink
-              className={cn(" px-4 py-2 text-primary")}
+              className={cn(" hidden px-4 py-2 text-primary sm:flex")}
               to={"/auth/login"}
             >
               Login
             </NavLink>
             <NavLink
               className={cn(
-                ({ isActive }) => (isActive ? "font-bold" : "", "bg-primary"),
-                "rounded-full bg-primary px-4 py-2 text-primary-foreground",
+                "hidden rounded-full bg-primary px-4 py-2 text-primary-foreground sm:flex",
               )}
               to={"/auth/register"}
             >

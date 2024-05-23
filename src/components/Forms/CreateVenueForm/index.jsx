@@ -1,7 +1,5 @@
 import { useEffect, useState } from "react";
-import Images from "../Images";
 import { useBoundStore } from "../../../stores/store";
-import { InputGroup, TextAreaGroup } from "../../ui/inputGroup";
 import { Button } from "../../ui/button";
 import Spinner from "../../ui/spinner";
 import { useMultistepForm } from "../../../hooks/useMultiStepForm";
@@ -20,41 +18,75 @@ export default function CreateVenueForm({
   errors,
   status,
   setError,
+  updateItem,
+  updateMeta,
+  updateLocation,
+  updateVenueForm,
+  venueFormData,
+  decreaseItem,
+  increaseItem,
 }) {
-  const { updateItem, updateMeta, updateLocation, updateVenueForm } =
-    useBoundStore();
-  const [images, setImages] = useState(
-    defaultValues ? defaultValues.media : [],
-  );
+  useEffect(() => {
+    if (defaultValues) console.log(defaultValues.media);
+  }, [defaultValues]);
+
+  const [errorMessages, setErrorMessages] = useState({});
+
+  function validateRequired(input, fieldName, message) {
+    let isValid = true;
+    if (typeof input === "string" && input.trim() === "") {
+      isValid = false;
+    } else if (!input) {
+      isValid = false;
+    }
+
+    setErrorMessages((prev) => ({
+      ...prev,
+      [fieldName]: {
+        isValid,
+        message: isValid ? "" : message,
+      },
+    }));
+
+    return isValid;
+  }
 
   const handleImagesChange = (newImages) => {
-    setImages(newImages);
     updateItem({ media: newImages });
   };
+
   const steps = [
     <DetailsStep
+      increaseItem={increaseItem}
+      decreaseItem={decreaseItem}
       updateItem={updateItem}
-      defaultValues={defaultValues}
+      maxGuests={venueFormData.maxGuests}
+      defaultValues={defaultValues ? defaultValues : venueFormData}
+      errorMessages={errorMessages}
       key={0}
     />,
     <AmenitiesStep
       updateItem={updateItem}
+      increaseItem={increaseItem}
+      decreaseItem={decreaseItem}
+      rating={venueFormData.rating}
       updateMeta={updateMeta}
-      defaultValues={defaultValues}
+      defaultValues={defaultValues ? defaultValues : venueFormData}
       key={1}
     />,
     <LocationStep
       key={2}
       updateLocation={updateLocation}
-      defaultValues={defaultValues}
+      defaultValues={defaultValues ? defaultValues : venueFormData}
     />,
     <ImagesStep
       key={3}
       handleImagesChange={handleImagesChange}
-      images={images}
+      images={venueFormData.media}
     />,
     <ReviewStep key={4} />,
   ];
+
   const { step, goTo, back, next, currentStep, isFirstStep, isLastStep } =
     useMultistepForm(steps);
 
@@ -68,8 +100,42 @@ export default function CreateVenueForm({
     if (!isLastStep) setError("");
   }, [isLastStep]);
 
+  const handleNext = () => {
+    if (validatePage(currentStep)) {
+      next();
+    }
+  };
+
+  function validatePage(step) {
+    let isValid = true;
+    if (step === 0) {
+      isValid &= validateRequired(
+        venueFormData.name,
+        "name",
+        "Please Write the name of the venue",
+      );
+      isValid &= validateRequired(
+        venueFormData.description,
+        "description",
+        "A description is required",
+      );
+      isValid &= validateRequired(
+        venueFormData.price,
+        "price",
+        "Price is required",
+      );
+      isValid &= validateRequired(
+        venueFormData.maxGuests,
+        "maxGuests",
+        "Number of guests is required",
+      );
+    }
+    // Add validations for other steps if needed
+    return isValid;
+  }
+
   return (
-    <form className=" mx-auto mt-[0.5rem] grid h-[calc(100dvh-100px)] max-h-[100dvh] w-calc max-w-[800px] grid-rows-[1fr,auto] gap-4 rounded-xl bg-card p-8 sm:h-[calc(100dvh-80px)] ">
+    <form className="mx-auto mt-[0.5rem] grid h-[calc(100dvh-100px)] max-h-[100dvh] w-calc max-w-[800px] grid-rows-[1fr,auto] gap-4 rounded-xl bg-card p-8 sm:h-[calc(100dvh-80px)]">
       <div className="overflow-y-auto">{step}</div>
       <div className="grid gap-4">
         {errors && (
@@ -88,7 +154,7 @@ export default function CreateVenueForm({
             {currentStep + 1} / {steps.length}
           </h2>
           {!isLastStep ? (
-            <Button variant="outline" type="button" onClick={next}>
+            <Button variant="outline" type="button" onClick={handleNext}>
               next
             </Button>
           ) : (

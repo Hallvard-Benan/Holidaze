@@ -20,7 +20,7 @@ export default function PaginationSection({
   onChange,
 }) {
   return (
-    <Pagination className="flex flex-col items-center gap-2">
+    <Pagination className="flex max-w-fit flex-col items-center gap-2 overflow-y-hidden">
       <PaginationContent>
         <PaginationItem>
           <PaginationPrevious
@@ -29,14 +29,14 @@ export default function PaginationSection({
           />
         </PaginationItem>
 
-        <div className="mx-2 flex sm:hidden">
+        <div className=" flex sm:hidden">
           <PaginationItem>Page {current}</PaginationItem>
         </div>
 
         <div className="hidden sm:flex">
           <PaginationItem
             className={cn(
-              current === 1 && "text-primary-foreground bg-primary",
+              current === 1 && "bg-primary text-primary-foreground",
             )}
           >
             <PaginationLink onClick={() => onChange(1)}>1</PaginationLink>
@@ -59,7 +59,7 @@ export default function PaginationSection({
           {pageCount > 1 && (
             <PaginationItem
               className={cn(
-                current === pageCount && "text-primary-foreground bg-primary",
+                current === pageCount && "bg-primary text-primary-foreground",
               )}
             >
               <PaginationLink onClick={() => onChange(pageCount)}>
@@ -104,7 +104,7 @@ function MiddlePages({ pageCount, current, onChange }) {
     pages.push(
       <PaginationItem
         key={i}
-        className={cn(i === current && "text-primary-foreground bg-primary")}
+        className={cn(i === current && "bg-primary text-primary-foreground")}
       >
         <PaginationLink onClick={() => onChange(i)}>{i}</PaginationLink>
       </PaginationItem>,

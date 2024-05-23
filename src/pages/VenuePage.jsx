@@ -2,7 +2,7 @@ import { Link, useLoaderData } from "react-router-dom";
 import useSingleVenue from "../hooks/useSingleVenue";
 import { FaRegStar } from "react-icons/fa";
 import { MdVerifiedUser } from "react-icons/md";
-
+import { FaEdit } from "react-icons/fa";
 import Spinner from "../components/ui/spinner";
 
 import { useBoundStore } from "../stores/store";
@@ -10,17 +10,7 @@ import { useBoundStore } from "../stores/store";
 import BookingForm from "../components/Forms/BookingForm";
 import { Button } from "../components/ui/button";
 import { cn, formatDate } from "../utils/utils";
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogTrigger,
-} from "../components/ui/alert-dialog";
+
 import useDeleteVenue from "../hooks/useDeleteVenue";
 import { useEffect, useState } from "react";
 import CreateVenueForm from "../components/Forms/CreateVenueForm";
@@ -29,6 +19,14 @@ import { ImageCarousel } from "../components/ui/imageCarousel";
 import AmenityIcons from "../components/ui/amenetiesIcons";
 import { Separator } from "../components/ui/seperator";
 import AreYouSure from "../components/ui/areYouSure";
+import { CiCircleList } from "react-icons/ci";
+
+import {
+  DialogHeader,
+  DialogTrigger,
+  Dialog,
+  DialogContent,
+} from "../components/ui/dialog";
 
 export async function loader({ params }) {
   const id = params.venueId;
@@ -38,17 +36,28 @@ export async function loader({ params }) {
 export default function VenuePage() {
   const user = useBoundStore((state) => state.user);
   const isLoggedIn = useBoundStore((state) => state.isLoggedIn);
-  const updateVenueForm = useBoundStore((state) => state.updateVenueForm);
-  const venueFormData = useBoundStore((state) => state.venueFormData);
+
+  const editVenueFormData = useBoundStore((state) => state.editVenueFormData);
+  const updateEditItem = useBoundStore((state) => state.updateEditItem);
+  const updateEditMeta = useBoundStore((state) => state.updateEditMeta);
+  const updateEditLocation = useBoundStore((state) => state.updateEditLocation);
+  const updateEditVenueForm = useBoundStore(
+    (state) => state.updateEditVenueForm,
+  );
+  const decreaseEditItem = useBoundStore((state) => state.decreaseEditItem);
+  const increaseEditItem = useBoundStore((state) => state.increaseEditItem);
   const { deleteMutation } = useDeleteVenue();
   const { id } = useLoaderData();
-  const { updateVenueMutation } = useUpdateVenue({
+  const {
+    updateVenueMutation,
+    error: updateError,
+    setError: setUpdateError,
+  } = useUpdateVenue({
     id,
     onUpdateSuccess,
     setError,
   });
   const [isUpdating, setIsUpdating] = useState(false);
-  const [updateError, setUpdateError] = useState([]);
   const [fullDescription, setFullDescription] = useState(false);
 
   const { data, status, error } = useSingleVenue(id);
@@ -58,8 +67,8 @@ export default function VenuePage() {
   }, [data]);
 
   useEffect(() => {
-    if (data)
-      updateVenueForm({
+    if (data) {
+      updateEditVenueForm({
         name: data.data.data.name,
         description: data.data.data.description,
         media: data.data.data.media,
@@ -69,6 +78,7 @@ export default function VenuePage() {
         meta: data.data.data.meta,
         location: data.data.data.location,
       });
+    }
   }, [data]);
 
   if (status === "pending") return <Spinner />;
@@ -113,66 +123,134 @@ export default function VenuePage() {
 
   const handleEdit = (e) => {
     e.preventDefault();
-    updateVenueMutation.mutate({ id: post.id, body: venueFormData });
+    updateVenueMutation.mutate({ id: post.id, body: editVenueFormData });
   };
 
   function onUpdateSuccess() {
     setIsUpdating(false);
+    window.location.reload();
   }
   function setError(error) {
     setUpdateError(error);
   }
 
   return (
-    <div className="mx-auto w-calc md:w-calc-md">
+    <div className="mx-auto grid w-calc gap-16 md:w-calc-md">
       {isMyVenue && (
-        <>
-          <Button onClick={() => setIsUpdating((prev) => !prev)}>Update</Button>
-          {isUpdating && (
-            <CreateVenueForm
-              status={status}
-              errors={updateError}
-              defaultValues={venueFormData}
-              onSubmit={handleEdit}
+        <div
+          className={cn(
+            "flex flex-col justify-between gap-8 px-2 py-4 sm:flex-row",
+            isUpdating && "justify-center px-0",
+          )}
+        >
+          <div
+            className={cn(
+              "relative flex flex-col gap-4 sm:flex-row ",
+              isUpdating && "sm:flex-col",
+            )}
+          >
+            {" "}
+            <Button
+              variant="outline"
+              className={cn("gap-2", isUpdating && " z-10 ")}
+              onClick={() => setIsUpdating((prev) => !prev)}
+            >
+              {isUpdating ? "Cancel" : "Update"} {!isUpdating && <FaEdit />}
+            </Button>
+            <div
+              className={cn(
+                " pointer-events-none mx-auto flex size-0  justify-center opacity-0 transition-transform duration-300",
+                !isUpdating && " fixed size-0 -translate-y-full opacity-0",
+                isUpdating &&
+                  " pointer-events-auto size-auto w-full translate-y-0 opacity-100 transition-transform duration-300",
+              )}
+            >
+              {" "}
+              <CreateVenueForm
+                status={status}
+                errors={updateError?.response?.data?.errors}
+                onSubmit={handleEdit}
+                setError={setUpdateError}
+                updateItem={updateEditItem}
+                updateMeta={updateEditMeta}
+                updateLocation={updateEditLocation}
+                updateVenueForm={updateEditVenueForm}
+                venueFormData={editVenueFormData}
+                decreaseItem={decreaseEditItem}
+                increaseItem={increaseEditItem}
+              />
+            </div>
+            {post.bookings.length > 0 && !isUpdating && (
+              <Dialog>
+                <DialogTrigger asChild>
+                  <Button variant="outline" className="relative gap-2">
+                    See Bookings <CiCircleList size={"20px"} />{" "}
+                    <span className="absolute -right-0 top-0 flex size-6 -translate-y-1/2 translate-x-1/2 items-center justify-center rounded-full border bg-primary text-primary-foreground">
+                      {post.bookings.length}
+                    </span>
+                  </Button>
+                </DialogTrigger>
+                <DialogContent className="max-h-[95dvh] overflow-y-auto px-0">
+                  <DialogHeader className={"text-center"}>
+                    <h2 className="text-center text-xl">Bookings</h2>
+                  </DialogHeader>
+                  <div className="grid max-h-full divide-y overflow-y-auto ">
+                    {" "}
+                    {post.bookings.map((booking) => (
+                      <div
+                        className="grid w-full grid-cols-3 gap-4 bg-card py-4 md:p-6"
+                        key={booking.id}
+                      >
+                        <Link
+                          to={`/profiles/${booking.customer.name}`}
+                          className="flex flex-col items-center gap-2 sm:text-lg"
+                        >
+                          <h3>{booking.customer.name}</h3>
+                          <img
+                            src={booking.customer.avatar.url}
+                            alt={`${booking.customer.name}'s avatar`}
+                            className="size-10 rounded-full object-cover"
+                          />
+                        </Link>
+                        <p>
+                          <p className="text-sm md:text-base">Check in:</p>{" "}
+                          {formatDate(booking.dateFrom)}
+                        </p>
+                        <p>
+                          <p className="text-sm md:text-base">Check out</p>{" "}
+                          {formatDate(booking.dateTo)}
+                        </p>
+                      </div>
+                    ))}
+                  </div>
+                </DialogContent>
+              </Dialog>
+            )}
+          </div>
+          {!isUpdating && (
+            <AreYouSure
+              buttonText="Delete this venue"
+              title="Are you absolutely sure?"
+              description="This action cannot be undone. This will permanently delete this venue."
+              onConfirm={handleDelete}
+              className="bg-destructive"
+              status={deleteMutation.status}
             />
           )}
-          <AreYouSure
-            buttonText={"Delete this venue"}
-            title={"Are you absolutely sure?"}
-            description=" This action cannot be undone. This will permanently delete this venue"
-            onConfirm={handleDelete}
-            className={"bg-destructive"}
-            status={deleteMutation.status}
-          />
-          bookings:
-          {post.bookings.map((booking) => (
-            <div className="bg-card p-6" key={booking.id}>
-              <Link
-                to={`/profiles/${booking.customer.name}`}
-                className="flex gap-2 text-lg"
-              >
-                <h3>{booking.customer.name}</h3>
-                <img
-                  src={booking.customer.avatar.url}
-                  alt=""
-                  className="h-10 rounded-full"
-                />
-              </Link>
-
-              <p>
-                Booked from {formatDate(booking.dateFrom)} to{" "}
-                {formatDate(booking.dateTo)}
-              </p>
-            </div>
-          ))}
-        </>
+        </div>
       )}
+
       <div className="grid gap-8">
         <div className="flex justify-center">
           <ImageCarousel images={post.media} />
         </div>
-        <div className="flex justify-between">
+        <div className="flex flex-col gap-2">
           <h1 className="text-2xl md:text-3xl">{post.name}</h1>
+          {post.location.city && post.location.country && (
+            <p className="text-muted-foreground">
+              {post.location.city}, {post.location.country}
+            </p>
+          )}
         </div>
         <div className="flex justify-between">
           <p className="text-2xl font-semibold">

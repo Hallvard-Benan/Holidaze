@@ -7,11 +7,7 @@ import { useBoundStore } from "../../stores/store";
 import useAllVenues from "../../hooks/useAllVenues";
 import { useEffect } from "react";
 
-export default function Venues({ status, error, data, meta }) {
-  const updatePageNumber = useBoundStore((state) => state.updatePageNumber);
-  const updatePerPage = useBoundStore((state) => state.updatePerPage);
-  const perPage = useBoundStore((state) => state.paginationState.perPage);
-
+export default function Venues({ data }) {
   return (
     <>
       {data.map((item) => (
@@ -63,7 +59,7 @@ export function PaginatedVenues() {
 
   return (
     <>
-      <div className=" grid grid-cols-2 gap-4 md:grid-cols-3 xl:grid-cols-4">
+      <div className=" grid grid-cols-2 gap-4 overflow-hidden md:grid-cols-3 xl:grid-cols-4">
         {data?.data.data.map((item) => (
           <Card
             key={item.id}
@@ -78,7 +74,7 @@ export function PaginatedVenues() {
           />
         ))}
       </div>
-      <div>
+      <div className="grid">
         <PaginationSection
           onChange={handlePageChange}
           current={data.data.meta.currentPage}

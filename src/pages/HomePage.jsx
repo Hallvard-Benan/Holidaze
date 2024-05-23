@@ -29,15 +29,23 @@ export default function HomePage() {
   }, []);
 
   return (
-    <Container>
-      {!isLoggedIn ? <HeroSection /> : <Dashboard />}
-      <div className="grid gap-8">
-        <div className="flex justify-center">
-          <Search onSearch={handleSearch} />{" "}
-          <FiltersSection onSubmit={() => navigate("/venues")} />
+    <>
+      {!isLoggedIn ? (
+        <HeroSection />
+      ) : (
+        <Container>
+          <Dashboard />
+        </Container>
+      )}
+      <Container>
+        <div className="grid gap-8">
+          <div className="flex justify-center">
+            <Search onSearch={handleSearch} />{" "}
+            <FiltersSection onSubmit={() => navigate("/venues")} />
+          </div>
+          <NewVenues />
         </div>
-        <NewVenues />
-      </div>
-    </Container>
+      </Container>
+    </>
   );
 }

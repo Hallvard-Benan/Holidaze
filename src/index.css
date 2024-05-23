@@ -55,7 +55,7 @@
     @apply border-border;
   }
   body {
-    @apply bg-background text-foreground font-body;
+    @apply bg-background font-body text-foreground;
   }
 }
 
@@ -65,4 +65,10 @@ body {
 
 html {
   scrollbar-gutter: stable;
+  overflow-y: hidden;
 }
+
+/* body[data-scroll-locked="1"] header {
+  margin-right: 15px !important 
+;
+} */

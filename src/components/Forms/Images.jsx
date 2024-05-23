@@ -48,8 +48,8 @@ function Images({ images = [], onImagesChange }) {
   return (
     <div className="grid gap-3">
       <h3>Images:</h3>
-      <div className="text-muted-foreground border border-dotted bg-white p-4 text-center">
-        {images.length === 0 ? (
+      <div className="border border-dotted bg-white p-4 text-center text-muted-foreground">
+        {images?.length === 0 ? (
           <p>no images</p>
         ) : (
           <div>
@@ -64,7 +64,7 @@ function Images({ images = [], onImagesChange }) {
                   <Button
                     type="button"
                     onClick={() => removeImage(img)}
-                    className="text-muted-foreground absolute right-0 top-0 flex aspect-square h-8 w-8 -translate-y-1/4 translate-x-1/2 items-center justify-center rounded-full bg-muted p-0 hover:bg-rose-100 hover:text-destructive"
+                    className="absolute right-0 top-0 flex aspect-square h-8 w-8 -translate-y-1/4 translate-x-1/2 items-center justify-center rounded-full bg-muted p-0 text-muted-foreground hover:bg-rose-100 hover:text-destructive"
                   >
                     <TfiClose />
                   </Button>

@@ -3,6 +3,9 @@ import useVenuesByProfile from "../../hooks/useVenuesByProfile";
 import Spinner from "../ui/spinner";
 import { Button } from "../ui/button";
 import VenuesDashboardSkeleton from "./loading";
+import { buttonVariants } from "../ui/button";
+import { cn } from "../../utils/utils";
+import { Link } from "react-router-dom";
 
 export default function YourVenuesDashboard({ userName, venuesNumber }) {
   const { data, error, status } = useVenuesByProfile(userName);
@@ -44,7 +47,7 @@ export default function YourVenuesDashboard({ userName, venuesNumber }) {
       <div className="flex gap-4 md:gap-8">
         <VenuesDashboardCard>
           <h4 className="text-xl font-bold md:text-2xl">{bookingsCount}</h4>
-          <p className="text-muted-foreground text-sm  md:text-base">
+          <p className="text-sm text-muted-foreground  md:text-base">
             Upcoming Bookings
           </p>
         </VenuesDashboardCard>
@@ -52,25 +55,28 @@ export default function YourVenuesDashboard({ userName, venuesNumber }) {
           <h4 className="text-xl font-bold md:text-2xl">
             {incomingMoney.toLocaleString()} kr
           </h4>
-          <p className="text-muted-foreground text-sm md:text-base">
+          <p className="text-sm text-muted-foreground md:text-base">
             Total Revenue
           </p>
         </VenuesDashboardCard>
       </div>
 
-      <Button
-        variant="outline"
-        className="border-muted-foreground h-14 rounded-xl bg-secondary text-primary"
+      <Link
+        to={venuesNumber > 0 ? `/profiles/${userName}/venues` : "/new-venue"}
+        className={cn(
+          buttonVariants({ variant: "outline" }),
+          "h-14 rounded-xl border-muted-foreground bg-secondary text-primary",
+        )}
       >
         {venuesNumber > 0 ? "See More" : "Add New Venue"}
-      </Button>
+      </Link>
     </div>
   );
 }
 
 export function VenuesDashboardCard({ children }) {
   return (
-    <div className="bg-card flex h-full w-full flex-col items-center justify-center gap-4 rounded-xl p-4 md:p-0">
+    <div className="flex h-full w-full flex-col items-center justify-center gap-4 rounded-xl bg-card p-4 md:p-0">
       {children}
     </div>
   );

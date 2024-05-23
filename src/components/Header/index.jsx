@@ -76,7 +76,7 @@ export default function NavBar() {
 
       <NavLink
         className={cn(
-          "flex flex-col-reverse items-center gap-1 rounded-full bg-transparent p-2 text-muted-foreground sm:flex-row sm:gap-2 sm:bg-primary sm:px-4 sm:py-1.5 sm:text-primary-foreground",
+          "flex flex-col-reverse items-center gap-1  bg-transparent p-2 text-muted-foreground sm:flex-row sm:gap-2  sm:px-4 sm:py-1.5 ",
           activeRoute === "new-venue" && activeStyles,
         )}
         to={

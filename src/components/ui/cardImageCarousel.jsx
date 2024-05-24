@@ -38,6 +38,7 @@ export function CardImageCarousel({ images, href, className }) {
             <CarouselItem key={index} className="m-0 h-full w-full p-0 ">
               <Link to={href}>
                 <img
+                  loading="lazy"
                   src={img.url}
                   alt={img.alt}
                   className="h-full w-full object-cover"

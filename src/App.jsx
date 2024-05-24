@@ -1,10 +1,10 @@
+import { useEffect, useRef, useState } from "react";
 import { Outlet, useMatches } from "react-router-dom";
 import "./index.css";
 import NavBar from "./components/Header";
 import Footer from "./components/Footer";
 import useUser from "./hooks/useUser";
 import { useBoundStore } from "./stores/store";
-import { useEffect } from "react";
 import { cn } from "./utils/utils";
 
 function App() {
@@ -14,6 +14,9 @@ function App() {
   const { data } = useUser(user?.name);
   const matches = useMatches();
   const onHomePage = matches[1].pathname === "/";
+  const contentRef = useRef();
+  const [scrollWidth, setScrollWidth] = useState(15);
+  const [hasScrolled, setHasScrolled] = useState(false); // State to track scroll position
 
   useEffect(() => {
     if (data) {
@@ -21,9 +24,35 @@ function App() {
     }
   }, [data, updateUser]);
 
+  useEffect(() => {
+    const currentScrollBarWidth =
+      window.innerWidth - contentRef.current.clientWidth;
+    setScrollWidth(currentScrollBarWidth);
+  }, [contentRef]);
+
+  const handleScroll = () => {
+    setHasScrolled(contentRef.current.scrollTop > 0);
+  };
+
   return (
-    <div className="grid h-[100dvh]  overflow-x-hidden bg-background">
-      <header className="fixed bottom-0 left-1/2 z-40 w-[100dvw] -translate-x-1/2 overflow-x-hidden sm:bottom-auto ">
+    <div
+      className="grid h-[100dvh]  overflow-x-hidden bg-background"
+      ref={contentRef}
+      onScroll={handleScroll}
+    >
+      <header
+        className={cn(
+          "fixed bottom-0 left-1/2 z-40 w-[100dvw] -translate-x-1/2 overflow-x-hidden bg-card text-muted-foreground transition-colors duration-500 sm:bottom-auto",
+          `pr-[${scrollWidth}px]`,
+          onHomePage &&
+            !isLoggedIn &&
+            "sm:bg-transparent sm:text-primary-foreground ",
+          onHomePage &&
+            !isLoggedIn &&
+            hasScrolled &&
+            " sm:bg-card sm:text-muted-foreground",
+        )}
+      >
         <NavBar />
       </header>
 

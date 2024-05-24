@@ -4,9 +4,11 @@ import { FaWifi } from "react-icons/fa6";
 import { CiParking1 } from "react-icons/ci";
 import { PiForkKnife, PiPawPrint, PiBed } from "react-icons/pi";
 import { FaRegStar } from "react-icons/fa";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useBoundStore } from "../../../stores/store";
 import NumberButtons from "../../ui/numberButtons";
+import { Label } from "../../ui/label";
+import { cn } from "../../../utils/utils";
 
 export function DetailsStep({
   updateItem,
@@ -16,7 +18,6 @@ export function DetailsStep({
   increaseItem,
   decreaseItem,
 }) {
-  console.log(defaultValues);
   return (
     <FormStepContainer title={"Details"}>
       <InputGroup
@@ -51,6 +52,8 @@ export function DetailsStep({
         value={defaultValues.price}
       />
       <NumberButtons
+        errorMessage={errorMessages?.maxGuests?.message}
+        label="Maximum guests"
         value={maxGuests}
         onIncrease={() => increaseItem("maxGuests")}
         onDecrease={() => decreaseItem("maxGuests")}
@@ -66,72 +69,62 @@ export function AmenitiesStep({
   decreaseItem,
   rating,
 }) {
+  const { wifi, parking, breakfast, pets } = defaultValues.meta;
+
   return (
     <FormStepContainer title={"Amenities"}>
       <div>
-        <IconContainer>
-          <FaRegStar />
-        </IconContainer>
-        <NumberButtons
-          value={rating}
-          onIncrease={() => increaseItem("rating")}
-          onDecrease={() => decreaseItem("rating")}
-        />
-      </div>
-
-      <div>
-        <div className="grid grid-cols-2 gap-6">
-          <AmenityContainer>
+        <div className="grid gap-6 sm:grid-cols-2">
+          <AmenityContainer
+            isActive={wifi}
+            onToggle={() => updateMeta({ wifi: !wifi })}
+          >
             <IconContainer>
               <FaWifi />
             </IconContainer>
-            <InputGroup
-              id={"wifi"}
-              label="Wifi"
-              onChange={(e) => updateMeta({ wifi: e.currentTarget.checked })}
-              type="checkbox"
-              checked={defaultValues.meta.wifi}
-            />
+            <h3>Wifi</h3>
           </AmenityContainer>
-          <AmenityContainer>
+          <AmenityContainer
+            isActive={parking}
+            onToggle={() => updateMeta({ parking: !parking })}
+          >
             <IconContainer>
               <CiParking1 />
             </IconContainer>
-            <InputGroup
-              id={"parking"}
-              label="Parking"
-              checked={defaultValues.meta.parking}
-              onChange={(e) => updateMeta({ parking: e.currentTarget.checked })}
-              type="checkbox"
-            />
+            <h3>Parking</h3>
           </AmenityContainer>
-          <AmenityContainer>
+          <AmenityContainer
+            isActive={breakfast}
+            onToggle={() => updateMeta({ breakfast: !breakfast })}
+          >
             <IconContainer>
-              <PiBed />
+              <PiForkKnife />
             </IconContainer>
-            <InputGroup
-              checked={defaultValues.meta.breakfast}
-              id={"breakfast"}
-              label="Breakfast"
-              onChange={(e) =>
-                updateMeta({ breakfast: e.currentTarget.checked })
-              }
-              type="checkbox"
-            />
+            <h3>Breakfast</h3>
           </AmenityContainer>
-          <AmenityContainer>
+          <AmenityContainer
+            isActive={pets}
+            onToggle={() => updateMeta({ pets: !pets })}
+          >
             <IconContainer>
               <PiPawPrint />
             </IconContainer>
-            <InputGroup
-              id={"pets"}
-              type="checkbox"
-              label="Pets"
-              checked={defaultValues.meta.pets}
-              onChange={(e) => updateMeta({ pets: e.currentTarget.checked })}
-            />
+            <h3>Pets</h3>
           </AmenityContainer>
         </div>
+      </div>
+      <div className="flex items-center justify-between">
+        <Label>Rating</Label>
+        <NumberButtons
+          label={
+            <Label className="flex items-center gap-1">
+              <FaRegStar />
+            </Label>
+          }
+          value={rating + " / 5"}
+          onIncrease={() => increaseItem("rating")}
+          onDecrease={() => decreaseItem("rating")}
+        />
       </div>
     </FormStepContainer>
   );
@@ -204,27 +197,114 @@ export function ImagesStep({ images, handleImagesChange }) {
   );
 }
 
-export function ReviewStep({}) {
-  return <div>review your thingamajig</div>;
+export function ReviewStep({ values }) {
+  useEffect(() => {
+    if (values) console.log(values);
+  }, [values]);
+  const { location, meta, name, description, maxGuests, price, media, rating } =
+    values;
+
+  const trueMetaKeys = Object.entries(meta)
+    .filter(([key, value]) => value)
+    .map(([key]) => key);
+
+  return (
+    <FormStepContainer
+      title={"Summary"}
+      className="grid gap-0 divide-y sm:gap-0"
+    >
+      <ReviewSection title={"Name"}>{name}</ReviewSection>
+      <ReviewSection title={"Description"}>{description}</ReviewSection>
+      <ReviewSection title={"Max Guests"}>{maxGuests}</ReviewSection>
+      <ReviewSection title={"Price"}>
+        {price.toLocaleString() + " kr /night"}
+      </ReviewSection>
+      <ReviewSection title={"Rating"}>
+        <div className="flex  items-center gap-2">
+          <FaRegStar /> {rating} / 5
+        </div>
+      </ReviewSection>
+      <ReviewSection title={"Amenities"}>
+        <div className="grid grid-cols-4">
+          {trueMetaKeys.map((item) => (
+            <AmenityContainer
+              key={item}
+              isActive={true}
+              className={
+                "text grid-cols-0 pointer-events-none cursor-default hover:opacity-100"
+              }
+            >
+              <h3>{item}</h3>
+            </AmenityContainer>
+          ))}
+        </div>
+      </ReviewSection>
+
+      <ReviewSection title={"Images"}>
+        <div className="flex flex-wrap gap-4">
+          {media.length > 0 ? (
+            media.map((img, index) => (
+              <div key={index} className="relative h-20">
+                <img
+                  src={img.url}
+                  alt={img.alt}
+                  className="max-h-full rounded-md"
+                />
+              </div>
+            ))
+          ) : (
+            <div className="text-muted-foreground">No images</div>
+          )}
+        </div>
+      </ReviewSection>
+
+      <ReviewSection title={"Location"}>
+        <div>
+          {location.address}, {location.zip}, {location.city},{" "}
+          {location.country}, {location.continent}
+        </div>
+        <div className="flex gap-2">
+          <p>Latitude: {location.lng}</p>
+          <p>Longitude: {location.lat}</p>
+        </div>
+      </ReviewSection>
+    </FormStepContainer>
+  );
 }
 
-function FormStepContainer({ title, children }) {
+function FormStepContainer({ title, className, children }) {
   return (
-    <div className="grid gap-6 px-2 sm:gap-8">
+    <div className={cn("grid gap-6 px-2 sm:gap-8", className)}>
       <h1 className="text-center text-xl font-semibold">{title}</h1>
       {children}
     </div>
   );
 }
 
-export function AmenityContainer({ children }) {
+export function AmenityContainer({ onToggle, children, isActive, className }) {
   return (
-    <div className=" just grid  grid-cols-2 items-center justify-center gap-4  p-4">
+    <div
+      onClick={onToggle}
+      className={cn(
+        " grid grid-cols-2 items-center justify-center gap-4 rounded-lg border border-muted p-4 text-muted-foreground  transition-all duration-300 hover:cursor-pointer hover:bg-primary hover:text-white hover:opacity-60",
+        isActive && "bg-primary text-primary-foreground hover:opacity-80",
+        className,
+      )}
+    >
       {children}
     </div>
   );
 }
 
 export function IconContainer({ children }) {
-  return <div className="w-fit border text-4xl">{children}</div>;
+  return <div className="w-fit text-4xl">{children}</div>;
+}
+
+function ReviewSection({ title, children }) {
+  return (
+    <div className="grid gap-2 py-4">
+      <h4 className="text-lg">{title}:</h4>
+      {children}
+    </div>
+  );
 }

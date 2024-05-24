@@ -140,7 +140,7 @@ const CheckBoxGroup = React.forwardRef(
     ref,
   ) => {
     return (
-      <div className="grid justify-items-center gap-2">
+      <div className="flex justify-between gap-2">
         <Label htmlFor={id ? id : label}>
           {required && <span className="text-muted-foreground">*</span>}
           {label}

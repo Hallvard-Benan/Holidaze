@@ -105,7 +105,7 @@ export function PaginatedVenues() {
 }
 
 export function NewVenues() {
-  const { status, data, error } = useAllVenues({ perPage: 21, pageNumber: 1 });
+  const { status, data, error } = useAllVenues({ perPage: 12, pageNumber: 1 });
 
   if (status === "pending") return <SkeletonVenues />;
   if (status === "error") {

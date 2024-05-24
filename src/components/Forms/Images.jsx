@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
 import { TfiClose } from "react-icons/tfi";
@@ -6,10 +6,10 @@ import { CiCirclePlus } from "react-icons/ci";
 import { Label } from "../ui/label";
 import { validateAvatar } from "../../utils/validation";
 import PropTypes from "prop-types";
+import { cn } from "../../utils/utils";
 
 function Images({ images = [], onImagesChange }) {
   const [image, setImage] = useState("");
-  const [active, setActive] = useState(false);
   const [alt, setAlt] = useState("");
   const [isFocused, setIsFocused] = useState(false);
   const [error, setError] = useState("");
@@ -22,6 +22,10 @@ function Images({ images = [], onImagesChange }) {
     setAlt(e.target.value);
   };
 
+  useEffect(() => {
+    if (!isFocused && !image) setError("");
+  }, [isFocused, image]);
+
   const addImage = async function (imageToAdd) {
     const validatedImage = await validateAvatar(imageToAdd.url);
     const imageExists = images.some((img) => img.url === imageToAdd.url);
@@ -29,13 +33,13 @@ function Images({ images = [], onImagesChange }) {
     if (validatedImage && !imageExists && imageToAdd.url.length > 0) {
       onImagesChange([...images, imageToAdd]);
       setError(null);
-      setActive(false); // Reset active state
+      setImage("");
+      setAlt("");
     } else if (imageExists) {
       setError("Cannot submit same image multiple times");
     } else if (!validatedImage) {
       setError("Must be a valid URL to a publicly available image");
     }
-    setImage("");
   };
 
   const removeImage = function (imageToRemove) {
@@ -47,10 +51,9 @@ function Images({ images = [], onImagesChange }) {
 
   return (
     <div className="grid gap-3">
-      <h3>Images:</h3>
-      <div className="border border-dotted bg-white p-4 text-center text-muted-foreground">
+      <div className="rounded-md border border-dotted bg-white p-4 text-center  text-muted-foreground">
         {images?.length === 0 ? (
-          <p>no images</p>
+          <p className="h-20">No images yet</p>
         ) : (
           <div>
             <div className="flex flex-wrap gap-8">
@@ -74,67 +77,79 @@ function Images({ images = [], onImagesChange }) {
           </div>
         )}
       </div>
-      <Button type="button" onClick={() => setActive(true)}>
-        Add image
-      </Button>
 
-      {active && (
-        <div>
-          <div className="grid gap-4">
-            <fieldset>
-              <div className="flex">
-                <div>
-                  <Label htmlFor="image">Image URL:</Label>
-                  <Input
-                    onChange={handleImageChange}
-                    onFocus={() => setIsFocused(true)}
-                    onBlur={() => setIsFocused(false)}
-                    onKeyPress={(e) => {
-                      if (e.key === "Enter") {
-                        e.preventDefault();
-                        addImage({ url: image, alt });
-                      }
-                    }}
-                    placeholder={
-                      isFocused ? "write the URL to the image" : "add image"
-                    }
-                    id="image"
-                    value={image}
-                  />
-                </div>
-                <div>
-                  <Label htmlFor="alt">Image Alt:</Label>
-                  <Input
-                    onChange={handleAltChange}
-                    onFocus={() => setIsFocused(true)}
-                    onBlur={() => setIsFocused(false)}
-                    onKeyPress={(e) => {
-                      if (e.key === "Enter") {
-                        e.preventDefault();
-                        addImage({ url: image, alt });
-                      }
-                    }}
-                    placeholder={
-                      isFocused ? "write the URL to the image" : "add image"
-                    }
-                    id="alt"
-                    value={alt}
-                  />
-                </div>
-                <Button
-                  type="button"
-                  onClick={() => addImage({ url: image, alt })}
-                  className="flex gap-1 bg-primary"
-                >
-                  <p>Add image</p>
-                  <CiCirclePlus size={28} />
-                </Button>
-              </div>
-            </fieldset>
+      <div className="w-full">
+        <div className="flex w-full  flex-col gap-4 ">
+          <div className="grid w-full gap-2">
+            <Label htmlFor="image">Image URL:</Label>
+            <div className="group relative">
+              <Input
+                onChange={handleImageChange}
+                onFocus={() => setIsFocused(true)}
+                onBlur={() => setIsFocused(false)}
+                onKeyPress={(e) => {
+                  if (e.key === "Enter") {
+                    e.preventDefault();
+                    addImage({ url: image, alt });
+                  }
+                }}
+                placeholder={"https://..."}
+                id="image"
+                value={image}
+              />
+              <button
+                type="button"
+                onClick={() => setImage("")}
+                className={cn(
+                  "absolute right-0 top-1/2 hidden -translate-x-1 -translate-y-1/2 items-center justify-center rounded-md border border-destructive bg-secondary  px-2  text-destructive  text-opacity-0 transition-opacity duration-300",
+                  image && " opacity-100 group-hover:flex",
+                )}
+              >
+                clear
+              </button>
+            </div>
           </div>
-          {error && <div className="text-destructive">{error}</div>}
+          <div className=" grid w-full gap-2">
+            <Label htmlFor="alt">Image Description:</Label>
+            <div className="group relative">
+              <Input
+                onChange={handleAltChange}
+                onFocus={() => setIsFocused(true)}
+                onBlur={() => setIsFocused(false)}
+                onKeyPress={(e) => {
+                  if (e.key === "Enter") {
+                    e.preventDefault();
+                    addImage({ url: image, alt });
+                  }
+                }}
+                placeholder={"Balcony view..."}
+                id="alt"
+                value={alt}
+              />
+              <button
+                type="button"
+                onClick={() => setAlt("")}
+                className={cn(
+                  "absolute right-0 top-1/2 hidden -translate-x-1 -translate-y-1/2 items-center justify-center rounded-md border border-destructive bg-secondary  bg-transparent px-2  text-destructive  text-opacity-0 transition-opacity duration-300",
+                  alt && " opacity-100 group-hover:flex",
+                )}
+              >
+                clear
+              </button>
+            </div>
+          </div>
+          <Button
+            type="button"
+            disabled={!image}
+            onClick={() => addImage({ url: image, alt })}
+            className=" gap-1 bg-primary"
+          >
+            <p>Add</p> <CiCirclePlus size={28} />
+          </Button>
         </div>
-      )}
+
+        {error && <div className="text-destructive">{error}</div>}
+      </div>
     </div>
   );
 }

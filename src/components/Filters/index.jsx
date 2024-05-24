@@ -20,7 +20,7 @@ export function FilterGrouping({ children, title }) {
   );
 }
 
-export default function FiltersSection({ onSubmit }) {
+export default function FiltersSection({ onSubmit, variant, className }) {
   const filtersOpen = useBoundStore((state) => state.filtersOpen);
   const toggleFiltersOpen = useBoundStore((state) => state.toggleFiltersOpen);
   const updatePriceRange = useBoundStore((state) => state.updatePriceRange);
@@ -63,14 +63,19 @@ export default function FiltersSection({ onSubmit }) {
     <>
       <Button
         onClick={toggleFiltersOpen}
-        className={cn("flex items-center gap-2", [])}
+        className={cn(
+          "flex items-center gap-2",
+          variant === "home" &&
+            "h-full rounded-full bg-inherit text-lg text-muted-foreground",
+          className,
+        )}
       >
-        {numOfFilters > 0 && (
+        {numOfFilters > 0 && variant !== "home" && (
           <p className="flex h-6 w-6 items-center justify-center rounded-full bg-secondary p-2 text-secondary-foreground">
             {numOfFilters}
           </p>
         )}
-        <p>Filters</p>
+        {variant !== "home" && <p>Filters</p>}
         <IoFilter />
       </Button>
       {Object.entries(filterForm).toString() !==
@@ -80,7 +85,10 @@ export default function FiltersSection({ onSubmit }) {
           title={"Save changes?"}
           description={"Do you want to apply the filters before you?"}
           onConfirm={handleUpdate}
-          onCancel={toggleFiltersOpen}
+          onCancel={() => {
+            toggleFiltersOpen();
+            cancelFilterForm();
+          }}
           cancelText={"Discard"}
           className={cn(
             ` fixed left-0 top-0 z-40 h-screen w-screen overflow-auto bg-gray-700 opacity-0 transition-opacity duration-500 ${
@@ -102,13 +110,13 @@ export default function FiltersSection({ onSubmit }) {
         ></div>
       )}
       <div
-        className={`md: fixed bottom-0 left-1/2 z-50 flex h-[85dvh] w-[600px] max-w-[100vw] -translate-x-1/2 flex-col justify-between overflow-y-scroll rounded-t-xl  bg-gray-100 pt-6  transition-all duration-300 ease-out sm:left-auto sm:right-0 sm:top-0 sm:h-[100dvh] sm:rounded-l-xl sm:rounded-tr-none lg:h-[100dvh] ${
+        className={`md: fixed bottom-0 left-1/2 z-50 flex h-[85dvh] w-[500px] max-w-[100vw] -translate-x-1/2 flex-col justify-between overflow-y-auto rounded-t-xl  bg-gray-100 pt-6  transition-all duration-300 ease-out sm:left-auto sm:right-0 sm:top-0 sm:h-[100dvh] sm:rounded-l-xl sm:rounded-tr-none lg:h-[100dvh] ${
           filtersOpen
             ? "translate-y-0 opacity-100 sm:translate-x-0"
             : "translate-y-full opacity-0 sm:translate-x-full sm:translate-y-0"
         }`}
       >
-        <div className="flex justify-between px-4 sm:px-8">
+        <div className="flex justify-between border-b border-[#E8E8E8] px-4 sm:px-8">
           <h2 className="mb-2  text-2xl font-medium">Filters</h2>
           {Object.entries(filterForm).toString() !==
           Object.entries(filters).toString() ? (
@@ -130,18 +138,19 @@ export default function FiltersSection({ onSubmit }) {
         </div>
 
         <ul className="flex min-w-full flex-grow flex-col gap-4 divide-y overflow-y-auto px-4 py-4 sm:gap-8 sm:px-8">
-          <ChosenFilters className={"px-4 sm:px-8"} />
-          <FilterGrouping title={"Dates"}>
-            <div className="flex  gap-4">
-              <InputGroup
-                type="date"
-                name="dateFrom"
-                label="From"
-                className="w-full"
-                onChange={(e) => {}}
-              />
-              <InputGroup type="date" name="dateTo" label="To" />
-            </div>
+          {numOfFilters !== 0 && <ChosenFilters className={"px-4 sm:px-8"} />}
+          <FilterGrouping title={"Price Range"}>
+            <PriceSlider
+              minPrice={filterForm.minPrice}
+              maxPrice={filterForm.maxPrice}
+              onMinValueChange={(value) => {
+                updateMinPrice(value);
+              }}
+              onMaxValueChange={updateMaxPrice}
+              onChange={(e) => {
+                updatePriceRange({ min: e[0], max: e[1] });
+              }}
+            />
           </FilterGrouping>
           <FilterGrouping title={"Guests"}>
             <NumberButtons
@@ -152,7 +161,7 @@ export default function FiltersSection({ onSubmit }) {
             />
           </FilterGrouping>
           <FilterGrouping title={"Amenities"}>
-            <div className="mx-auto grid grid-cols-2 gap-x-16 gap-y-8 sm:grid-cols-4">
+            <div className="grid  gap-x-16 gap-y-8">
               <CheckBoxGroup
                 type="checkbox"
                 name="pets"
@@ -184,20 +193,6 @@ export default function FiltersSection({ onSubmit }) {
                 checked={filterForm.parking}
               />
             </div>
-          </FilterGrouping>
-
-          <FilterGrouping title={"Price Range"}>
-            <PriceSlider
-              minPrice={filterForm.minPrice}
-              maxPrice={filterForm.maxPrice}
-              onMinValueChange={(value) => {
-                updateMinPrice(value);
-              }}
-              onMaxValueChange={updateMaxPrice}
-              onChange={(e) => {
-                updatePriceRange({ min: e[0], max: e[1] });
-              }}
-            />
           </FilterGrouping>
         </ul>
         <div className="border-t p-4">

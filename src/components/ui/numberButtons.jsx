@@ -1,4 +1,3 @@
-import React from "react";
 import { Button } from "./button";
 import { Input } from "./input";
 
@@ -8,42 +7,41 @@ export default function NumberButtons({
   value,
   maxValue,
   disabled,
+  label = "",
+  errorMessage,
 }) {
   return (
-    <div className="flex items-center justify-center">
-      <Button
-        disabled={value === maxValue || disabled}
-        type="button"
-        variant="outline"
-        className="border-muted-foreground h-[45px] w-[45px] rounded-full border text-xl font-bold"
-        onClick={() => {
-          onIncrease();
-        }}
-      >
-        <p>+</p>
-      </Button>
+    <div>
+      <div className="flex w-full items-center justify-between gap-2">
+        {label}
+        <div className="flex items-center gap-4">
+          <Button
+            disabled={value === 1}
+            type="button"
+            variant="outline"
+            className="size-[45px] rounded-full border border-black text-xl font-bold"
+            onClick={() => {
+              onDecrease();
+            }}
+          >
+            -
+          </Button>
+          <p className="text-lg tabular-nums">{value}</p>
 
-      <Input
-        className="flex items-center justify-center pr-0 text-center"
-        type="number"
-        min={1}
-        max={maxValue}
-        name="guests"
-        disabled
-        value={value}
-      />
-
-      <Button
-        disabled={value === 1}
-        type="button"
-        variant="outline"
-        className="h-[45px] w-[45px] rounded-full border border-black text-xl font-bold"
-        onClick={() => {
-          onDecrease();
-        }}
-      >
-        -
-      </Button>
+          <Button
+            disabled={value === maxValue || disabled}
+            type="button"
+            variant="outline"
+            className="size-[45px] rounded-full border border-muted-foreground text-xl font-bold"
+            onClick={() => {
+              onIncrease();
+            }}
+          >
+            <p>+</p>
+          </Button>
+        </div>
+      </div>
+      {errorMessage && <p className="text-destructive">{errorMessage}</p>}
     </div>
   );
 }

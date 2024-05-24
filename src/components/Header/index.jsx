@@ -53,8 +53,7 @@ export default function NavBar() {
   return (
     <nav
       className={cn(
-        " relative mx-auto grid grid-cols-4 items-center justify-between justify-items-center bg-card py-2 text-xl sm:flex sm:px-4 ",
-        currentPath === "/" && !isLoggedIn && "sm:bg-transparent ",
+        " bg relative mx-auto grid grid-cols-4 items-center justify-between justify-items-center  py-2 text-xl sm:flex  md:w-calc ",
       )}
     >
       <NavLink
@@ -78,6 +77,7 @@ export default function NavBar() {
         className={cn(
           "flex flex-col-reverse items-center gap-1  bg-transparent p-2 text-muted-foreground sm:flex-row sm:gap-2  sm:px-4 sm:py-1.5 ",
           activeRoute === "new-venue" && activeStyles,
+          activeRoute === "/" && !isLoggedIn && "text-inherit",
         )}
         to={
           isLoggedIn && user.venueManager
@@ -122,7 +122,10 @@ export default function NavBar() {
         {!isLoggedIn && (
           <>
             <NavLink
-              className={cn(" hidden px-4 py-2 text-primary sm:flex")}
+              className={cn(
+                " hidden px-4 py-2 sm:flex",
+                activeRoute === "/" && !isLoggedIn && "text-inherit",
+              )}
               to={"/auth/login"}
             >
               Login

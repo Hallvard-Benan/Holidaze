@@ -84,7 +84,10 @@ export default function CreateVenueForm({
       handleImagesChange={handleImagesChange}
       images={venueFormData.media}
     />,
-    <ReviewStep key={4} />,
+    <ReviewStep
+      values={defaultValues ? defaultValues : venueFormData}
+      key={4}
+    />,
   ];
 
   const { step, goTo, back, next, currentStep, isFirstStep, isLastStep } =

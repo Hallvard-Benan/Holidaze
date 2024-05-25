@@ -9,7 +9,7 @@ import {
 } from "./carousel";
 import { cn } from "../../utils/utils";
 
-export function ImageCarousel({ images }) {
+export function ImageCarousel({ images, noImage }) {
   const [api, setApi] = React.useState();
   const [current, setCurrent] = React.useState(0);
   const [count, setCount] = React.useState(0);
@@ -29,13 +29,16 @@ export function ImageCarousel({ images }) {
 
   return (
     <Carousel setApi={setApi} className=" relative w-full">
-      <CarouselContent className="h-72 w-full ">
+      <CarouselContent className="aspect-video w-full  sm:h-72 ">
         {images.map((img, index) => (
-          <CarouselItem key={index}>
+          <CarouselItem key={index} className="flex justify-center">
             <img
               src={img.url}
               alt={img.alt}
-              className="h-full w-full object-contain"
+              className={cn(
+                " h-full w-full   object-cover sm:aspect-video sm:w-auto",
+                noImage && "object-contain",
+              )}
             />
           </CarouselItem>
         ))}

@@ -61,6 +61,7 @@ export default function CreateVenueForm({
       decreaseItem={decreaseItem}
       updateItem={updateItem}
       maxGuests={venueFormData.maxGuests}
+      rating={venueFormData.rating}
       defaultValues={defaultValues ? defaultValues : venueFormData}
       errorMessages={errorMessages}
       key={0}
@@ -69,7 +70,6 @@ export default function CreateVenueForm({
       updateItem={updateItem}
       increaseItem={increaseItem}
       decreaseItem={decreaseItem}
-      rating={venueFormData.rating}
       updateMeta={updateMeta}
       defaultValues={defaultValues ? defaultValues : venueFormData}
       key={1}
@@ -90,8 +90,7 @@ export default function CreateVenueForm({
     />,
   ];
 
-  const { step, goTo, back, next, currentStep, isFirstStep, isLastStep } =
-    useMultistepForm(steps);
+  const { step, back, next, currentStep, isLastStep } = useMultistepForm(steps);
 
   useEffect(() => {
     if (defaultValues) {
@@ -150,18 +149,33 @@ export default function CreateVenueForm({
         )}
         <ProgressBar max={steps.length} current={currentStep + 1} />
         <div className="flex w-full justify-between">
-          <Button variant="outline" type="button" onClick={back}>
-            back
+          <Button
+            className="w-full"
+            variant="outline"
+            type="button"
+            onClick={back}
+          >
+            Back
           </Button>
-          <h2>
+          <h2 className="flex w-full items-center justify-center">
             {currentStep + 1} / {steps.length}
           </h2>
           {!isLastStep ? (
-            <Button variant="outline" type="button" onClick={handleNext}>
-              next
+            <Button
+              className="w-full"
+              variant="outline"
+              type="button"
+              onClick={handleNext}
+            >
+              Next
             </Button>
           ) : (
-            <Button disabled={!isLastStep} type="button" onClick={onSubmit}>
+            <Button
+              className="w-full"
+              disabled={!isLastStep}
+              type="button"
+              onClick={onSubmit}
+            >
               {status !== "pending" ? "Submit" : <Spinner />}
             </Button>
           )}

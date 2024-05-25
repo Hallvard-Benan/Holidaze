@@ -2,20 +2,32 @@
   display: none;
 }
 
+.rdrDateDisplayWrapper {
+  display: none;
+}
+
 .rdrCalendarWrapper {
   width: 100%;
-  background-color: aliceblue;
+
   border-radius: 1rem;
 
-  margin-top: 1.5rem;
+  /* margin-top: 1.5rem; */
+  background: transparent;
+}
+.rdrDay:not(.rdrDayPassive) .rdrInRange ~ .rdrDayNumber span,
+.rdrDay:not(.rdrDayPassive) .rdrSelected ~ .rdrDayNumber span {
+  color: black;
 }
 
 /* Important tag must be used in these cases in order to overwrite inline style tag from component */
 
+.rdrInRange {
+  color: rgb(214, 214, 214) !important;
+}
+
 .rdrEndEdge,
-.rdrInRange,
 .rdrStartEdge {
-  color: rgb(29, 153, 68) !important;
+  color: rgb(19, 19, 19) !important;
 }
 
 .rdrDayInPreview,
@@ -24,7 +36,12 @@
   border-color: white !important;
 }
 
-.rdrDateInput:nth-of-type(1)::before,
+.rdrDayDisabled .rdrDayNumber {
+  text-decoration: line-through !important;
+  text-decoration-color: gray !important;
+}
+
+/* .rdrDateInput:nth-of-type(1)::before,
 .rdrDateInput:nth-of-type(2)::before {
   content: "check-out";
   position: absolute;
@@ -37,4 +54,16 @@
 
 .rdrDateInput:nth-of-type(1)::before {
   content: "check-in";
+} */
+
+@media (min-width: 650px) {
+  .rdrCalendarWrapper {
+    font-size: 14px !important;
+  }
+}
+
+@media screen and (min-width: 400px) and (max-width: 640px) {
+  .rdrCalendarWrapper {
+    font-size: 14px !important;
+  }
 }

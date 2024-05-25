@@ -27,6 +27,7 @@ import {
   Dialog,
   DialogContent,
 } from "../components/ui/dialog";
+import Container from "../components/ui/container";
 
 export async function loader({ params }) {
   const id = params.venueId;
@@ -93,7 +94,7 @@ export default function VenuePage() {
   const post = data.data.data;
   let disabledDates = [];
   const isMyVenue = post.owner && post.owner.name === user.name;
-  // Get today's date
+
   const today = new Date();
   today.setHours(0, 0, 0, 0); // Set hours to 0 to compare dates only
 
@@ -135,7 +136,7 @@ export default function VenuePage() {
   }
 
   return (
-    <div className="mx-auto grid w-calc gap-16 md:w-calc-md">
+    <div className="gridgap-16 ">
       {isMyVenue && (
         <div
           className={cn(
@@ -164,7 +165,6 @@ export default function VenuePage() {
                   " pointer-events-auto size-auto w-full translate-y-0 opacity-100 transition-transform duration-300",
               )}
             >
-              {" "}
               <CreateVenueForm
                 status={status}
                 errors={updateError?.response?.data?.errors}
@@ -241,82 +241,96 @@ export default function VenuePage() {
 
       <div className="grid gap-8">
         <div className="flex justify-center">
-          <ImageCarousel images={post.media} />
+          <ImageCarousel
+            noImage={post.media.length < 1}
+            images={
+              post.media.length > 0
+                ? post.media
+                : [
+                    {
+                      url: "/noimage.png",
+                    },
+                  ]
+            }
+          />
         </div>
-        <div className="flex flex-col gap-2">
-          <h1 className="text-2xl md:text-3xl">{post.name}</h1>
-          {post.location.city && post.location.country && (
-            <p className="text-muted-foreground">
-              {post.location.city}, {post.location.country}
+        <Container>
+          <div className="flex flex-col gap-2">
+            <h1 className="text-2xl md:text-3xl">{post.name}</h1>
+            {post.location.city && post.location.country && (
+              <p className="text-muted-foreground">
+                {post.location.city}, {post.location.country}
+              </p>
+            )}
+          </div>
+          <div className="flex justify-between">
+            <p className="text-2xl font-semibold">
+              {post.price} kr /{" "}
+              <span className="font-normal text-muted-foreground">night</span>
             </p>
-          )}
-        </div>
-        <div className="flex justify-between">
-          <p className="text-2xl font-semibold">
-            {post.price} kr /{" "}
-            <span className="font-normal text-muted-foreground">night</span>
-          </p>
-          <p className="flex items-center gap-2">
-            <FaRegStar /> {post.rating}
-          </p>
-        </div>
-        <BookingForm
-          status={status}
-          disabled={isMyVenue}
-          disabledDates={disabledDates}
-          price={post.price}
-          name={user.name}
-          venueId={id}
-          maxGuests={post.maxGuests}
-        />
-        <Separator />
+            <p className="flex items-center gap-2">
+              <FaRegStar /> {post.rating}
+            </p>
+          </div>
+          <BookingForm
+            post={post}
+            status={status}
+            disabled={isMyVenue}
+            disabledDates={disabledDates}
+            price={post.price}
+            name={user.name}
+            venueId={id}
+            maxGuests={post.maxGuests}
+          />
+          <Separator />
 
-        <section className="flex flex-col items-center gap-6 pb-8 ">
-          <div className="flex w-full flex-col gap-8 sm:flex-row">
-            <Link
-              to={`/profiles/${post.owner.name}`}
-              className={
-                (cn(!isLoggedIn && "pointer-events-none"),
-                "mx-auto grid  min-w-72 gap-2 rounded-md border p-6")
-              }
-            >
-              <div className=" flex flex-col items-center justify-center gap-2">
-                <img
-                  src={post.owner.avatar.url}
-                  alt=""
-                  className={"h-20 w-20 rounded-full object-cover"}
-                />{" "}
-                <p className="text-xl font-medium">{post.owner.name}</p>{" "}
-                <p className=" text-2xl text-primary">
-                  <MdVerifiedUser />
-                </p>
-              </div>
-            </Link>
-            <div className="grid flex-grow gap-6">
-              <AmenityIcons meta={post.meta} maxGuests={post.maxGuests} />
-              <div
-                className={cn(
-                  " grid w-full gap-2 overflow-hidden rounded-md bg-card p-2",
-                  fullDescription && "h-auto",
-                )}
+          <section className="flex flex-col items-center gap-6 pb-8 ">
+            <div className="flex w-full flex-col gap-8 sm:flex-row">
+              <Link
+                to={`/profiles/${post.owner.name}`}
+                className={
+                  (cn(!isLoggedIn && "pointer-events-none"),
+                  "mx-auto grid  min-w-72 gap-2 rounded-md border p-6")
+                }
               >
-                <h2 className="text-lg font-medium">About This Venue</h2>
-                <p
+                <div className=" flex flex-col items-center justify-center gap-2">
+                  <img
+                    src={post.owner.avatar.url}
+                    alt=""
+                    className={"h-20 w-20 rounded-full object-cover"}
+                  />{" "}
+                  <p className="text-xl font-medium">{post.owner.name}</p>{" "}
+                  <p className=" text-2xl text-primary">
+                    <MdVerifiedUser />
+                  </p>
+                </div>
+              </Link>
+              <div className="grid flex-grow gap-6">
+                <AmenityIcons meta={post.meta} maxGuests={post.maxGuests} />
+                <div
                   className={cn(
-                    " line-clamp-6 overflow-hidden",
-                    fullDescription && "line-clamp-none",
+                    " grid w-full gap-2 overflow-hidden rounded-md bg-card p-2",
+                    fullDescription && "h-auto",
                   )}
                 >
-                  {post.description}
-                </p>
-                <button onClick={() => setFullDescription((prev) => !prev)}>
-                  {" "}
-                  read more...
-                </button>
+                  <h2 className="text-lg font-medium">About This Venue</h2>
+                  <p
+                    className={cn(
+                      " line-clamp-6 overflow-hidden",
+                      fullDescription && "line-clamp-none",
+                    )}
+                  >
+                    {post.description}
+                  </p>
+                  <button onClick={() => setFullDescription((prev) => !prev)}>
+                    {" "}
+                    read more...
+                  </button>
+                </div>
               </div>
             </div>
-          </div>
-        </section>
+          </section>
+        </Container>
       </div>
     </div>
   );

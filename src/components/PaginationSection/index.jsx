@@ -36,7 +36,8 @@ export default function PaginationSection({
         <div className="hidden sm:flex">
           <PaginationItem
             className={cn(
-              current === 1 && "bg-primary text-primary-foreground",
+              current === 1 &&
+                "bg-primary text-primary-foreground hover:bg-primary hover:opacity-80",
             )}
           >
             <PaginationLink onClick={() => onChange(1)}>1</PaginationLink>
@@ -57,12 +58,11 @@ export default function PaginationSection({
             </PaginationItem>
           )}
           {pageCount > 1 && (
-            <PaginationItem
-              className={cn(
-                current === pageCount && "bg-primary text-primary-foreground",
-              )}
-            >
-              <PaginationLink onClick={() => onChange(pageCount)}>
+            <PaginationItem>
+              <PaginationLink
+                isActive={current === pageCount}
+                onClick={() => onChange(pageCount)}
+              >
                 {pageCount}
               </PaginationLink>
             </PaginationItem>
@@ -102,11 +102,10 @@ function MiddlePages({ pageCount, current, onChange }) {
 
   for (let i = startPage; i <= endPage; i++) {
     pages.push(
-      <PaginationItem
-        key={i}
-        className={cn(i === current && "bg-primary text-primary-foreground")}
-      >
-        <PaginationLink onClick={() => onChange(i)}>{i}</PaginationLink>
+      <PaginationItem key={i}>
+        <PaginationLink onClick={() => onChange(i)} isActive={i === current}>
+          {i}
+        </PaginationLink>
       </PaginationItem>,
     );
   }

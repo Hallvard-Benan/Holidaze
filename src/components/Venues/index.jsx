@@ -5,6 +5,11 @@ import SkeletonVenues from "./loading";
 import { useBoundStore } from "../../stores/store";
 import useAllVenues from "../../hooks/useAllVenues";
 import { useEffect } from "react";
+import { VenuesGrid } from "./ui";
+import useSearchVenues from "../../hooks/useSearchVenues";
+import { useInView } from "react-intersection-observer";
+import Spinner from "../ui/spinner";
+import useInfiniteVenues from "../../hooks/useInfiniteVenues";
 
 export default function Venues({ data }) {
   return (
@@ -58,20 +63,49 @@ export function PaginatedVenues() {
 
   return (
     <>
-      <div className=" grid grid-cols-2 gap-4 overflow-hidden md:grid-cols-3 xl:grid-cols-4">
-        {data?.data.data.map((item) => (
-          <Card
-            key={item.id}
-            heading={item.name}
-            description={item.description}
-            images={item.media}
-            price={item.price}
-            location={item.location}
-            rating={item.rating}
-            details={item.price}
-            href={`/venues/${item.id}`}
+      <div className="flex flex-col gap-4">
+        <div className="relative">
+          <div className="absolute bottom-0 h-fit w-fit">
+            <select
+              name=""
+              id=""
+              value={perPage}
+              onChange={(e) => {
+                updatePerPage(parseInt(e.target.value));
+              }}
+            >
+              <option value={20}>20 per page</option>
+              <option value={50}>50</option>
+              <option value={100}>100</option>
+            </select>
+          </div>
+          <PaginationSection
+            onChange={handlePageChange}
+            current={data.data.meta.currentPage}
+            isFirst={data.data.meta.isFirstPage}
+            isLast={data.data.meta.isLastPage}
+            perPage={perPage}
+            total={data.data.meta.totalCount}
+            onThisPage={data.data.data.length}
+            firstOnThisPage={firstOnThisPage}
+            pageCount={data.data.meta.pageCount}
           />
-        ))}
+        </div>
+        <VenuesGrid>
+          {data?.data.data.map((item) => (
+            <Card
+              key={item.id}
+              heading={item.name}
+              description={item.description}
+              images={item.media}
+              price={item.price}
+              location={item.location}
+              rating={item.rating}
+              details={item.price}
+              href={`/venues/${item.id}`}
+            />
+          ))}
+        </VenuesGrid>
       </div>
       <div className="grid">
         <PaginationSection
@@ -117,7 +151,7 @@ export function NewVenues() {
 
   return (
     <>
-      <div className=" grid grid-cols-2 gap-4 md:grid-cols-3 xl:grid-cols-4">
+      <VenuesGrid>
         {data?.data.data.map((item) => (
           <Card
             key={item.id}
@@ -131,7 +165,7 @@ export function NewVenues() {
             href={`/venues/${item.id}`}
           />
         ))}
-      </div>
+      </VenuesGrid>
       <div className="flex w-full justify-center">
         <Link to="/venues?page=2" className="rounded-lg border px-4 py-2">
           See all
@@ -139,4 +173,124 @@ export function NewVenues() {
       </div>
     </>
   );
+}
+
+export function SearchedVenues({ search }) {
+  const { data, error, status, fetchNextPage, isFetchingNextPage } =
+    useSearchVenues(search);
+  const { ref, inView } = useInView();
+
+  useEffect(() => {
+    if (inView) {
+      fetchNextPage();
+    }
+  }, [inView, fetchNextPage]);
+
+  if (status === "pending") return <SkeletonVenues />;
+  if (status === "error") {
+    return (
+      <div>
+        {error.message} {error.response.data.errors[0].message}
+      </div>
+    );
+  }
+  return (
+    <div className="grid gap-2">
+      <div className="flex gap-2">
+        <h1>
+          {data.pages[0].data.meta.totalCount} Results for: &rdquo;{search}
+          &rdquo;
+        </h1>
+        <Link to={"/venues"}>X</Link>
+      </div>
+
+      <VenuesGrid>
+        {data.pages.map((page) => (
+          <Venues
+            key={page?.data.meta?.currentPage}
+            meta={page?.data.meta}
+            data={page.data.data}
+            error={error}
+            status={status}
+          />
+        ))}
+      </VenuesGrid>
+      <div ref={ref}>
+        {isFetchingNextPage && (
+          <div className="p-8">
+            <Spinner />
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
+export function FilteredVenues() {
+  const { ref, inView } = useInView();
+  const filters = useBoundStore((state) => state.filters);
+  const { data, error, status, isFetchingNextPage, fetchNextPage } =
+    useInfiniteVenues();
+
+  useEffect(() => {
+    if (inView) {
+      fetchNextPage();
+    }
+  }, [inView, fetchNextPage]);
+
+  if (status === "pending") return <SkeletonVenues />;
+  if (status === "error") {
+    return (
+      <div>
+        {error.message} {error.response.data.errors[0].message}
+      </div>
+    );
+  }
+  if (status === "success" && data)
+    return (
+      <VenuesGrid>
+        {data?.pages?.map((page) => {
+          const filteredData = filterVenues(page.data.data, filters);
+          return (
+            <Venues
+              key={page.data.meta.currentPage}
+              data={filteredData}
+              meta={page.data.meta}
+            />
+          );
+        })}
+        <div ref={ref}>
+          {isFetchingNextPage && (
+            <div className="p-8">
+              <Spinner />
+            </div>
+          )}
+        </div>
+      </VenuesGrid>
+    );
+}
+
+function filterVenues(data, filters) {
+  const filteredVenues = data.filter((item) => {
+    const priceInRange =
+      item.price <= filters.maxPrice && item.price >= filters.minPrice;
+    const maxGuestsInRange = item.maxGuests >= filters.maxGuests;
+    const petsMatch = !filters.pets || item.meta.pets === filters.pets;
+    const wifiMatch = !filters.wifi || item.meta.wifi === filters.wifi;
+    const parkingMatch =
+      !filters.parking || item.meta.parking === filters.parking;
+    const breakfastMatch =
+      !filters.breakfast || item.meta.breakfast === filters.breakfast;
+
+    return (
+      priceInRange &&
+      maxGuestsInRange &&
+      petsMatch &&
+      wifiMatch &&
+      parkingMatch &&
+      breakfastMatch
+    );
+  });
+
+  return filteredVenues;
 }

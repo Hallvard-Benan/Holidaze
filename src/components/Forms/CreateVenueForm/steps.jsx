@@ -4,8 +4,6 @@ import { FaWifi } from "react-icons/fa6";
 import { CiParking1 } from "react-icons/ci";
 import { PiForkKnife, PiPawPrint, PiBed } from "react-icons/pi";
 import { FaRegStar } from "react-icons/fa";
-import { useEffect, useState } from "react";
-import { useBoundStore } from "../../../stores/store";
 import NumberButtons from "../../ui/numberButtons";
 import { Label } from "../../ui/label";
 import { cn } from "../../../utils/utils";
@@ -17,6 +15,7 @@ export function DetailsStep({
   maxGuests,
   increaseItem,
   decreaseItem,
+  rating,
 }) {
   return (
     <FormStepContainer title={"Details"}>
@@ -51,24 +50,32 @@ export function DetailsStep({
         type="number"
         value={defaultValues.price}
       />
-      <NumberButtons
-        errorMessage={errorMessages?.maxGuests?.message}
-        label="Maximum guests"
-        value={maxGuests}
-        onIncrease={() => increaseItem("maxGuests")}
-        onDecrease={() => decreaseItem("maxGuests")}
-      />
+      <div className="flex items-center justify-between">
+        <Label className="flex items-center gap-2">
+          <PiBed /> Max guests
+        </Label>
+        <NumberButtons
+          errorMessage={errorMessages?.maxGuests?.message}
+          value={maxGuests}
+          onIncrease={() => increaseItem("maxGuests")}
+          onDecrease={() => decreaseItem("maxGuests")}
+        />
+      </div>
+      <div className="flex items-center justify-between">
+        <Label className="flex items-center gap-2">
+          <FaRegStar /> Rating
+        </Label>
+        <NumberButtons
+          value={rating + " / 5"}
+          onIncrease={() => increaseItem("rating")}
+          onDecrease={() => decreaseItem("rating")}
+        />
+      </div>
     </FormStepContainer>
   );
 }
 
-export function AmenitiesStep({
-  defaultValues,
-  updateMeta,
-  increaseItem,
-  decreaseItem,
-  rating,
-}) {
+export function AmenitiesStep({ defaultValues, updateMeta }) {
   const { wifi, parking, breakfast, pets } = defaultValues.meta;
 
   return (
@@ -112,19 +119,6 @@ export function AmenitiesStep({
             <h3>Pets</h3>
           </AmenityContainer>
         </div>
-      </div>
-      <div className="flex items-center justify-between">
-        <Label>Rating</Label>
-        <NumberButtons
-          label={
-            <Label className="flex items-center gap-1">
-              <FaRegStar />
-            </Label>
-          }
-          value={rating + " / 5"}
-          onIncrease={() => increaseItem("rating")}
-          onDecrease={() => decreaseItem("rating")}
-        />
       </div>
     </FormStepContainer>
   );
@@ -198,9 +192,6 @@ export function ImagesStep({ images, handleImagesChange }) {
 }
 
 export function ReviewStep({ values }) {
-  useEffect(() => {
-    if (values) console.log(values);
-  }, [values]);
   const { location, meta, name, description, maxGuests, price, media, rating } =
     values;
 

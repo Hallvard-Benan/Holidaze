@@ -40,7 +40,11 @@ function CountdownTimer({ endsAt, longFormat, className, mediumFormat }) {
   return (
     <div className={`flex gap-2 font-medium ${className}`}>
       {longFormat === true && <p className="font font-normal">Checkin in:</p>}
-      {timeRemaining.days >= 1 ? <p>{timeRemaining.days} d</p> : <p>Today</p>}
+      {timeRemaining.days >= 1 ? (
+        <p>In {timeRemaining.days} days</p>
+      ) : (
+        <p>Today</p>
+      )}
 
       {mediumFormat && <p>Left</p>}
     </div>

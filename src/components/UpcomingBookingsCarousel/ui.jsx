@@ -54,7 +54,7 @@ export default function BookingsCarouselUi({ bookings, userName }) {
             >
               <Link
                 to={`/venues/${booking.venue.id}`}
-                className="bg-card relative flex h-full w-full max-w-full flex-col justify-end gap-2 overflow-hidden  rounded-xl  p-2"
+                className="relative flex h-full w-full max-w-full flex-col justify-end gap-2 overflow-hidden rounded-xl  bg-card  p-2"
               >
                 <div className="z-10 flex w-fit flex-col justify-between overflow-hidden text-white">
                   <h3 className=" w-full text-xl font-medium">
@@ -70,8 +70,16 @@ export default function BookingsCarouselUi({ bookings, userName }) {
                 <div className="absolute right-0 top-0 z-0 h-full w-full ">
                   <div className="absolute h-full w-full bg-gradient-to-b from-gray-800/10 to-gray-800/80"></div>
                   <img
-                    src={booking.venue.media[0].url}
-                    alt={booking.venue.media[0].alt}
+                    src={
+                      booking?.venue?.media[0]?.url
+                        ? booking.venue.media[0].url
+                        : "/noimage.png"
+                    }
+                    alt={
+                      booking?.venue?.media[0]?.alt
+                        ? booking.venue.media[0].alt
+                        : ""
+                    }
                     className="h-full w-full object-cover"
                   />
                 </div>

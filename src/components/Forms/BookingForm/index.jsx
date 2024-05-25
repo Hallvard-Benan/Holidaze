@@ -10,15 +10,20 @@ import { useState, useEffect } from "react";
 import { addDays, subDays } from "date-fns";
 
 import BookingFormCard from "../../ui/bookingFormCard";
+import { useNavigate } from "react-router-dom";
+import { toast } from "sonner";
 
 const BookingForm = ({
   disabledDates,
   venueId,
   maxGuests,
   name,
+  post,
   price,
   disabled,
 }) => {
+  const navigate = useNavigate();
+
   const [bookingFormState, setBookingFormState] = useState({
     dateFrom: subDays(new Date(), 0),
     dateTo: addDays(new Date(), 0),
@@ -68,7 +73,6 @@ const BookingForm = ({
   const isLoggedIn = useBoundStore((state) => state.isLoggedIn);
 
   const handleDateRangeChange = ({ startDate, endDate }) => {
-    console.log("date from date range change", startDate);
     setBookingFormState((state) => ({
       ...state,
       dateFrom: startDate,
@@ -86,7 +90,8 @@ const BookingForm = ({
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["venue", venueId] });
       queryClient.invalidateQueries({ queryKey: ["user", name] });
-
+      navigate(`/profiles/${name}/bookings`);
+      toast.success("Booking successful");
       setError("root", { errors: [] });
     },
     onError: (res) => {
@@ -158,13 +163,10 @@ const BookingForm = ({
   const totalPrice = numberOfNights > 0 ? numberOfNights * price : price;
 
   return (
-    <form
-      onSubmit={handleBooking}
-      className="flex flex-col items-center gap-2 sm:flex-row"
-    >
+    <div className="flex flex-col items-center gap-8 sm:flex-row sm:gap-2">
       {makeBookingMutation.status === "pending" && <Spinner />}
 
-      <div className="">
+      <div>
         <Calendar
           state={calendarState}
           handleOnChange={handleOnChange}
@@ -174,6 +176,8 @@ const BookingForm = ({
 
       {!disabled && (
         <BookingFormCard
+          onSubmit={handleBooking}
+          post={post}
           guests={bookingFormState.guests}
           maxGuests={maxGuests}
           onUpdateGuests={handleUpdateGuests}
@@ -190,7 +194,7 @@ const BookingForm = ({
               guests: state.guests + 1,
             }))
           }
-          errors={{ root: { errors: [{ message: "something went wrong" }] } }}
+          errors={errors}
           nights={numberOfNights}
           price={price}
           total={totalPrice}
@@ -200,7 +204,7 @@ const BookingForm = ({
           status={makeBookingMutation.status}
         />
       )}
-    </form>
+    </div>
   );
 };
 
@@ -210,6 +214,8 @@ BookingForm.propTypes = {
   maxGuests: PropTypes.number,
   price: PropTypes.number,
   disabled: PropTypes.bool,
+  post: PropTypes.object,
+  name: PropTypes.string,
 };
 
 export default BookingForm;

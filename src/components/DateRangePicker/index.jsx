@@ -7,7 +7,7 @@ import { useEffect, useState } from "react";
 
 const Calendar = ({ disabledDates, state, handleOnChange }) => {
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
-  const isSmallScreen = windowWidth < 960;
+  const isSmallScreen = windowWidth < 1060;
   const numMonths = isSmallScreen ? 1 : 2;
 
   useEffect(() => {
@@ -24,6 +24,7 @@ const Calendar = ({ disabledDates, state, handleOnChange }) => {
 
   return (
     <DateRangePicker
+      s
       weekStartsOn={1}
       onChange={handleOnChange}
       showSelectionPreview={true}

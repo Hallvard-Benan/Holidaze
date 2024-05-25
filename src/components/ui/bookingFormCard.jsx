@@ -4,7 +4,7 @@ import Spinner from "./spinner";
 import { formatDate } from "../../utils/utils";
 import { Separator } from "./seperator";
 import NumberButtons from "./numberButtons";
-import { Dialog, DialogContent, DialogTrigger } from "./dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTrigger } from "./dialog";
 
 export default function BookingFormCard({
   status,
@@ -111,6 +111,9 @@ function ConfirmBookingForm({
         <Button type="button">Continue</Button>
       </DialogTrigger>
       <DialogContent className="my-4 max-h-[90dvh] gap-0 divide-y overflow-auto">
+        <h2 className={"py-4 text-center text-xl font-semibold"}>
+          Booking Overview
+        </h2>
         <div className="flex gap-4 py-4">
           <div className="size-24 overflow-hidden rounded-lg border border-gray-400">
             <img
@@ -158,7 +161,7 @@ function ConfirmBookingForm({
             </div>
           )}
           <Button onClick={onSubmit} disabled={disabled}>
-            {status === "pending" ? <Spinner /> : "Confirm"}
+            {status === "pending" ? <Spinner /> : "Confirm Booking"}
           </Button>
         </div>
       </DialogContent>

@@ -6,6 +6,7 @@ import Footer from "./components/Footer";
 import useUser from "./hooks/useUser";
 import { useBoundStore } from "./stores/store";
 import { cn } from "./utils/utils";
+import { Toaster, toast } from "sonner";
 
 function App() {
   const user = useBoundStore((state) => state.user);
@@ -40,10 +41,10 @@ function App() {
       ref={contentRef}
       onScroll={handleScroll}
     >
+      <Toaster richColors />
       <header
         className={cn(
-          "fixed bottom-0 left-1/2 z-40 w-[100dvw] -translate-x-1/2 overflow-x-hidden bg-card text-muted-foreground transition-colors duration-500 sm:bottom-auto",
-          `pr-[${scrollWidth}px]`,
+          "fixed bottom-0 left-1/2 z-40 w-[100dvw] -translate-x-1/2 bg-card text-muted-foreground transition-colors duration-500 sm:bottom-auto",
           onHomePage &&
             !isLoggedIn &&
             "sm:bg-transparent sm:text-primary-foreground ",
@@ -51,6 +52,7 @@ function App() {
             !isLoggedIn &&
             hasScrolled &&
             " sm:bg-card sm:text-muted-foreground",
+          `pr-[${scrollWidth}px]`,
         )}
       >
         <NavBar />

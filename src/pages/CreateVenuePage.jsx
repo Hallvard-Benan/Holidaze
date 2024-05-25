@@ -1,9 +1,11 @@
-import { useLayoutEffect } from "react";
+import { useEffect, useLayoutEffect } from "react";
 import CreateVenueForm from "../components/Forms/CreateVenueForm";
 import useCreateVenue from "../hooks/useCreateVenue";
 import { useBoundStore } from "../stores/store";
+import { useNavigate } from "react-router-dom";
 
 export default function CreateVenuePage() {
+  const navigate = useNavigate();
   const clearVenueForm = useBoundStore((state) => state.clearVenueForm);
   const { createVenueMutation, error, setError } = useCreateVenue();
   const updateItem = useBoundStore((state) => state.updateItem);
@@ -13,10 +15,17 @@ export default function CreateVenuePage() {
   const venueFormData = useBoundStore((state) => state.venueFormData);
   const decreaseItem = useBoundStore((state) => state.decreaseItem);
   const increaseItem = useBoundStore((state) => state.increaseItem);
+  const venueManager = useBoundStore((state) => state.user.venueManager);
 
   useLayoutEffect(() => {
     clearVenueForm();
   }, []);
+
+  useEffect(() => {
+    if (!venueManager) {
+      navigate("/become-host");
+    }
+  }, [venueManager]);
 
   const handleCreateVenue = (e) => {
     e.preventDefault();

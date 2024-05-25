@@ -16,7 +16,7 @@ import VenuesPage from "./pages/VenuesPage";
 import CreateVenuePage from "./pages/CreateVenuePage";
 import UserVenuesPage from "./pages/UserVenuesPage";
 import UserBookingsPage from "./pages/UserBookingsPage";
-
+import BecomeHostPage from "./pages/BecomeHostPage";
 const router = createBrowserRouter([
   {
     path: "/",
@@ -47,6 +47,10 @@ const router = createBrowserRouter([
       {
         path: "/new-venue",
         element: <CreateVenuePage />,
+      },
+      {
+        path: "/become-host",
+        element: <BecomeHostPage />,
       },
     ],
   },

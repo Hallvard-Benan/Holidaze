@@ -43,7 +43,7 @@ export default {
         },
       },
       fontFamily: {
-        body: ["Figtree", "sans"],
+        body: ["Figtree", "ui-sans-serif", "system-ui"],
       },
       keyframes: {
         "accordion-down": {

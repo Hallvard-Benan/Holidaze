@@ -1,8 +1,7 @@
-import { Link, useParams, useSearchParams } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 import Card from "../Card";
 import PaginationSection from "../PaginationSection";
 import SkeletonVenues from "./loading";
-import Spinner from "../ui/spinner";
 import { useBoundStore } from "../../stores/store";
 import useAllVenues from "../../hooks/useAllVenues";
 import { useEffect } from "react";

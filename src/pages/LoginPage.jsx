@@ -15,17 +15,14 @@ export default function LoginPage() {
     document.title = "Holiday Helper | Login";
   }, []);
   return (
-    <div className="container mx-auto">
+    <div className=" mx-auto flex min-h-[90vh] items-center justify-center">
       {formVersion === "login" ? (
         <div>
           <LoginForm />
-          Not signed up?
-          <Link to={"/auth/register"}>Sign up</Link>`
         </div>
       ) : (
         <div>
           <RegisterForm />
-          <Link to={"/auth/login"}>Login</Link>`
         </div>
       )}
     </div>

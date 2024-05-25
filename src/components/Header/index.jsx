@@ -18,7 +18,7 @@ import { cn } from "../../utils/utils";
 import Search from "../ui/search";
 import UserDropDown from "./menu";
 
-export default function NavBar() {
+export default function NavBar({ className }) {
   const isLoggedIn = useBoundStore((state) => state.isLoggedIn);
   const logout = useBoundStore((state) => state.logout);
   const user = useBoundStore((state) => state.user);
@@ -53,7 +53,8 @@ export default function NavBar() {
   return (
     <nav
       className={cn(
-        " bg relative mx-auto grid grid-cols-4 items-center justify-between justify-items-center  py-2 text-xl sm:flex  md:w-calc ",
+        " bg relative mx-auto grid grid-cols-4 items-center justify-between justify-items-center py-2 text-xl sm:flex  sm:w-calc ",
+        className,
       )}
     >
       <NavLink

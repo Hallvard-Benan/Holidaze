@@ -3,6 +3,12 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import Spinner from "../../ui/spinner";
 import useLoginMutation from "../../../hooks/useLoginUserMutation";
+import { Input } from "../../ui/input";
+import { Label } from "../../ui/label";
+import { Link } from "react-router-dom";
+import { Button } from "../../ui/button";
+import { FormSection, FormContainer } from "../ui";
+import { buttonVariants } from "../../ui/button";
 
 const schema = z.object({
   email: z.string().refine((value) => value.endsWith("@stud.noroff.no"), {
@@ -27,41 +33,36 @@ export default function LoginForm() {
     loginUserMutation.mutate(data);
   };
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className=" flex flex-col gap-4">
-      <label htmlFor="email">Email:</label>
-      <input
-        className="border p-2"
-        type="email"
-        {...register("email")}
-        placeholder="email"
-        name="email"
-        defaultValue={"cool_cat@stud.noroff.no"}
-        autoComplete="email"
-      />
-      {errors?.email && (
-        <div className="text-red-500">{errors.email.message}</div>
-      )}
-      <label htmlFor="password"></label>
-      <input
-        className="border p-2"
-        type="password"
-        defaultValue={"thebestuser123"}
-        name="password"
-        autoComplete="current-password"
-        {...register("password")}
-        placeholder="password"
-      />
-      {errors?.password && (
-        <div className="text-red-500">{errors.password.message}</div>
-      )}
-
-      <button
-        disabled={isSubmitting}
-        type="submit"
-        className="flex h-[48px] items-center justify-center rounded-lg bg-gray-500 py-3 font-semibold text-gray-100 transition duration-300 ease-in-out hover:opacity-85 md:max-w-[200px]"
-      >
+    <FormContainer onSubmit={handleSubmit(onSubmit)} title={"Log in"}>
+      <FormSection>
+        <Label htmlFor="email">Email:</Label>
+        <Input
+          type="email"
+          {...register("email")}
+          placeholder="email@stud.noroff.no"
+          name="email"
+          autoComplete="email"
+        />
+        {errors?.email && (
+          <div className="text-red-500">{errors.email.message}</div>
+        )}
+      </FormSection>
+      <FormSection>
+        <Label htmlFor="password">Password</Label>
+        <Input
+          type="password"
+          name="password"
+          autoComplete="current-password"
+          {...register("password")}
+          placeholder="********"
+        />
+        {errors?.password && (
+          <div className="text-red-500">{errors.password.message}</div>
+        )}
+      </FormSection>
+      <Button disabled={isSubmitting} type="submit">
         {isSubmitting || loginUserMutation.isPending ? <Spinner /> : "Login"}
-      </button>
+      </Button>
       {errors?.root && (
         <div className="text-red-500">
           {errors.root.errors.map((m, i) => (
@@ -69,6 +70,15 @@ export default function LoginForm() {
           ))}
         </div>
       )}
-    </form>
+      <div className="flex items-center gap-4">
+        <p>Not a member yet? </p>
+        <Link
+          className={buttonVariants({ variant: "outline" })}
+          to={"/auth/register"}
+        >
+          Sign up
+        </Link>
+      </div>
+    </FormContainer>
   );
 }

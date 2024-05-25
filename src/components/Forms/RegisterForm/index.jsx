@@ -4,8 +4,13 @@ import { z } from "zod";
 import { validateAvatar } from "../../../utils/validation";
 import { useState } from "react";
 import Spinner from "../../ui/spinner";
+import { FormSection, FormContainer } from "../ui";
 import useLoginMutation from "../../../hooks/useLoginUserMutation";
 import useRegisterMutation from "../../../hooks/useRegisterUserMutation";
+import { Label } from "../../ui/label";
+import { Input } from "../../ui/input";
+import { Link } from "react-router-dom";
+import { Button, buttonVariants } from "../../ui/button";
 
 const schema = z.object({
   name: z.string().regex(/^[a-zA-Z0-9_]+$/, {
@@ -13,7 +18,7 @@ const schema = z.object({
       "Name must not contain punctuation symbols apart from underscore (_)",
   }),
   email: z.string().refine((value) => value.endsWith("@stud.noroff.no"), {
-    message: "Email must be a valid stud.noroff.no email address",
+    message: "Valid stud.noroff.no email address is required",
   }),
   password: z
     .string()
@@ -82,121 +87,132 @@ export default function RegisterForm() {
   };
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4">
-      <label htmlFor="name">Name:</label>
-      <input
-        className="border p-2"
-        type="text"
-        {...register("name")}
-        placeholder="Name"
-        name="name"
-      />
-      {errors?.name && (
-        <div className="text-red-500">{errors.name.message}</div>
-      )}
+    <FormContainer
+      title={"Sign up"}
+      onSubmit={handleSubmit(onSubmit)}
+      className="flex flex-col gap-4"
+    >
+      <FormSection>
+        <Label htmlFor="name">Name:</Label>
+        <Input
+          className="border p-2"
+          type="text"
+          {...register("name")}
+          placeholder="User name"
+          name="name"
+        />
+        {errors?.name && (
+          <div className="text-destructive">{errors.name.message}</div>
+        )}
+      </FormSection>
 
-      <label htmlFor="email">Email:</label>
-      <input
-        className="border p-2"
-        type="email"
-        {...register("email")}
-        placeholder="email"
-        name="email"
-        autoComplete="email"
-      />
-      {errors?.email && (
-        <div className="text-red-500">{errors.email.message}</div>
-      )}
-      <label htmlFor="password">Password</label>
-      <input
-        className="border p-2"
-        type="password"
-        name="password"
-        {...register("password")}
-        placeholder="password"
-      />
-      {errors?.password && (
-        <div className="text-red-500">{errors.password.message}</div>
-      )}
+      <FormSection>
+        <Label htmlFor="email">Email:</Label>
+        <Input
+          className="border p-2"
+          type="email"
+          {...register("email")}
+          placeholder="email@stud.noroff.no"
+          name="email"
+          autoComplete="email"
+        />
+        {errors?.email && (
+          <div className="text-destructive">{errors.email.message}</div>
+        )}
+      </FormSection>
+      <FormSection>
+        <Label htmlFor="password">Password</Label>
+        <Input
+          className="border p-2"
+          type="password"
+          name="password"
+          {...register("password")}
+          placeholder="********"
+        />
+        {errors?.password && (
+          <div className="text-destructive">{errors.password.message}</div>
+        )}
+      </FormSection>
 
-      <label htmlFor="bio">Bio:</label>
-      <textarea
-        className="border p-2"
-        {...register("bio")}
-        placeholder="Bio"
-        name="bio"
-      />
-      {errors?.bio && <div className="text-red-500">{errors.bio.message}</div>}
+      <FormSection>
+        <Label htmlFor="bio">Bio:</Label>
+        <textarea
+          className="border p-2"
+          {...register("bio")}
+          placeholder="About me ..."
+          name="bio"
+        />
+        {errors?.bio && (
+          <div className="text-destructive">{errors.bio.message}</div>
+        )}
+      </FormSection>
+      <FormSection>
+        <Label htmlFor="avatar">Avatar Image URL:</Label>
+        <Input
+          className="border p-2"
+          type="url"
+          {...register("avatar.url")}
+          placeholder={"https://..."}
+          name="avatar.url"
+        />
+        {errors?.avatar?.url && (
+          <div className="text-destructive">{errors.avatar.url.message}</div>
+        )}
+      </FormSection>
+      <FormSection>
+        <Label htmlFor="avatar.alt">Avatar Description:</Label>
+        <Input
+          className="border p-2"
+          type="text"
+          {...register("avatar.alt")}
+          placeholder="Me at the zoo..."
+          name="avatar.alt"
+        />
+        {errors?.avatar?.alt && (
+          <div className="text-destructive">{errors.avatar.alt.message}</div>
+        )}
+      </FormSection>
+      <FormSection>
+        <Label htmlFor="banner">Banner image URL:</Label>
+        <Input
+          className="border p-2"
+          type="url"
+          {...register("banner.url")}
+          placeholder={"https://..."}
+          name="banner.url"
+        />
+        {errors?.banner?.url && (
+          <div className="text-destructive">{errors.banner.url.message}</div>
+        )}
+      </FormSection>
 
-      <label htmlFor="avatar">Avatar URL:</label>
-      <input
-        className="border p-2"
-        type="url"
-        {...register("avatar.url")}
-        placeholder="Avatar URL"
-        name="avatar.url"
-      />
-      {errors?.avatar?.url && (
-        <div className="text-red-500">{errors.avatar.url.message}</div>
-      )}
+      <FormSection>
+        <Label htmlFor="banner.alt">Banner description:</Label>
+        <Input
+          className="border p-2"
+          type="text"
+          {...register("banner.alt")}
+          placeholder="My favorite painting of... "
+          name="banner.alt"
+        />
+        {errors?.banner?.alt && (
+          <div className="text-destructive">{errors.banner.alt.message}</div>
+        )}
+      </FormSection>
 
-      <label htmlFor="avatar.alt">Avatar Alt Text:</label>
-      <input
-        className="border p-2"
-        type="text"
-        {...register("avatar.alt")}
-        placeholder="Avatar Alt Text"
-        name="avatar.alt"
-      />
-      {errors?.avatar?.alt && (
-        <div className="text-red-500">{errors.avatar.alt.message}</div>
-      )}
-
-      <label htmlFor="banner">banner URL:</label>
-      <input
-        className="border p-2"
-        type="url"
-        {...register("banner.url")}
-        placeholder="banner URL"
-        name="banner.url"
-      />
-      {errors?.banner?.url && (
-        <div className="text-red-500">{errors.banner.url.message}</div>
-      )}
-
-      <label htmlFor="banner.alt">banner Alt Text:</label>
-      <input
-        className="border p-2"
-        type="text"
-        {...register("banner.alt")}
-        placeholder="banner Alt Text"
-        name="banner.alt"
-      />
-      {errors?.banner?.alt && (
-        <div className="text-red-500">{errors.banner.alt.message}</div>
-      )}
-      {/* Similarly add input fields for banner and venueManager */}
-
-      <div className="mb-4 flex items-center">
-        <input
+      <div className=" flex items-center gap-4">
+        <Label htmlFor="venue-manager-check" className="">
+          Become venue manager:
+        </Label>
+        <Input
           id="venue-manager-check"
           {...register("venueManager")}
           type="checkbox"
-          className="h-4 w-4 rounded border-gray-300 bg-gray-100 text-blue-600 focus:ring-2 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:ring-offset-gray-800 dark:focus:ring-blue-600"
+          className="size-6 rounded border-gray-300 bg-gray-100 text-blue-600 focus:ring-2 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:ring-offset-gray-800 dark:focus:ring-blue-600"
         />
-        <label
-          htmlFor="venue-manager-check"
-          className="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300"
-        >
-          Become venue manager
-        </label>
       </div>
 
-      <button
-        disabled={isSubmitting}
-        type="submit"
-        className="flex h-[48px] items-center justify-center rounded-lg bg-gray-500 py-3 font-semibold text-gray-100 transition duration-300 ease-in-out hover:opacity-85 md:max-w-[200px]"
-      >
+      <Button disabled={isSubmitting} type="submit">
         {isSubmitting ||
         registerUserMutation.isPending ||
         loginUserMutation.isPending ? (
@@ -204,14 +220,23 @@ export default function RegisterForm() {
         ) : (
           "Register"
         )}
-      </button>
+      </Button>
       {errors?.root && (
-        <div className="text-red-500">
+        <div className="text-destructive">
           {errors.root.errors.map((m, i) => (
             <p key={i}>{m.message}</p>
           ))}
         </div>
       )}
-    </form>
+      <div className="flex items-center gap-4">
+        <p>Already a Member? </p>
+        <Link
+          className={buttonVariants({ variant: "outline" })}
+          to={"/auth/login"}
+        >
+          Log in
+        </Link>
+      </div>
+    </FormContainer>
   );
 }

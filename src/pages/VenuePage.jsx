@@ -149,7 +149,6 @@ export default function VenuePage() {
               isUpdating && "sm:flex-col",
             )}
           >
-            {" "}
             <Button
               variant="outline"
               className={cn("gap-2", isUpdating && " z-10 ")}

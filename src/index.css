@@ -66,8 +66,3 @@ body {
 html {
   overflow-y: hidden;
 }
-
-/* body[data-scroll-locked="1"] header {
-  margin-right: 15px !important 
-;
-} */

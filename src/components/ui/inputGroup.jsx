@@ -14,6 +14,7 @@ const InputGroup = React.forwardRef(
       onChange,
       value,
       required,
+      errorWidth,
       placeholder,
       onBlur,
       type,
@@ -25,7 +26,7 @@ const InputGroup = React.forwardRef(
     ref,
   ) => {
     return (
-      <div className="grid gap-2">
+      <div className="grid max-w-full gap-2 ">
         <Label htmlFor={id ? id : label}>
           {required && <span className="text-muted-foreground">*</span>}
           {label}
@@ -46,7 +47,7 @@ const InputGroup = React.forwardRef(
           className={cn(
             errorMessage && "border-destructive",
             success && "border-green-500",
-            "h-[48px]",
+            "h-[48px] max-w-full",
             className,
           )}
         />
@@ -54,7 +55,14 @@ const InputGroup = React.forwardRef(
           <p className="text-sm text-muted-foreground">{description}</p>
         )}
         {errorMessage && (
-          <p className="text-sm text-destructive">{errorMessage}</p>
+          <p
+            className={cn(
+              "text-wrap break-words text-sm text-destructive",
+              `w-[${errorWidth}]`,
+            )}
+          >
+            {errorMessage}
+          </p>
         )}
       </div>
     );

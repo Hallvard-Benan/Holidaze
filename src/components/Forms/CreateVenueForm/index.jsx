@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import { useBoundStore } from "../../../stores/store";
 import { Button } from "../../ui/button";
 import Spinner from "../../ui/spinner";
 import { useMultistepForm } from "../../../hooks/useMultiStepForm";
@@ -11,6 +10,7 @@ import {
   ReviewStep,
 } from "./steps";
 import ProgressBar from "../../ui/progressBar";
+import { cn } from "../../../utils/utils";
 
 export default function CreateVenueForm({
   onSubmit,
@@ -26,11 +26,18 @@ export default function CreateVenueForm({
   decreaseItem,
   increaseItem,
 }) {
-  useEffect(() => {
-    if (defaultValues) console.log(defaultValues.media);
-  }, [defaultValues]);
+  const [errorMessages, setErrorMessages] = useState({
+    name: { isValid: false },
+    description: { isValid: false },
+    price: { isValid: false },
+    maxGuests: { isValid: false },
+  });
 
-  const [errorMessages, setErrorMessages] = useState({});
+  const isStepOneValid =
+    errorMessages.name.isValid &&
+    errorMessages.description.isValid &&
+    errorMessages.price.isValid &&
+    errorMessages.maxGuests.isValid;
 
   function validateRequired(input, fieldName, message) {
     let isValid = true;
@@ -90,7 +97,8 @@ export default function CreateVenueForm({
     />,
   ];
 
-  const { step, back, next, currentStep, isLastStep } = useMultistepForm(steps);
+  const { step, back, next, currentStep, isLastStep, goTo } =
+    useMultistepForm(steps);
 
   useEffect(() => {
     if (defaultValues) {
@@ -132,12 +140,13 @@ export default function CreateVenueForm({
         "Number of guests is required",
       );
     }
-    // Add validations for other steps if needed
     return isValid;
   }
 
+  const stepTitles = ["Details", "Amenities", "Address", "Images", "Review"];
+
   return (
-    <form className="mx-auto mt-[0.5rem] grid h-[calc(100dvh-100px)] max-h-[100dvh] w-calc max-w-[800px] grid-rows-[1fr,auto] gap-4 rounded-xl bg-card p-8 sm:h-[calc(100dvh-80px)]">
+    <form className="mx-auto mt-[0.5rem] grid h-[calc(100dvh-100px)] max-h-[100dvh] w-full max-w-[800px] grid-rows-[1fr,auto] gap-4 rounded-xl bg-card sm:h-[calc(100dvh-80px)] md:w-calc md:p-8">
       <div className="overflow-y-auto">{step}</div>
       <div className="grid gap-4">
         {errors && (
@@ -147,11 +156,30 @@ export default function CreateVenueForm({
             ))}
           </div>
         )}
-        <ProgressBar max={steps.length} current={currentStep + 1} />
+
+        <div>
+          <div className="flex w-full">
+            {steps.map((_, i) => (
+              <GoToButton
+                disabled={!isStepOneValid}
+                current={i <= currentStep}
+                key={i}
+                number={i}
+                goTo={goTo}
+                title={stepTitles[i]}
+              />
+            ))}
+          </div>
+          <ProgressBar
+            max={steps.length}
+            current={currentStep + 1}
+            progressStyle="rounded-e-none"
+          />
+        </div>
         <div className="flex w-full justify-between">
           <Button
-            className="w-full"
-            variant="outline"
+            className="w-full "
+            variant="ghost"
             type="button"
             onClick={back}
           >
@@ -162,7 +190,7 @@ export default function CreateVenueForm({
           </h2>
           {!isLastStep ? (
             <Button
-              className="w-full"
+              className="w-full bg-foreground text-background"
               variant="outline"
               type="button"
               onClick={handleNext}
@@ -182,5 +210,23 @@ export default function CreateVenueForm({
         </div>
       </div>
     </form>
+  );
+}
+
+function GoToButton({ number, title, goTo, disabled, current }) {
+  return (
+    <button
+      disabled={disabled}
+      type="button"
+      className={cn(
+        "w-full border-x text-sm transition-all duration-300",
+        current && "border-primary text-primary",
+        number === 0 && "border-l-0",
+        number === 4 && "border-r-0",
+      )}
+      onClick={() => goTo(number)}
+    >
+      {title}
+    </button>
   );
 }

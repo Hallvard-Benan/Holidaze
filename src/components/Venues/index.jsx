@@ -179,13 +179,12 @@ export function SearchedVenues({ search }) {
   const { data, error, status, fetchNextPage, isFetchingNextPage } =
     useSearchVenues(search);
   const { ref, inView } = useInView();
-
+  const filters = useBoundStore((state) => state.filters);
   useEffect(() => {
     if (inView) {
       fetchNextPage();
     }
   }, [inView, fetchNextPage]);
-
   if (status === "pending") return <SkeletonVenues />;
   if (status === "error") {
     return (
@@ -205,15 +204,18 @@ export function SearchedVenues({ search }) {
       </div>
 
       <VenuesGrid>
-        {data.pages.map((page) => (
-          <Venues
-            key={page?.data.meta?.currentPage}
-            meta={page?.data.meta}
-            data={page.data.data}
-            error={error}
-            status={status}
-          />
-        ))}
+        {data.pages.map((page) => {
+          const filteredData = filterVenues(page.data.data, filters);
+          return (
+            <Venues
+              key={page?.data.meta?.currentPage}
+              meta={page?.data.meta}
+              data={filteredData}
+              error={error}
+              status={status}
+            />
+          );
+        })}
       </VenuesGrid>
       <div ref={ref}>
         {isFetchingNextPage && (

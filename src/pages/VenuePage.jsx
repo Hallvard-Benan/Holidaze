@@ -140,26 +140,26 @@ export default function VenuePage() {
       {isMyVenue && (
         <div
           className={cn(
-            "flex flex-col justify-between gap-8 px-2 py-4 sm:flex-row",
-            isUpdating && "justify-center px-0",
+            "mx-auto flex w-calc flex-col justify-between gap-8 px-2 py-4 sm:flex-row",
+            isUpdating && "w-full justify-center px-0 md:w-calc",
           )}
         >
           <div
             className={cn(
-              "relative flex flex-col gap-4 sm:flex-row ",
+              "relative flex w-full flex-col gap-4 sm:flex-row",
               isUpdating && "sm:flex-col",
             )}
           >
             <Button
               variant="outline"
-              className={cn("gap-2", isUpdating && " z-10 ")}
+              className={cn("gap-2", isUpdating && " z-10 w-fit ")}
               onClick={() => setIsUpdating((prev) => !prev)}
             >
               {isUpdating ? "Cancel" : "Update"} {!isUpdating && <FaEdit />}
             </Button>
             <div
               className={cn(
-                " pointer-events-none mx-auto flex size-0  justify-center opacity-0 transition-transform duration-300",
+                " pointer-events-none  flex size-0  justify-center opacity-0 transition-transform duration-300",
                 !isUpdating && " fixed size-0 -translate-y-full opacity-0",
                 isUpdating &&
                   " pointer-events-auto size-auto w-full translate-y-0 opacity-100 transition-transform duration-300",

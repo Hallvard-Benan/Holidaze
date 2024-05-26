@@ -6,7 +6,7 @@ import { Button } from "../ui/button";
 import { cn } from "../../utils/utils";
 import NumberButtons from "../ui/numberButtons";
 import PriceSlider from "../ui/price-slider";
-import { CheckBoxGroup, InputGroup } from "../ui/inputGroup";
+import { CheckBoxGroup } from "../ui/inputGroup";
 import { useEffect } from "react";
 import { ChosenFilters } from "../ChosenFilters";
 import AreYouSure from "../ui/areYouSure";

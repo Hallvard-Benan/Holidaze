@@ -4,7 +4,6 @@ import { getUser } from "../api/profiles";
 import { useNavigate } from "react-router-dom";
 import { useBoundStore } from "../stores/store";
 import { useState } from "react";
-
 export default function useLoginMutation({ setError }) {
   const [accessToken, setAccessToken] = useState("");
   const { login, updateUser } = useBoundStore();
@@ -15,7 +14,7 @@ export default function useLoginMutation({ setError }) {
     onSuccess: (res) => {
       updateUser(res.data.data);
       login(accessToken);
-      navigate("/");
+      navigate(-1);
     },
     onError: (res) => {
       setError("root", {

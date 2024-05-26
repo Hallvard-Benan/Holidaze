@@ -42,6 +42,7 @@ export default function UserPage() {
           name={userData.name}
           bookings={userData.bookings}
           venues={userData.venues}
+          bio={userData.bio}
           avatar={userData.avatar}
           venueManager={userData.venueManager}
           isMyProfile={isMyProfile}

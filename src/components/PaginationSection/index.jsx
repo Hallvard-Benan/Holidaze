@@ -75,7 +75,7 @@ export default function PaginationSection({
           </PaginationItem>
         )}
       </PaginationContent>
-      <div>
+      <div className="text-sm text-muted-foreground">
         {firstOnThisPage} to {Math.min(current * perPage, total)} of {total}
       </div>
     </Pagination>

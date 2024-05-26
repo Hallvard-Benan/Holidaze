@@ -129,7 +129,6 @@ export function LocationStep({ updateLocation, defaultValues }) {
     <FormStepContainer title={"Location"}>
       <div className="grid grid-cols-2 gap-2">
         <InputGroup
-          className="w-22"
           value={defaultValues.location.address}
           id={"address"}
           label="Address"
@@ -186,7 +185,7 @@ export function LocationStep({ updateLocation, defaultValues }) {
 export function ImagesStep({ images, handleImagesChange }) {
   return (
     <FormStepContainer title={"Images"}>
-      <Images images={images} onImagesChange={handleImagesChange} />
+      <Images images={images} onImagesChange={handleImagesChange} max={8} />
     </FormStepContainer>
   );
 }

@@ -103,14 +103,14 @@ export default function NavBar({ className }) {
           activeRoute === "venues" && activeStyles,
         )}
       >
-        <div className="flex size-8 items-center justify-center">
+        <div className="flex size-8 items-center justify-center ">
           <FaSearch size={"24px"} />
         </div>
         <p className="text-xs sm:hidden">Discover</p>{" "}
       </NavLink>
 
       <div className="flex items-center gap-4">
-        <div className=" hidden w-60 md:block">
+        <div className=" hidden w-60 text-muted-foreground md:block">
           <Search onSearch={handleSearch} variant="header" />
         </div>
         <UserDropDown

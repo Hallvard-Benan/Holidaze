@@ -1,8 +1,16 @@
 import { Link } from "react-router-dom";
 import Search from "../ui/search";
 import FiltersSection from "../Filters";
+import { useNavigate } from "react-router-dom";
 
 export function HeroSection() {
+  const navigate = useNavigate();
+  const handleSearch = (e) => {
+    e.preventDefault();
+    const searchTerm = e.target.search.value;
+    navigate(`/venues?search=${searchTerm}`);
+  };
+
   return (
     <div
       className="relative flex  h-[80dvh] w-full flex-col justify-between bg-cover bg-center"
@@ -16,8 +24,9 @@ export function HeroSection() {
             Find Your Perfect Getaway
           </h1>
           <div className="relative flex w-[50rem] max-w-[80vw] items-center">
-            <Search />
+            <Search onSearch={handleSearch} />
             <FiltersSection
+              onSubmit={() => navigate("/venues")}
               variant="home"
               className={"absolute right-0  h-full"}
             />

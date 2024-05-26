@@ -7,12 +7,14 @@ import { Label } from "../ui/label";
 import { validateAvatar } from "../../utils/validation";
 import PropTypes from "prop-types";
 import { cn } from "../../utils/utils";
+import Spinner from "../ui/spinner";
 
-function Images({ images = [], onImagesChange }) {
+function Images({ images = [], onImagesChange, max }) {
   const [image, setImage] = useState("");
   const [alt, setAlt] = useState("");
   const [isFocused, setIsFocused] = useState(false);
   const [error, setError] = useState("");
+  const [isValidating, setIsValidating] = useState(false);
 
   const handleImageChange = function (e) {
     setImage(e.target.value);
@@ -27,6 +29,7 @@ function Images({ images = [], onImagesChange }) {
   }, [isFocused, image]);
 
   const addImage = async function (imageToAdd) {
+    setIsValidating(true);
     const validatedImage = await validateAvatar(imageToAdd.url);
     const imageExists = images.some((img) => img.url === imageToAdd.url);
 
@@ -40,6 +43,7 @@ function Images({ images = [], onImagesChange }) {
     } else if (!validatedImage) {
       setError("Must be a valid URL to a publicly available image");
     }
+    setIsValidating(false);
   };
 
   const removeImage = function (imageToRemove) {
@@ -80,10 +84,12 @@ function Images({ images = [], onImagesChange }) {
 
       <div className="w-full">
         <div className="flex w-full  flex-col gap-4 ">
+          {images.length >= max && `Limit of ${max} Images Reached`}
           <div className="grid w-full gap-2">
             <Label htmlFor="image">Image URL:</Label>
             <div className="group relative">
               <Input
+                disabled={images.length >= max}
                 onChange={handleImageChange}
                 onFocus={() => setIsFocused(true)}
                 onBlur={() => setIsFocused(false)}
@@ -113,6 +119,7 @@ function Images({ images = [], onImagesChange }) {
             <Label htmlFor="alt">Image Description:</Label>
             <div className="group relative">
               <Input
+                disabled={images.length >= max}
                 onChange={handleAltChange}
                 onFocus={() => setIsFocused(true)}
                 onBlur={() => setIsFocused(false)}
@@ -130,7 +137,7 @@ function Images({ images = [], onImagesChange }) {
                 type="button"
                 onClick={() => setAlt("")}
                 className={cn(
-                  "absolute right-0 top-1/2 hidden -translate-x-1 -translate-y-1/2 items-center justify-center rounded-md border border-destructive bg-secondary  bg-transparent px-2  text-destructive  text-opacity-0 transition-opacity duration-300",
+                  "absolute right-0 top-1/2 hidden -translate-x-1 -translate-y-1/2 items-center justify-center rounded-md border border-destructive  bg-transparent px-2  text-destructive  text-opacity-0 transition-opacity duration-300",
                   alt && " opacity-100 group-hover:flex",
                 )}
               >
@@ -144,7 +151,14 @@ function Images({ images = [], onImagesChange }) {
             onClick={() => addImage({ url: image, alt })}
             className=" gap-1 bg-primary"
           >
-            <p>Add</p> <CiCirclePlus size={28} />
+            {!isValidating ? (
+              <>
+                {" "}
+                <p>Add</p> <CiCirclePlus size={28} />{" "}
+              </>
+            ) : (
+              <Spinner />
+            )}
           </Button>
         </div>
 

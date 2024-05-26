@@ -41,6 +41,10 @@ export default {
           DEFAULT: "var(--card)",
           foreground: "var(--card-foreground)",
         },
+        success: {
+          DEFAULT: "var(--success)",
+          foreground: "var(--success-foreground)",
+        },
       },
       fontFamily: {
         body: ["Figtree", "ui-sans-serif", "system-ui"],

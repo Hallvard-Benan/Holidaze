@@ -5,6 +5,7 @@ import { formatDate } from "../../utils/utils";
 import { Separator } from "./seperator";
 import NumberButtons from "./numberButtons";
 import { Dialog, DialogContent, DialogHeader, DialogTrigger } from "./dialog";
+import { buttonVariants } from "./button";
 
 export default function BookingFormCard({
   status,
@@ -82,9 +83,21 @@ export default function BookingFormCard({
           />
         </>
       ) : (
-        <div>
-          <Link to={"/auth/login"}>Log in</Link>
-          <Link to={"/auth/register"}>Register</Link>
+        <div className="space-y-2">
+          <p className="text-muted-foreground">
+            Log in or register to make a booking
+          </p>
+          <div className="flex gap-2">
+            <Link to={"/auth/login"} className={buttonVariants()}>
+              Log in
+            </Link>
+            <Link
+              to={"/auth/register"}
+              className={buttonVariants({ variant: "outline" })}
+            >
+              Register
+            </Link>
+          </div>
         </div>
       )}
     </div>

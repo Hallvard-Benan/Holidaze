@@ -35,34 +35,43 @@ export default function BecomeHostPage() {
   }, [venueManager]);
 
   return (
-    <Container className={"h-[90vh]"}>
+    <Container className={"h-[85vh]"}>
       <form
         onSubmit={handleSubmit}
         className="flex flex-col justify-items-center gap-16 rounded-lg bg-card p-4"
       >
-        <h1 className="text-xl font-semibold">Become a host today</h1>
-        <div className="flex flex-col gap-4">
-          <div className=" flex items-center gap-4">
-            <Label htmlFor="venue-manager-check" className="">
-              * I have read and agree to the <TermsAndConditionsDialog />
-            </Label>
-            <Input
-              id="venue-manager-check"
-              type="checkbox"
-              checked={hasAgreed}
-              onChange={() => setHasAgreed((prev) => !prev)}
-              className="size-6 rounded border-gray-300 bg-gray-100 text-blue-600 focus:ring-2 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:ring-offset-gray-800 dark:focus:ring-blue-600"
-            />
+        <div className="mx-auto flex h-full max-w-[500px] flex-col justify-between gap-8">
+          <div className="space-y-4">
+            <h1 className="text-xl font-semibold capitalize">
+              Begin your hosting journey today
+            </h1>
+            <p className="text-muted-foreground">
+              Host travelers and earn money. Just a few clicks away.
+            </p>
           </div>
-          <Button disabled={!hasAgreed}>Become a Host</Button>
+          <div className="flex flex-col gap-4">
+            <div className=" flex items-center gap-4">
+              <Label htmlFor="venue-manager-check" className="">
+                * I have read and agree to the <TermsAndConditionsDialog />
+              </Label>
+              <Input
+                id="venue-manager-check"
+                type="checkbox"
+                checked={hasAgreed}
+                onChange={() => setHasAgreed((prev) => !prev)}
+                className="size-6 rounded border-gray-300 bg-gray-100 text-blue-600 focus:ring-2 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:ring-offset-gray-800 dark:focus:ring-blue-600"
+              />
+            </div>
+            <Button disabled={!hasAgreed}>Become a Host</Button>
+          </div>
+          {error?.root && (
+            <div className="text-red-500">
+              {error.root.error.map((m, i) => (
+                <p key={i}>{m.message}</p>
+              ))}
+            </div>
+          )}
         </div>
-        {error?.root && (
-          <div className="text-red-500">
-            {error.root.error.map((m, i) => (
-              <p key={i}>{m.message}</p>
-            ))}
-          </div>
-        )}
       </form>
     </Container>
   );

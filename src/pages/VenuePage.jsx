@@ -136,36 +136,25 @@ export default function VenuePage() {
   }
 
   return (
-    <div className="gridgap-16 ">
+    <div className="">
       {isMyVenue && (
         <div
           className={cn(
             "mx-auto flex w-calc flex-col justify-between gap-8 px-2 py-4 sm:flex-row",
-            isUpdating && "w-full justify-center px-0 md:w-calc",
           )}
         >
-          <div
-            className={cn(
-              "relative flex w-full flex-col gap-4 sm:flex-row",
-              isUpdating && "sm:flex-col",
-            )}
-          >
+          <div className={"relative flex w-full flex-col gap-4 sm:flex-row"}>
             <Button
               variant="outline"
-              className={cn("gap-2", isUpdating && " z-10 w-fit ")}
+              className={"gap-2"}
               onClick={() => setIsUpdating((prev) => !prev)}
             >
-              {isUpdating ? "Cancel" : "Update"} {!isUpdating && <FaEdit />}
+              Update <FaEdit />
             </Button>
-            <div
-              className={cn(
-                " pointer-events-none  flex size-0  justify-center opacity-0 transition-transform duration-300",
-                !isUpdating && " fixed size-0 -translate-y-full opacity-0",
-                isUpdating &&
-                  " pointer-events-auto size-auto w-full translate-y-0 opacity-100 transition-transform duration-300",
-              )}
-            >
+
+            {isUpdating && (
               <CreateVenueForm
+                handleBack={() => setIsUpdating(false)}
                 status={status}
                 errors={updateError?.response?.data?.errors}
                 onSubmit={handleEdit}
@@ -178,8 +167,9 @@ export default function VenuePage() {
                 decreaseItem={decreaseEditItem}
                 increaseItem={increaseEditItem}
               />
-            </div>
-            {post.bookings.length > 0 && !isUpdating && (
+            )}
+
+            {post.bookings.length > 0 && (
               <Dialog>
                 <DialogTrigger asChild>
                   <Button variant="outline" className="relative gap-2">
@@ -226,16 +216,15 @@ export default function VenuePage() {
               </Dialog>
             )}
           </div>
-          {!isUpdating && (
-            <AreYouSure
-              buttonText="Delete this venue"
-              title="Are you absolutely sure?"
-              description="This action cannot be undone. This will permanently delete this venue."
-              onConfirm={handleDelete}
-              className="bg-destructive"
-              status={deleteMutation.status}
-            />
-          )}
+
+          <AreYouSure
+            buttonText="Delete this venue"
+            title="Are you absolutely sure?"
+            description="This action cannot be undone. This will permanently delete this venue."
+            onConfirm={handleDelete}
+            className="bg-destructive"
+            status={deleteMutation.status}
+          />
         </div>
       )}
 

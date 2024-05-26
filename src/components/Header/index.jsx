@@ -88,9 +88,16 @@ export default function NavBar({ className }) {
               : "/become-host"
         }
       >
-        <p className="text-xs sm:text-base md:text-lg">New venue</p>{" "}
+        <p className="text-xs sm:text-base md:text-lg">
+          {user.venueManager ? "New venue" : "Become Host"}
+        </p>{" "}
         <div className="flex size-8 items-center justify-center">
-          <div className="size-[27px] sm:size-5">
+          <div
+            className={cn(
+              "size-[27px] sm:size-5 ",
+              !user.venueManager && "sm:hidden",
+            )}
+          >
             <FaPlus size={"100%"} />
           </div>
         </div>

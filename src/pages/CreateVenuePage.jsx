@@ -16,7 +16,6 @@ export default function CreateVenuePage() {
   const decreaseItem = useBoundStore((state) => state.decreaseItem);
   const increaseItem = useBoundStore((state) => state.increaseItem);
   const venueManager = useBoundStore((state) => state.user.venueManager);
-
   useLayoutEffect(() => {
     clearVenueForm();
   }, []);
@@ -34,18 +33,21 @@ export default function CreateVenuePage() {
   };
 
   return (
-    <CreateVenueForm
-      onSubmit={handleCreateVenue}
-      errors={error?.response?.data?.errors}
-      status={createVenueMutation.status}
-      setError={setError}
-      updateItem={updateItem}
-      updateMeta={updateMeta}
-      updateLocation={updateLocation}
-      updateVenueForm={updateVenueForm}
-      venueFormData={venueFormData}
-      decreaseItem={decreaseItem}
-      increaseItem={increaseItem}
-    />
+    <div className="">
+      <CreateVenueForm
+        handleBack={() => navigate(-1)}
+        onSubmit={handleCreateVenue}
+        errors={error?.response?.data?.errors}
+        status={createVenueMutation.status}
+        setError={setError}
+        updateItem={updateItem}
+        updateMeta={updateMeta}
+        updateLocation={updateLocation}
+        updateVenueForm={updateVenueForm}
+        venueFormData={venueFormData}
+        decreaseItem={decreaseItem}
+        increaseItem={increaseItem}
+      />
+    </div>
   );
 }

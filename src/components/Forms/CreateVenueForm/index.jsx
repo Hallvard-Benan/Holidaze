@@ -153,7 +153,7 @@ export default function CreateVenueForm({
   return (
     <div
       className={cn(
-        "animate-in slide-in-from-bottom fixed inset-0 z-40 h-screen w-screen overflow-auto bg-card duration-300",
+        "animate-in slide-in-from-bottom fixed inset-0 z-40  w-screen overflow-auto bg-card duration-300",
         isExiting && "animate-out  slide-out-to-bottom",
       )}
     >

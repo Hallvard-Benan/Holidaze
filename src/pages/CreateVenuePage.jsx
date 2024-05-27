@@ -33,7 +33,7 @@ export default function CreateVenuePage() {
   };
 
   return (
-    <div className="">
+    <div className="h-screen">
       <CreateVenueForm
         handleBack={() => navigate(-1)}
         onSubmit={handleCreateVenue}

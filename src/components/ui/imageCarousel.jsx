@@ -29,6 +29,10 @@ export function ImageCarousel({ images, noImage }) {
 
   return (
     <Carousel setApi={setApi} className=" relative w-full">
+      <p className="absolute right-0 top-0 z-20 -translate-x-1/2 translate-y-1/2 rounded-md bg-slate-900/50 p-1 text-xs text-white sm:hidden">
+        {" "}
+        {current} / {count}
+      </p>
       <CarouselContent className="aspect-video w-full  sm:h-72 ">
         {images.map((img, index) => (
           <CarouselItem key={index} className="flex justify-center">
@@ -36,14 +40,15 @@ export function ImageCarousel({ images, noImage }) {
               src={img.url}
               alt={img.alt}
               className={cn(
-                " h-full w-full   object-cover sm:aspect-video sm:w-auto",
+                " h-full w-full   object-cover sm:aspect-video sm:w-auto sm:rounded-md",
                 noImage && "object-contain",
               )}
             />
           </CarouselItem>
         ))}
       </CarouselContent>
-      <div className="flex  justify-between">
+
+      <div className="hidden justify-between  sm:flex">
         <CarouselPrevious className=" relative" />
         <div className="py-2 text-center text-sm text-muted-foreground">
           <div className="flex justify-center gap-2">

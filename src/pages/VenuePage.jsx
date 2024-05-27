@@ -140,7 +140,7 @@ export default function VenuePage() {
       {isMyVenue && (
         <div
           className={cn(
-            "mx-auto flex w-calc flex-col justify-between gap-8 px-2 py-4 sm:flex-row",
+            "mx-auto flex w-calc flex-col justify-between gap-8  px-2 py-4 sm:flex-row",
           )}
         >
           <div className={"relative flex w-full flex-col gap-4 sm:flex-row"}>
@@ -244,7 +244,7 @@ export default function VenuePage() {
           />
         </div>
         <Container>
-          <div className="flex flex-col gap-2">
+          <div className="flex flex-col gap-2 overflow-hidden break-all">
             <h1 className="text-2xl md:text-3xl">{post.name}</h1>
             {post.location.city && post.location.country && (
               <p className="text-muted-foreground">
@@ -261,25 +261,26 @@ export default function VenuePage() {
               <FaRegStar /> {post.rating}
             </p>
           </div>
-          <BookingForm
-            post={post}
-            status={status}
-            disabled={isMyVenue}
-            disabledDates={disabledDates}
-            price={post.price}
-            name={user.name}
-            venueId={id}
-            maxGuests={post.maxGuests}
-          />
-          <Separator />
+          <div className="border-b pb-4">
+            <BookingForm
+              post={post}
+              status={status}
+              disabled={isMyVenue}
+              disabledDates={disabledDates}
+              price={post.price}
+              name={user.name}
+              venueId={id}
+              maxGuests={post.maxGuests}
+            />
+          </div>
 
           <section className="flex flex-col items-center gap-6 pb-8 ">
-            <div className="flex w-full flex-col gap-8 sm:flex-row">
+            <div className="flex w-full flex-col gap-8 divide-y sm:flex-row sm:divide-y-0">
               <Link
                 to={`/profiles/${post.owner.name}`}
                 className={
                   (cn(!isLoggedIn && "pointer-events-none"),
-                  "mx-auto grid  min-w-72 gap-2 rounded-md border p-6")
+                  "mx-auto grid aspect-square h-[200px] gap-2 rounded-md border p-6")
                 }
               >
                 <div className=" flex flex-col items-center justify-center gap-2">
@@ -294,27 +295,17 @@ export default function VenuePage() {
                   </p>
                 </div>
               </Link>
-              <div className="grid flex-grow gap-6">
-                <AmenityIcons meta={post.meta} maxGuests={post.maxGuests} />
+              <div className="flex-grow space-y-8 divide-y">
+                <div className="pt-8 md:pt-0">
+                  <AmenityIcons meta={post.meta} maxGuests={post.maxGuests} />
+                </div>
                 <div
                   className={cn(
-                    " grid w-full gap-2 overflow-hidden rounded-md bg-card p-2",
-                    fullDescription && "h-auto",
+                    " grid max-w-full gap-2 overflow-hidden rounded-md p-2",
                   )}
                 >
                   <h2 className="text-lg font-medium">About This Venue</h2>
-                  <p
-                    className={cn(
-                      " line-clamp-6 overflow-hidden",
-                      fullDescription && "line-clamp-none",
-                    )}
-                  >
-                    {post.description}
-                  </p>
-                  <button onClick={() => setFullDescription((prev) => !prev)}>
-                    {" "}
-                    read more...
-                  </button>
+                  <p className="max-w-full break-all ">{post.description}</p>
                 </div>
               </div>
             </div>

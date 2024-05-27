@@ -6,26 +6,26 @@ import { cn } from "../../utils/utils";
 
 export function AmenityIcon({ icon, text }) {
   return (
-    <div className="flex flex-col items-center gap-1">
+    <div className="flex items-center gap-6">
       <p className="text-2xl text-black">{createElement(icon)}</p>
-      <p className="text-muted-foreground text-sm">{text}</p>
+      <p className="text-sm text-muted-foreground">{text}</p>
     </div>
   );
 }
 
 export default function AmenityIcons({ meta, maxGuests, direction }) {
   const amenities = [
-    { name: "Wifi", value: meta.wifi, icon: FaWifi },
+    { name: "Free Wifi", value: meta.wifi, icon: FaWifi },
     { name: "Parking", value: meta.parking, icon: CiParking1 },
-    { name: "Pets", value: meta.pets, icon: PiPawPrint },
-    { name: "Breakfast", value: meta.breakfast, icon: PiForkKnife },
+    { name: "Pets Allowed", value: meta.pets, icon: PiPawPrint },
+    { name: "Included Breakfast", value: meta.breakfast, icon: PiForkKnife },
     { name: `Up to ${maxGuests} guests`, value: true, icon: PiBed },
   ];
 
   return (
     <div
       className={cn(
-        "flex w-fit gap-4 whitespace-nowrap",
+        "flex w-fit flex-col gap-4 whitespace-nowrap",
         direction === "horizontal" && "flex-col",
       )}
     >

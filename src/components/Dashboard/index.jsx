@@ -9,15 +9,14 @@ export function Dashboard() {
   const userName = useBoundStore((state) => state.user.name);
   const venuesNumber = useBoundStore((state) => state.user?._count?.venues);
   const venueManager = useBoundStore((state) => state.user.venueManager);
-  const { bookings } = useUpcomingBookings(userName);
+  const { upcomingBookings } = useUpcomingBookings(userName);
   return (
     <>
-      {bookings.length > 0 || venueManager ? (
+      {upcomingBookings.length > 0 || venueManager ? (
         <div className="grid gap-8">
-          <h2>Welcome, {userName}!</h2>
           <div
             className={cn(
-              "relative flex w-full max-w-full flex-col gap-16 overflow-hidden md:flex-row",
+              "relative flex w-full max-w-full flex-col gap-8 overflow-hidden sm:gap-16 md:flex-row",
               !venueManager && "mx-auto max-w-[400px]",
             )}
           >

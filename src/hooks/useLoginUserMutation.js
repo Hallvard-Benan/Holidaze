@@ -4,6 +4,7 @@ import { getUser } from "../api/profiles";
 import { useNavigate } from "react-router-dom";
 import { useBoundStore } from "../stores/store";
 import { useState } from "react";
+import { toast } from "sonner";
 export default function useLoginMutation({ setError }) {
   const [accessToken, setAccessToken] = useState("");
   const { login, updateUser } = useBoundStore();
@@ -26,6 +27,7 @@ export default function useLoginMutation({ setError }) {
   const loginUserMutation = useMutation({
     mutationFn: loginUser,
     onSuccess: (res) => {
+      toast.success(`Logged in as ${res.data.data.name}`);
       setAccessToken(res.data.data.accessToken);
       updateUserMutation.mutate({
         name: res.data.data.name,

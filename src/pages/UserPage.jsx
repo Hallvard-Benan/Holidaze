@@ -4,6 +4,7 @@ import ProfileUi from "../components/user/ui";
 import { useBoundStore } from "../stores/store.js";
 import useUser from "../hooks/useUser.js";
 import { useEffect } from "react";
+import SkeletonProfile from "../components/user/loading.jsx";
 
 export async function loader({ params }) {
   const userName = params.userName;
@@ -20,7 +21,7 @@ export default function UserPage() {
 
   const { data, error, status } = useUser(userName);
 
-  if (status === "pending") return <Spinner />;
+  if (status === "pending") return <SkeletonProfile />;
 
   if (status === "error") {
     return (

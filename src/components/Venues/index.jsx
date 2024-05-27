@@ -31,6 +31,28 @@ export default function Venues({ data }) {
   );
 }
 
+export function MyVenues({ data }) {
+  return (
+    <>
+      {data.map((item) => (
+        <Card
+          isMine={true}
+          bookings={item.bookings}
+          key={item.id}
+          heading={item.name}
+          description={item.description}
+          images={item.media}
+          price={item.price}
+          location={item.location}
+          rating={item.rating}
+          details={item.price}
+          href={`/venues/${item.id}`}
+        />
+      ))}
+    </>
+  );
+}
+
 export function PaginatedVenues() {
   const updatePageNumber = useBoundStore((state) => state.updatePageNumber);
   const updatePerPage = useBoundStore((state) => state.updatePerPage);
@@ -69,12 +91,14 @@ export function PaginatedVenues() {
             <select
               name=""
               id=""
+              className="bg-inherit text-sm"
               value={perPage}
               onChange={(e) => {
                 updatePerPage(parseInt(e.target.value));
               }}
             >
-              <option value={20}>20 per page</option>
+              <option value={12}>12 per page</option>
+              <option value={20}>20</option>
               <option value={50}>50</option>
               <option value={100}>100</option>
             </select>
@@ -107,7 +131,23 @@ export function PaginatedVenues() {
           ))}
         </VenuesGrid>
       </div>
-      <div className="grid">
+      <div className="relative">
+        <div className="absolute bottom-0 h-fit w-fit">
+          <select
+            name=""
+            id=""
+            className="bg-inherit text-sm"
+            value={perPage}
+            onChange={(e) => {
+              updatePerPage(parseInt(e.target.value));
+            }}
+          >
+            <option value={12}>12 per page</option>
+            <option value={20}>20</option>
+            <option value={50}>50</option>
+            <option value={100}>100</option>
+          </select>
+        </div>
         <PaginationSection
           onChange={handlePageChange}
           current={data.data.meta.currentPage}
@@ -119,19 +159,6 @@ export function PaginatedVenues() {
           firstOnThisPage={firstOnThisPage}
           pageCount={data.data.meta.pageCount}
         />
-        <select
-          className="w-fit"
-          name=""
-          id=""
-          value={perPage}
-          onChange={(e) => {
-            updatePerPage(parseInt(e.target.value));
-          }}
-        >
-          <option value={20}>20</option>
-          <option value={50}>50</option>
-          <option value={100}>100</option>
-        </select>
       </div>
     </>
   );
@@ -167,7 +194,7 @@ export function NewVenues() {
         ))}
       </VenuesGrid>
       <div className="flex w-full justify-center">
-        <Link to="/venues?page=2" className="rounded-lg border px-4 py-2">
+        <Link to="/venues" className="rounded-lg border px-4 py-2">
           See all
         </Link>
       </div>

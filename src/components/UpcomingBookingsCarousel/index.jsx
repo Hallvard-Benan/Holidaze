@@ -11,11 +11,11 @@ import { cn } from "../../utils/utils";
 export default function UpcomingBookingsCarousel() {
   const userName = useBoundStore((state) => state.user.name);
 
-  const { status, error, bookings } = useUpcomingBookings(userName);
+  const { status, error, upcomingBookings } = useUpcomingBookings(userName);
 
   if (status === "error") return <div>error</div>;
   if (status === "pending") return <UpcomingBookingSkeleton />;
-  if (status === "success" && bookings && bookings.length === 0)
+  if (status === "success" && upcomingBookings && upcomingBookings.length === 0)
     return (
       <div className="flex h-full w-full flex-col justify-between">
         <div className="w-full text-center text-xl font-semibold">
@@ -35,5 +35,5 @@ export default function UpcomingBookingsCarousel() {
         </div>
       </div>
     );
-  return <BookingsCarouselUi bookings={bookings} userName={userName} />;
+  return <BookingsCarouselUi bookings={upcomingBookings} userName={userName} />;
 }

@@ -1,53 +1,23 @@
 import { Link } from "react-router-dom";
-import Card from "../Card";
-import { cn, formatDate } from "../../utils/utils";
+import { cn } from "../../utils/utils";
 
 import UpdateAvatarForm from "../Forms/UpdateAvatarForm";
 import { VenuesGrid } from "../Venues/ui";
 import { useState } from "react";
-import CountdownTimer from "../ui/countDown";
-import ProgressBar from "../ui/progressBar";
-import { FaCalendar, FaCheck, FaEdit, FaSearch, FaUser } from "react-icons/fa";
+import { FaCheck, FaEdit, FaSearch } from "react-icons/fa";
 import { FaPlus } from "react-icons/fa6";
 import { Button, buttonVariants } from "../ui/button";
 import useUpdateUser from "../../hooks/useUpdateUser";
 import { toast } from "sonner";
-function ProfileUi({
-  name,
-  avatar,
-  banner,
-  venues,
-  bio,
-  bookings,
-  isMyProfile,
-}) {
-  const [bookingsToDisplay, setBookingsToDisplay] = useState("upcoming");
-
-  const upComingBookings = bookings.filter((booking) => {
-    const today = new Date();
-    const bookingDate = new Date(booking.dateFrom);
-    return bookingDate > today;
-  });
-  const pastBookings = bookings.filter((booking) => {
-    const today = new Date();
-    const bookingDate = new Date(booking.dateFrom);
-    return bookingDate < today;
-  });
-
-  const sortedBookings = (bookingsToSort) =>
-    bookingsToSort.sort((bookingA, bookingB) => {
-      const dateA = new Date(bookingA.dateFrom);
-      const dateB = new Date(bookingB.dateFrom);
-      return dateA - dateB;
-    });
-
-  const sortedUpComingBookings = sortedBookings(upComingBookings);
-  const sortedPastBookings = sortedBookings(pastBookings);
-  const renderedBookings =
-    bookingsToDisplay === "upcoming"
-      ? sortedUpComingBookings
-      : sortedPastBookings;
-
+import Bookings from "../Bookings";
+import BookingsButtons from "../Bookings/buttons";
+import useFilterBookings from "../../hooks/useFilterBookings";
+import useVenuesByProfile from "../../hooks/useVenuesByProfile";
+import Venues, { MyVenues } from "../Venues";
+import Spinner from "../ui/spinner";
+function ProfileUi({ name, avatar, banner, bio, bookings, isMyProfile }) {
+  const { renderedBookings, setBookingsToDisplay, bookingsToDisplay } =
+    useFilterBookings(bookings);
   return (
     <div className="relative mx-auto grid  w-calc gap-4 overflow-hidden">
       <div className="space-y-8">
@@ -87,7 +57,7 @@ function ProfileUi({
             )}
           </div>
           <div className="flex flex-col justify-center divide-y ">
-            <h1 className="break-all py-6 text-center text-4xl  sm:py-8 md:text-5xl">
+            <h1 className=" break-words py-6 text-center text-4xl  sm:py-8 md:text-5xl">
               {name}
             </h1>
 
@@ -109,95 +79,17 @@ function ProfileUi({
                         Find a venue <FaSearch />
                       </Link>
                     ) : (
-                      <>
-                        <button
-                          className={cn(
-                            "border-b px-2 font-light transition-all duration-300 hover:text-primary",
-                            bookingsToDisplay === "upcoming" &&
-                              "border-b border-primary  hover:text-current",
-                          )}
-                          onClick={() => setBookingsToDisplay("upcoming")}
-                        >
-                          Upcoming
-                        </button>
-                        <button
-                          className={cn(
-                            "border-b px-2 font-light transition-all duration-300 hover:text-primary",
-                            bookingsToDisplay === "past" &&
-                              "border-b border-primary  hover:text-current",
-                          )}
-                          onClick={() => setBookingsToDisplay("past")}
-                        >
-                          Previous
-                        </button>
-                      </>
+                      <BookingsButtons
+                        bookingsToDisplay={bookingsToDisplay}
+                        setBookingsToDisplay={setBookingsToDisplay}
+                      />
                     )}
                   </div>
                 </div>
-                <VenuesGrid className="gap-8 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3">
-                  {renderedBookings.map((booking) => (
-                    <div
-                      key={booking.id}
-                      className="items-centr flex w-full flex-col gap-2"
-                    >
-                      <div
-                        key={booking.id}
-                        className=" flex aspect-video w-full items-center justify-center overflow-hidden "
-                      >
-                        <Link
-                          to={`/venues/${booking.venue.id}`}
-                          className="relative flex h-full w-full max-w-full flex-col justify-end gap-2 overflow-hidden rounded-xl  bg-card  p-2"
-                        >
-                          <div className="z-10 flex w-fit flex-col justify-between overflow-hidden text-white">
-                            <h3 className=" w-full text-xl font-medium">
-                              {booking.venue.name}
-                            </h3>
-                            {bookingsToDisplay === "upcoming" && (
-                              <div className="flex w-full max-w-full gap-2 ">
-                                <CountdownTimer endsAt={booking.dateFrom} />
-                              </div>
-                            )}
-                          </div>
-                          {bookingsToDisplay === "upcoming" && (
-                            <div className="z-10 max-w-full">
-                              <ProgressBar
-                                start={booking.created}
-                                end={booking.dateTo}
-                              />
-                            </div>
-                          )}
-                          <div className="absolute right-0 top-0 z-0 h-full w-full ">
-                            <div className="absolute h-full w-full bg-gradient-to-b from-gray-800/10 to-gray-800/80"></div>
-                            <img
-                              src={
-                                booking?.venue?.media[0]?.url
-                                  ? booking.venue.media[0].url
-                                  : "/noimage.png"
-                              }
-                              alt={
-                                booking?.venue?.media[0]?.alt
-                                  ? booking.venue.media[0].alt
-                                  : ""
-                              }
-                              className="h-full w-full object-cover"
-                            />
-                          </div>
-                        </Link>
-                      </div>
-                      <div className="flex justify-between px-2 text-sm text-muted-foreground">
-                        <div className="flex items-center gap-1">
-                          <p>{formatDate(booking.dateFrom)}</p>-
-                          <p> {formatDate(booking.dateTo)}</p>
-                          <FaCalendar />
-                        </div>
-                        <p className="flex items-center gap-1  text-muted-foreground">
-                          {booking.guests}
-                          <FaUser />
-                        </p>
-                      </div>
-                    </div>
-                  ))}
-                </VenuesGrid>
+                <Bookings
+                  renderedBookings={renderedBookings}
+                  bookingsToDisplay={bookingsToDisplay}
+                />
               </div>
             )}
             <div className="space-y-4 py-6 sm:py-8">
@@ -219,17 +111,7 @@ function ProfileUi({
                 )}
               </div>
               <VenuesGrid>
-                {venues.map((venue) => (
-                  <Card
-                    key={venue.id}
-                    rating={venue.rating}
-                    images={venue.media}
-                    location={venue.location}
-                    price={venue.price}
-                    heading={venue.name}
-                    href={`/venues/${venue.id}`}
-                  ></Card>
-                ))}
+                <ProfileVenues isMyProfile={isMyProfile} userName={name} />
               </VenuesGrid>
             </div>
           </div>
@@ -314,4 +196,26 @@ function UserBio({ bio, isMyProfile, userName }) {
       </div>
     </section>
   );
+}
+
+function ProfileVenues({ userName, isMyProfile }) {
+  const { data, error, status } = useVenuesByProfile(userName);
+  if (status === "pending") return <Spinner />;
+
+  if (status === "error") {
+    return (
+      <div>
+        error {error.message}{" "}
+        {error.response?.data?.errors.map((e, i) => (
+          <p key={i}>{e.message}</p>
+        ))}{" "}
+      </div>
+    );
+  }
+
+  if (status === "success") {
+    const userData = data.data.data;
+    if (isMyProfile) return <MyVenues data={userData}></MyVenues>;
+    return <Venues data={userData}></Venues>;
+  }
 }

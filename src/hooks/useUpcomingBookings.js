@@ -3,12 +3,14 @@ import useUser from "./useUser";
 
 export default function useUpcomingBookings(userName) {
   const { status, error, data } = useUser(userName);
+  const [upcomingBookings, setUpComingBookings] = useState([]);
   const [bookings, setBookings] = useState([]);
 
   useEffect(() => {
     if (status === "success" && data) {
       const filteredBookings = filterBookings(data.data.data.bookings);
-      setBookings(filteredBookings);
+      setUpComingBookings(filteredBookings);
+      setBookings(data.data.data.bookings);
     }
   }, [status, data]);
 
@@ -28,5 +30,5 @@ export default function useUpcomingBookings(userName) {
     return sortedBookings;
   }
 
-  return { status, error, bookings };
+  return { status, error, bookings, upcomingBookings };
 }

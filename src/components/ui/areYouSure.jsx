@@ -19,6 +19,7 @@ export default function AreYouSure({
   status,
   onConfirm,
   description,
+  confirmVariant,
   cancelText,
   className,
 }) {
@@ -36,7 +37,7 @@ export default function AreYouSure({
           <AlertDialogCancel {...(onCancel ? { onClick: onCancel } : {})}>
             {cancelText ? cancelText : "Cancel"}
           </AlertDialogCancel>
-          <AlertDialogAction onClick={onConfirm}>
+          <AlertDialogAction onClick={onConfirm} variant={confirmVariant}>
             {status === "pending" ? (
               <Spinner></Spinner>
             ) : confirmText ? (

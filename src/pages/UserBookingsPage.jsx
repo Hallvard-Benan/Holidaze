@@ -47,7 +47,7 @@ export default function UserBookingsPage() {
   };
 
   return (
-    <div className="h-screen">
+    <div className="min-h-screen">
       <Container>
         <div className="flex justify-between">
           <h1 className="text-3xl font-semibold">Your Upcoming Bookings</h1>

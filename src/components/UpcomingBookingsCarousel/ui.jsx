@@ -31,7 +31,7 @@ export default function BookingsCarouselUi({ bookings, userName }) {
   }, [api]);
 
   return (
-    <div className="flex w-full flex-col gap-8 overflow-hidden">
+    <div className="flex w-full flex-col gap-4 overflow-hidden sm:gap-8">
       <div className="flex justify-between">
         <h3 className="text-xl font-semibold">Upcoming trip:</h3>{" "}
         <Link

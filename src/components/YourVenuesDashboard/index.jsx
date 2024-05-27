@@ -42,7 +42,7 @@ export default function YourVenuesDashboard({ userName, venuesNumber }) {
   }, 0);
 
   return (
-    <div className="grid h-full w-full grid-rows-[auto,1fr,auto]  gap-8 ">
+    <div className="grid h-full w-full grid-rows-[auto,1fr,auto] gap-4 sm:gap-8 ">
       <h3 className="text-center text-xl font-semibold">Your Venues</h3>
       <div className="flex gap-4 md:gap-8">
         <VenuesDashboardCard>

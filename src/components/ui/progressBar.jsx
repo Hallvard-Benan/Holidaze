@@ -33,7 +33,7 @@ const ProgressBar = ({ start, end, max, current, progressStyle }) => {
   }, [max, current]);
 
   return (
-    <div className="h-2.5 w-full rounded-full bg-gray-200">
+    <div className="h-2.5 w-full overflow-clip rounded-full bg-gray-200">
       <div
         className={cn(
           "h-2.5 rounded-full bg-primary transition-all duration-500",

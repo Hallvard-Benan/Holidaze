@@ -1,12 +1,12 @@
 import { useEffect, useRef, useState } from "react";
-import { Outlet, useMatches } from "react-router-dom";
+import { Outlet, ScrollRestoration, useMatches } from "react-router-dom";
 import "./index.css";
 import NavBar from "./components/Header";
 import Footer from "./components/Footer";
 import useUser from "./hooks/useUser";
 import { useBoundStore } from "./stores/store";
 import { cn } from "./utils/utils";
-import { Toaster, toast } from "sonner";
+import { Toaster } from "sonner";
 
 function App() {
   const user = useBoundStore((state) => state.user);
@@ -41,8 +41,10 @@ function App() {
       ref={contentRef}
       onScroll={handleScroll}
     >
+      <ScrollToTop target={contentRef} />
       <Toaster richColors />
       <header
+        style={{ paddingRight: `${scrollWidth}px` }}
         className={cn(
           "fixed bottom-0 left-1/2 z-40 w-[100dvw] -translate-x-1/2 bg-card text-muted-foreground transition-colors duration-500 sm:bottom-auto",
           onHomePage &&
@@ -52,7 +54,6 @@ function App() {
             !isLoggedIn &&
             hasScrolled &&
             " sm:bg-card sm:text-muted-foreground",
-          `pr-[${scrollWidth}px]`,
         )}
       >
         <NavBar />
@@ -66,7 +67,10 @@ function App() {
       >
         <Outlet />
       </main>
-      <footer className="pb-[62px] sm:pb-0">
+      <footer
+        style={{ paddingRight: `${scrollWidth}px` }}
+        className=" border-t-2 pb-[84px] sm:pb-0"
+      >
         <Footer />
       </footer>
     </div>
@@ -74,3 +78,15 @@ function App() {
 }
 
 export default App;
+
+import { useLocation } from "react-router-dom";
+
+export function ScrollToTop({ target }) {
+  const { pathname } = useLocation();
+
+  useEffect(() => {
+    target.current.scrollTo(0, 0);
+  }, [pathname]);
+
+  return null;
+}

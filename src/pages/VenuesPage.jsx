@@ -8,7 +8,6 @@ import { useEffect } from "react";
 import Container from "../components/ui/container";
 import FiltersSection from "../components/Filters";
 import Search from "../components/ui/search";
-import GridViewButtons from "../components/ui/grid-view-buttons";
 import { useBoundStore } from "../stores/store";
 
 export default function VenuesPage() {
@@ -33,16 +32,11 @@ export default function VenuesPage() {
   if (!hasBeenFiltered && !search)
     return (
       <Container>
-        <div className="max-w-full sm:hidden">
+        <div className="flex max-w-full items-center pt-4 ">
           <Search />
+          <FiltersSection variant={"small"} />
         </div>
-        <div className="flex w-full items-center justify-between gap-2 overflow-hidden">
-          <GridViewButtons />
-          <div className="hidden w-full sm:flex">
-            <Search />
-          </div>
-          <FiltersSection />
-        </div>
+
         <PaginatedVenues />
       </Container>
     );
@@ -50,15 +44,9 @@ export default function VenuesPage() {
   if (!search) {
     return (
       <Container>
-        <div className="max-w-full sm:hidden">
+        <div className="flex max-w-full items-center pt-4">
           <Search />
-        </div>
-        <div className="flex w-full items-center justify-between gap-2 overflow-hidden">
-          <GridViewButtons />
-          <div className="hidden w-full sm:flex">
-            <Search />
-          </div>
-          <FiltersSection />
+          <FiltersSection variant={"small"} />
         </div>
         <FilteredVenues />
       </Container>
@@ -67,17 +55,13 @@ export default function VenuesPage() {
 
   return (
     <Container>
-      <div className="max-w-full sm:hidden">
+      <div className="flex max-w-full items-center pt-4">
         <Search />
-      </div>
-      <div className="flex w-full items-center justify-between gap-2 overflow-hidden">
-        <GridViewButtons />
-        <div className="hidden w-full sm:flex">
-          <Search />
+        <div className="h-full">
+          <FiltersSection variant={"small"} />
         </div>
-        <FiltersSection />
       </div>
-      <SearchedVenues search={search} />{" "}
+      <SearchedVenues search={search} />
     </Container>
   );
 }

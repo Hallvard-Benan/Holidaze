@@ -1,5 +1,5 @@
 export const createPaginationSlice = (set) => ({
-  paginationState: { pageNumber: 1, perPage: 20 },
+  paginationState: { pageNumber: 1, perPage: 12 },
 
   updatePageNumber: (number) =>
     set((state) => {

@@ -1,8 +1,6 @@
 import { IoClose } from "react-icons/io5";
-import { IoFilter } from "react-icons/io5";
-
 import { useBoundStore } from "../../stores/store";
-import { Button } from "../ui/button";
+import { Button, buttonVariants } from "../ui/button";
 import { cn } from "../../utils/utils";
 import NumberButtons from "../ui/numberButtons";
 import PriceSlider from "../ui/price-slider";
@@ -10,6 +8,7 @@ import { CheckBoxGroup } from "../ui/inputGroup";
 import { useEffect } from "react";
 import { ChosenFilters } from "../ChosenFilters";
 import AreYouSure from "../ui/areYouSure";
+import { SlidersHorizontal } from "lucide-react";
 
 export function FilterGrouping({ children, title }) {
   return (
@@ -63,11 +62,14 @@ export default function FiltersSection({ onSubmit, variant, className }) {
     <>
       <Button
         onClick={toggleFiltersOpen}
+        variant={variant === "small" ? "outline" : "default"}
         className={cn(
-          "flex items-center gap-2",
+          "flex h-full items-center gap-2",
           variant === "home" &&
-            "h-full rounded-full bg-inherit text-lg text-muted-foreground",
+            "  rounded-full bg-inherit text-lg text-muted-foreground",
+
           className,
+          variant === "small" && "w-20 rounded-full ",
         )}
       >
         {numOfFilters > 0 && variant !== "home" && (
@@ -75,15 +77,16 @@ export default function FiltersSection({ onSubmit, variant, className }) {
             {numOfFilters}
           </p>
         )}
-        {variant !== "home" && <p>Filters</p>}
-        <IoFilter />
+        {variant !== "home" && variant !== "small" && <p>Filters</p>}
+        <SlidersHorizontal size={20} />
       </Button>
       {Object.entries(filterForm).toString() !==
       Object.entries(filters).toString() ? (
         <AreYouSure
           buttonText={<IoClose />}
+          confirmVariant={"default"}
           title={"Save changes?"}
-          description={"Do you want to apply the filters before you?"}
+          description={"Do you want to apply the filters?"}
           onConfirm={handleUpdate}
           onCancel={() => {
             toggleFiltersOpen();
@@ -121,9 +124,10 @@ export default function FiltersSection({ onSubmit, variant, className }) {
           {Object.entries(filterForm).toString() !==
           Object.entries(filters).toString() ? (
             <AreYouSure
+              confirmVariant={"default"}
               buttonText={<IoClose />}
               title={"Save changes?"}
-              description={"Do you want to apply the filters before you?"}
+              description={"Do you want to apply the filters?"}
               onConfirm={handleUpdate}
               onCancel={toggleFiltersOpen}
               className={"bg-inherit text-inherit "}
@@ -131,7 +135,14 @@ export default function FiltersSection({ onSubmit, variant, className }) {
               cancelText={"Discard"}
             />
           ) : (
-            <button type="button" onClick={toggleFiltersOpen}>
+            <button
+              type="button"
+              className={cn(
+                buttonVariants({ variant: "outline" }),
+                "border-0 bg-inherit",
+              )}
+              onClick={toggleFiltersOpen}
+            >
               <IoClose />
             </button>
           )}

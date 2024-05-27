@@ -22,9 +22,10 @@ const Calendar = ({ disabledDates, state, handleOnChange }) => {
     };
   }, []);
 
+  const today = new Date();
   return (
     <DateRangePicker
-      s
+      minDate={today}
       weekStartsOn={1}
       onChange={handleOnChange}
       showSelectionPreview={true}

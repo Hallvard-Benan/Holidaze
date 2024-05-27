@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { FaRegStar } from "react-icons/fa";
 
 import { CardImageCarousel } from "../ui/cardImageCarousel";
+import BookingsModal from "../ui/bookinigModal";
 
 export default function Card({
   images,
@@ -11,6 +12,8 @@ export default function Card({
   price,
   details,
   href,
+  isMine,
+  bookings,
   location,
   rating,
 }) {
@@ -38,10 +41,21 @@ export default function Card({
               location.city !== "string" &&
               location?.city + ", " + location?.country}
           </p>
-          <p>
-            {price.toLocaleString()} kr{" "}
-            <span className="text-muted-foreground">/ night</span>
-          </p>
+          <div className="flex flex-wrap justify-between">
+            <p>
+              {price.toLocaleString()} kr{" "}
+              <span className="text-muted-foreground">/ night</span>
+            </p>
+            {isMine && (
+              <>
+                {bookings?.length > 0 ? (
+                  <BookingsModal bookings={bookings} />
+                ) : (
+                  <p className="text-sm text-muted-foreground">No bookings</p>
+                )}
+              </>
+            )}
+          </div>
         </div>
       </div>
     </div>

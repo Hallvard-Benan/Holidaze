@@ -14,7 +14,7 @@ export default function HomePage() {
   const navigate = useNavigate();
   const isLoggedIn = useBoundStore((state) => state.isLoggedIn);
   const clearFilters = useBoundStore((state) => state.clearFilters);
-
+  const userName = useBoundStore((state) => state.user.name);
   const updatePageNumber = useBoundStore((state) => state.updatePageNumber);
 
   console.log("Rendered HomePage component");
@@ -35,14 +35,15 @@ export default function HomePage() {
       {!isLoggedIn ? (
         <HeroSection />
       ) : (
-        <Container>
+        <Container className={"grid gap-4 sm:gap-8"}>
+          <h2 className="pt-2">Welcome, {userName}!</h2>
           <Dashboard />
         </Container>
       )}
       <Container>
-        <div className="grid gap-8">
+        <div className="grid gap-4 sm:gap-8">
           {isLoggedIn && (
-            <div className="flex justify-center">
+            <div className="flex justify-center pt-8  ">
               <Search onSearch={handleSearch} />{" "}
               <FiltersSection
                 onSubmit={() => navigate("/venues")}

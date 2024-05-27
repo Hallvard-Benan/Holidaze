@@ -15,12 +15,13 @@ export default function Search({ onSearch, variant }) {
       <input
         type="text"
         className={cn(
-          "focus-within:bg-card w-full max-w-full rounded-full  border bg-muted p-3 pl-10",
+          "w-full max-w-full rounded-full border  bg-muted p-3 pl-10 focus-within:bg-card",
+          variant === "",
         )}
         name="search"
         placeholder="What are you looking for?"
       />
-      <button className="text-muted-foreground absolute left-4">
+      <button className="absolute left-4 text-muted-foreground">
         <FaSearch />
       </button>
     </form>
@@ -29,4 +30,5 @@ export default function Search({ onSearch, variant }) {
 
 Search.propTypes = {
   onSearch: PropTypes.func,
+  variant: PropTypes.string,
 };

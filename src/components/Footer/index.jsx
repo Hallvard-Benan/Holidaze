@@ -1,25 +1,6 @@
-import {
-  FaArrowRight,
-  FaCcVisa,
-  FaApplePay,
-  FaPaypal,
-  FaCcAmex,
-  FaCcMastercard,
-} from "react-icons/fa";
 import { HiOutlineMail } from "react-icons/hi";
-import { GrLocation } from "react-icons/gr";
 import { LiaPhoneVolumeSolid } from "react-icons/lia";
-import {
-  FaFacebookF,
-  FaGit,
-  FaGithub,
-  FaGlobe,
-  FaInternetExplorer,
-  FaLinkedin,
-} from "react-icons/fa6";
-import { RiInstagramFill } from "react-icons/ri";
-import { FaXTwitter } from "react-icons/fa6";
-import { Link } from "react-router-dom";
+import { FaGithub, FaGlobe, FaLinkedin } from "react-icons/fa6";
 
 export default function Footer() {
   return (
@@ -28,7 +9,7 @@ export default function Footer() {
         <div className="flex flex-col  gap-4 md:items-start">
           <div className="space-y-1">
             <div className="flex items-center gap-1">
-              <img src="/public/holidayhelper-logo.svg" className="h-8" />
+              <img src="/holidayhelper-logo.svg" className="h-8" />
               <h2 className=" text-2xl font-bold">Holiday Helper</h2>
             </div>
             <p className="max-w-[200px] text-wrap text-sm">

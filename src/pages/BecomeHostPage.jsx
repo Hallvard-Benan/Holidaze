@@ -18,7 +18,9 @@ export default function BecomeHostPage() {
   const { updateProfileMutation } = useUpdateUser({
     name: userName,
     setError,
-    onSuccess: () => toast.success("Success! You are now a venue manager"),
+    onSuccess: () => {
+      toast.success("Success! You are now a venue manager");
+    },
   });
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -30,7 +32,7 @@ export default function BecomeHostPage() {
 
   useEffect(() => {
     if (venueManager) {
-      navigate("/new-venue");
+      navigate("/");
     }
   }, [venueManager]);
 

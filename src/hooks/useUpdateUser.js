@@ -9,9 +9,9 @@ export default function useUpdateUser({ setError, name, onSuccess, onError }) {
   const updateProfileMutation = useMutation({
     mutationFn: updateProfile,
     onSuccess: (res) => {
+      onSuccess && onSuccess();
       updateUser(res.data.data);
       queryClient.invalidateQueries({ queryKey: ["user", name] });
-      onSuccess && onSuccess();
     },
     onError: (res) => {
       setError("root", {

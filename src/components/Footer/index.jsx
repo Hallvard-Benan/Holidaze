@@ -1,6 +1,7 @@
 import { HiOutlineMail } from "react-icons/hi";
 import { LiaPhoneVolumeSolid } from "react-icons/lia";
 import { FaGithub, FaGlobe, FaLinkedin } from "react-icons/fa6";
+import { Link } from "react-router-dom";
 
 export default function Footer() {
   return (
@@ -9,7 +10,9 @@ export default function Footer() {
         <div className="flex flex-col  gap-4 md:items-start">
           <div className="space-y-1">
             <div className="flex items-center gap-1">
-              <img src="/holidayhelper-logo.svg" className="h-8" />
+              <Link to={"/"}>
+                <img src="/holidayhelper-logo.svg" className="h-8" />
+              </Link>
               <h2 className=" text-2xl font-bold">Holiday Helper</h2>
             </div>
             <p className="max-w-[200px] text-wrap text-sm">
@@ -62,18 +65,27 @@ export default function Footer() {
           <p>Made By Hallvard Benan</p>
         </div>
         <div className="flex items-center justify-center gap-3 md:justify-end">
-          <FaGlobe
-            size={20}
-            className="cursor-pointer hover:text-neutral-500"
-          />
-          <FaGithub
-            size={23}
-            className="cursor-pointer hover:text-neutral-500"
-          />
-          <FaLinkedin
-            size={21}
-            className="cursor-pointer hover:text-neutral-500"
-          />
+          <a href="https://hallvard.netlify.app" target="_blank">
+            <FaGlobe
+              size={20}
+              className="cursor-pointer hover:text-neutral-500"
+            />
+          </a>
+          <a href="https://github.com/Hallvard-Benan" target="_blank">
+            <FaGithub
+              size={23}
+              className="cursor-pointer hover:text-neutral-500"
+            />
+          </a>
+          <a
+            href="https://www.linkedin.com/in/hallvard-benan-282937249/"
+            target="_blank"
+          >
+            <FaLinkedin
+              size={21}
+              className="cursor-pointer hover:text-neutral-500"
+            />
+          </a>
         </div>
       </div>
     </div>

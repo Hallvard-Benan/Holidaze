@@ -33,21 +33,15 @@ export default function LocationMap({ venue, latitude, longitude }) {
 
   return (
     <APIProvider apiKey={import.meta.env.VITE_GOOGLE_MAPS_KEY}>
-      <div className="h-full overflow-hidden rounded-lg ">
-        <Map
-          center={position}
-          defaultZoom={12}
-          mapId={import.meta.env.VITE_VENUE_MAP_ID}
-        >
-          <AdvancedMarker position={position}>
-            <Pin
-              background={"white"}
-              borderColor={"grey"}
-              glyphColor={"grey"}
-            />
-          </AdvancedMarker>
-        </Map>
-      </div>
+      <Map
+        center={position}
+        zoom={12}
+        mapId={import.meta.env.VITE_VENUE_MAP_ID}
+      >
+        <AdvancedMarker position={position}>
+          <Pin background={"white"} borderColor={"grey"} glyphColor={"grey"} />
+        </AdvancedMarker>
+      </Map>
     </APIProvider>
   );
 }

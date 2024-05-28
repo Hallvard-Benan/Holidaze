@@ -83,7 +83,7 @@ export default function FiltersSection({ onSubmit, variant, className }) {
       {Object.entries(filterForm).toString() !==
       Object.entries(filters).toString() ? (
         <AreYouSure
-          buttonText={<IoClose />}
+          buttonText={""}
           confirmVariant={"default"}
           title={"Save changes?"}
           description={"Do you want to apply the filters?"}

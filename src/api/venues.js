@@ -5,7 +5,6 @@ const authStorage = window.localStorage.getItem("Auth-storage");
 const accessToken = JSON.parse(authStorage)?.state.accessToken;
 
 export async function fetchAllVenues({ pageParam, perPage }) {
-  console.log("fetching all venues");
   const res = await axios.get(
     `${baseUrl}/holidaze/venues?sort=created&sortOrder=desc&limit=${perPage}&page=${pageParam}`,
   );
@@ -13,7 +12,6 @@ export async function fetchAllVenues({ pageParam, perPage }) {
 }
 
 export async function fetchVenueById(id) {
-  console.log("fetching venue", id);
   const res = await axios.get(
     `${baseUrl}/holidaze/venues/${id}?_bookings=true&_owner=true`,
   );
@@ -22,9 +20,9 @@ export async function fetchVenueById(id) {
 
 export async function searchVenues({ pageParam, search }) {
   const res = await axios.get(
-    `${baseUrl}/holidaze/venues/search?q=${search}&limit=20&page=${pageParam}`,
+    `${baseUrl}/holidaze/venues/search?q=${search}&limit=100&page=${pageParam}`,
   );
-  console.log(pageParam, search, "data from search: ", res);
+
   return res;
 }
 
@@ -42,7 +40,6 @@ export async function createVenue(data) {
 }
 
 export async function editVenue(data) {
-  console.log(data);
   const authStorage = window.localStorage.getItem("Auth-storage");
   const accessToken = JSON.parse(authStorage).state.accessToken;
   const res = await axios.put(

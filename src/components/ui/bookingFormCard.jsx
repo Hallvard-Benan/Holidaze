@@ -25,7 +25,7 @@ export default function BookingFormCard({
   onDecreaseGuests,
 }) {
   return (
-    <div className="flex w-full flex-col gap-6 rounded-md border border-muted bg-card p-6">
+    <div className="flex  w-full flex-col gap-6 rounded-md border border-muted bg-card p-6">
       <div className="flex justify-between">
         <div>
           <label htmlFor="guests" className="font-semibold">

@@ -3,13 +3,12 @@ import useSingleVenue from "../hooks/useSingleVenue";
 import { FaRegStar } from "react-icons/fa";
 import { MdVerifiedUser } from "react-icons/md";
 import { FaEdit } from "react-icons/fa";
-import Spinner from "../components/ui/spinner";
 
 import { useBoundStore } from "../stores/store";
 
 import BookingForm from "../components/Forms/BookingForm";
 import { Button } from "../components/ui/button";
-import { cn, formatDate } from "../utils/utils";
+import { cn } from "../utils/utils";
 
 import useDeleteVenue from "../hooks/useDeleteVenue";
 import { useEffect, useState } from "react";
@@ -17,13 +16,13 @@ import CreateVenueForm from "../components/Forms/CreateVenueForm";
 import useUpdateVenue from "../hooks/useUpdateVenue";
 import { ImageCarousel } from "../components/ui/imageCarousel";
 import AmenityIcons from "../components/ui/amenetiesIcons";
-import { Separator } from "../components/ui/seperator";
 import AreYouSure from "../components/ui/areYouSure";
 
 import Container from "../components/ui/container";
 import BookingsModal from "../components/ui/bookinigModal";
 import { Skeleton } from "../components/ui/skeleton";
 import LocationMap from "../components/Map";
+import { useInView } from "react-intersection-observer";
 
 export async function loader({ params }) {
   const id = params.venueId;
@@ -33,7 +32,8 @@ export async function loader({ params }) {
 export default function VenuePage() {
   const user = useBoundStore((state) => state.user);
   const isLoggedIn = useBoundStore((state) => state.isLoggedIn);
-
+  // Important to stop overflow issues caused by google maps
+  const { ref: mapRef, inView } = useInView();
   const editVenueFormData = useBoundStore((state) => state.editVenueFormData);
   const updateEditItem = useBoundStore((state) => state.updateEditItem);
   const updateEditMeta = useBoundStore((state) => state.updateEditMeta);
@@ -198,7 +198,7 @@ export default function VenuePage() {
       )}
 
       <div className="grid gap-8">
-        <div className="flex justify-center">
+        <div className="flex justify-center md:mx-auto md:w-calc">
           <ImageCarousel
             noImage={post.media.length < 1}
             images={
@@ -279,7 +279,7 @@ export default function VenuePage() {
                     " grid max-w-full gap-2 overflow-hidden rounded-md p-2",
                   )}
                 >
-                  <h2 className="text-lg font-medium">About This Venue</h2>
+                  <h2 className="text-lg font-medium">About This Venue</h2>{" "}
                   <p className="break-word max-w-full ">{post.description}</p>
                 </div>
 
@@ -288,15 +288,21 @@ export default function VenuePage() {
                     Area
                   </h3>
 
-                  <p>
+                  <div>
                     {" "}
                     {post.location.city && post.location.country && (
                       <p className="text-muted-foreground">
                         {post.location.city}, {post.location.country}
                       </p>
                     )}
-                  </p>
-                  <div className="aspect-video w-full rounded-lg ">
+                  </div>
+                  <div
+                    ref={mapRef}
+                    className={cn(
+                      "  aspect-video w-1  max-w-full overflow-hidden rounded-lg",
+                      inView && "w-full",
+                    )}
+                  >
                     <LocationMap venue={post} />
                   </div>
                 </div>

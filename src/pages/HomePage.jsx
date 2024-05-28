@@ -17,7 +17,6 @@ export default function HomePage() {
   const userName = useBoundStore((state) => state.user.name);
   const updatePageNumber = useBoundStore((state) => state.updatePageNumber);
 
-  console.log("Rendered HomePage component");
   const handleSearch = (e) => {
     e.preventDefault();
     const searchTerm = e.target.search.value;

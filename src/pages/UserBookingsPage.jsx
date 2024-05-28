@@ -1,13 +1,9 @@
 import Spinner from "../components/ui/spinner";
-import Card from "../components/Card";
-import { cn, formatDate } from "../utils/utils";
+import { cn } from "../utils/utils";
 import { useNavigate, useParams } from "react-router-dom";
 import useUpcomingBookings from "../hooks/useUpcomingBookings";
 import Container from "../components/ui/container";
-import { CiCalendar } from "react-icons/ci";
 import { useEffect } from "react";
-import { Button } from "../components/ui/button";
-import useDeleteBooking from "../hooks/useDeleteBookings";
 import { useBoundStore } from "../stores/store";
 import Bookings from "../components/Bookings";
 import BookingsButtons from "../components/Bookings/buttons";
@@ -17,7 +13,6 @@ export default function UserBookingsPage() {
   const navigate = useNavigate();
   const { userName } = useParams();
   const myUserName = useBoundStore((state) => state.user.name);
-  const { deleteMutation } = useDeleteBooking();
 
   const { bookings, status, error } = useUpcomingBookings(userName);
   useEffect(() => {
@@ -41,10 +36,6 @@ export default function UserBookingsPage() {
         ))}{" "}
       </div>
     );
-
-  const handleDelete = (id) => {
-    deleteMutation.mutate(id);
-  };
 
   return (
     <div className="min-h-screen">

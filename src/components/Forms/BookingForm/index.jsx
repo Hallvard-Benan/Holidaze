@@ -166,7 +166,7 @@ const BookingForm = ({
     <div className="flex flex-col items-center gap-8 sm:flex-row sm:gap-2">
       {makeBookingMutation.status === "pending" && <Spinner />}
 
-      <div>
+      <div className=" ">
         <Calendar
           state={calendarState}
           handleOnChange={handleOnChange}

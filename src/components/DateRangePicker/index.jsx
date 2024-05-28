@@ -1,7 +1,6 @@
 import PropTypes from "prop-types";
 import { DateRangePicker } from "react-date-range";
 import "react-date-range/dist/styles.css"; // main css file
-import "react-date-range/dist/theme/default.css"; // theme css file
 import "./style.css";
 import { useEffect, useState } from "react";
 
@@ -28,8 +27,6 @@ const Calendar = ({ disabledDates, state, handleOnChange }) => {
       minDate={today}
       weekStartsOn={1}
       onChange={handleOnChange}
-      showSelectionPreview={true}
-      moveRangeOnFirstSelection={false}
       months={numMonths}
       ranges={state}
       editableDateInputs

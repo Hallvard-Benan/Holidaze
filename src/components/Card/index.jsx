@@ -1,4 +1,3 @@
-import React from "react";
 import { Link } from "react-router-dom";
 import { FaRegStar } from "react-icons/fa";
 
@@ -8,9 +7,7 @@ import BookingsModal from "../ui/bookinigModal";
 export default function Card({
   images,
   heading,
-  description,
   price,
-  details,
   href,
   isMine,
   bookings,
@@ -18,7 +15,7 @@ export default function Card({
   rating,
 }) {
   return (
-    <div className="group grid h-[450px] grid-rows-[300px,auto] overflow-hidden rounded-lg border border-gray-200 bg-card shadow">
+    <div className="group grid h-[450px]  grid-rows-[300px,auto] overflow-hidden rounded-lg border border-gray-200 bg-card shadow-sm transition-shadow duration-300 hover:shadow-lg">
       <CardImageCarousel images={images} href={href} className={" h-[300px]"} />
       <div className="flex max-w-full flex-col justify-between overflow-hidden p-4">
         <Link

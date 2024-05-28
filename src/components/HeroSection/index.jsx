@@ -13,7 +13,7 @@ export function HeroSection() {
 
   return (
     <div
-      className="relative flex  h-[80dvh] w-full flex-col justify-between bg-cover bg-center"
+      className="relative flex h-[85dvh] max-h-[700px] min-h-[375px] w-full flex-col justify-between bg-cover bg-center"
       style={{ backgroundImage: "url('/skyline.webp')" }}
     >
       <div className="absolute inset-0  flex bg-black opacity-20"></div>
@@ -31,14 +31,15 @@ export function HeroSection() {
               className={"absolute right-0  h-full"}
             />
           </div>
+          <div></div>
         </div>
-        <div className="  flex justify-center  gap-2 py-6">
-          <h2 className="text-white">Earn money Hosting Travelers?</h2>
+        <div className="  flex flex-col items-end justify-center  gap-2 py-6">
+          <h2 className="text-white">Feeling adventurous?</h2>
           <Link
-            to="/auth/register"
-            className="h-fit rounded-lg border border-secondary-foreground bg-secondary px-4 py-2 text-secondary-foreground"
+            to="/venues"
+            className="h-fit rounded-lg border border-secondary bg-black/30 px-4 py-2 text-secondary transition-all duration-300 hover:bg-black/50"
           >
-            Become a host
+            See All Venues
           </Link>
         </div>
       </div>

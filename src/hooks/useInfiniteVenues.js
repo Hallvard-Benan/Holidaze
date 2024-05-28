@@ -1,40 +1,34 @@
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { fetchAllVenues } from "../api/venues";
 import { useBoundStore } from "../stores/store";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 export default function useInfiniteVenues() {
-  const [filteredData, setFilteredData] = useState([]);
-  const [currentPage, setCurrentPage] = useState(0);
-
+  const [isLastPage, setIsLastPage] = useState(false);
   const filters = useBoundStore((state) => state.filters);
-  const perPage = useBoundStore((state) => state.paginationState.perPage);
 
   const { data, status, error, fetchNextPage, isFetchingNextPage } =
     useInfiniteQuery({
       queryKey: ["venues", filters],
-      queryFn: ({ pageParam }) => fetchAllVenues({ pageParam, perPage }),
+      queryFn: ({ pageParam }) => fetchAllVenues({ pageParam, perPage: 100 }),
       initialPageParam: 1,
       getNextPageParam: (lastPage) => lastPage.data.meta.nextPage,
     });
 
-  //   useEffect(() => {
-  //     if (data && filters && data.pages[currentPage]) {
-  //       console.log(data.pages[currentPage]);
-  //       const filteredVenues = filterVenues(
-  //         data.pages[currentPage].data.data,
-  //         filters,
-  //       );
-  //       setCurrentPage((prev) => prev + 1);
-  //       setFilteredData((state) => [...state, ...filteredVenues]);
-  //     }
-  //   }, [data, filters, currentPage]);
+  const fetchNext = async () => {
+    if (isLastPage) return;
+
+    const lastPage = data.pages[0].data.meta.pageCount;
+
+    const res = await fetchNextPage();
+    if (res.data.pages.length === lastPage) setIsLastPage(true);
+  };
 
   return {
     data,
     status,
     error,
-    filteredData,
+    fetchNext,
     fetchNextPage,
     isFetchingNextPage,
   };

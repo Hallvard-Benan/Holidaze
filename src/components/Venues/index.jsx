@@ -10,6 +10,7 @@ import useSearchVenues from "../../hooks/useSearchVenues";
 import { useInView } from "react-intersection-observer";
 import Spinner from "../ui/spinner";
 import useInfiniteVenues from "../../hooks/useInfiniteVenues";
+import { ScrollToTop } from "../../App";
 
 export default function Venues({ data }) {
   return (
@@ -62,6 +63,11 @@ export function PaginatedVenues() {
   const { perPage, pageNumber } = useBoundStore(
     (state) => state.paginationState,
   );
+
+  useEffect(() => {
+    window.document.getElementById("content").scrollTo(0, 0);
+  }, [pageNumber]);
+
   useEffect(() => {
     if (page) updatePageNumber(parseInt(page));
   }, []);
@@ -89,9 +95,7 @@ export function PaginatedVenues() {
         <div className="relative">
           <div className="absolute bottom-0 h-fit w-fit">
             <select
-              name=""
-              id=""
-              className="bg-inherit text-sm"
+              className="rounded-md border bg-inherit"
               value={perPage}
               onChange={(e) => {
                 updatePerPage(parseInt(e.target.value));
@@ -207,11 +211,12 @@ export function SearchedVenues({ search }) {
     useSearchVenues(search);
   const { ref, inView } = useInView();
   const filters = useBoundStore((state) => state.filters);
+
   useEffect(() => {
-    if (inView) {
+    if (inView && !isFetchingNextPage) {
       fetchNextPage();
     }
-  }, [inView, fetchNextPage]);
+  }, [inView, fetchNextPage, isFetchingNextPage]);
   if (status === "pending") return <SkeletonVenues />;
   if (status === "error") {
     return (
@@ -244,7 +249,7 @@ export function SearchedVenues({ search }) {
           );
         })}
       </VenuesGrid>
-      <div ref={ref}>
+      <div ref={ref} className="h-1 w-1 bg-black">
         {isFetchingNextPage && (
           <div className="p-8">
             <Spinner />
@@ -258,14 +263,14 @@ export function SearchedVenues({ search }) {
 export function FilteredVenues() {
   const { ref, inView } = useInView();
   const filters = useBoundStore((state) => state.filters);
-  const { data, error, status, isFetchingNextPage, fetchNextPage } =
+  const { data, error, status, isFetchingNextPage, fetchNext } =
     useInfiniteVenues();
 
   useEffect(() => {
-    if (inView) {
-      fetchNextPage();
+    if (inView && !isFetchingNextPage) {
+      fetchNext();
     }
-  }, [inView, fetchNextPage]);
+  }, [inView, fetchNext, isFetchingNextPage]);
 
   if (status === "pending") return <SkeletonVenues />;
   if (status === "error") {
@@ -277,25 +282,27 @@ export function FilteredVenues() {
   }
   if (status === "success" && data)
     return (
-      <VenuesGrid>
-        {data?.pages?.map((page) => {
-          const filteredData = filterVenues(page.data.data, filters);
-          return (
-            <Venues
-              key={page.data.meta.currentPage}
-              data={filteredData}
-              meta={page.data.meta}
-            />
-          );
-        })}
-        <div ref={ref}>
+      <>
+        <VenuesGrid>
+          {data?.pages?.map((page) => {
+            const filteredData = filterVenues(page.data.data, filters);
+            return (
+              <Venues
+                key={page.data.meta.currentPage}
+                data={filteredData}
+                meta={page.data.meta}
+              />
+            );
+          })}
+        </VenuesGrid>
+        <div ref={ref} className="">
           {isFetchingNextPage && (
             <div className="p-8">
               <Spinner />
             </div>
           )}
         </div>
-      </VenuesGrid>
+      </>
     );
 }
 

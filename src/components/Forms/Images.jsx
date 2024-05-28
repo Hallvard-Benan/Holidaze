@@ -172,6 +172,7 @@ Images.propTypes = {
     PropTypes.shape({
       url: PropTypes.string.isRequired,
       alt: PropTypes.string.isRequired,
+      max: PropTypes.number,
     }),
   ),
   onImagesChange: PropTypes.func.isRequired,

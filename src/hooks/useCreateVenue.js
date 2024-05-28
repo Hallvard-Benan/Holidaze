@@ -19,7 +19,6 @@ export default function useCreateVenue() {
       navigate(`/venues/${res.data.data.id}`);
     },
     onError: (err) => {
-      console.log(err);
       setError(err);
     },
   });

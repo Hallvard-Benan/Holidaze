@@ -11,7 +11,6 @@ import {
 
 export default function PaginationSection({
   isLast,
-  isFirst,
   current,
   firstOnThisPage,
   total,

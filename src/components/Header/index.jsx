@@ -1,15 +1,7 @@
-import { Link, NavLink, useMatch, useMatches } from "react-router-dom";
+import { NavLink, useMatches } from "react-router-dom";
 import { useBoundStore } from "../../stores/store";
 import { useNavigate } from "react-router-dom";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-  DropdownMenuSeparator,
-} from "../ui/dropdown-menu";
-import { FiLogOut } from "react-icons/fi";
-import { LuUser2 } from "react-icons/lu";
+
 import { FaSearch } from "react-icons/fa";
 
 import { FaPlus } from "react-icons/fa";

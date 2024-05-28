@@ -95,7 +95,7 @@ export function ChosenFilters({ className }) {
 export function ChosenFilterButton({ onDelete, children }) {
   return (
     <div className="flex gap-2 rounded-full border border-muted-foreground bg-secondary px-4 py-2 text-sm text-primary">
-      <p className="flex text-nowrap">{children}</p>
+      <div className="flex text-nowrap">{children}</div>
       <button onClick={onDelete}>x</button>
     </div>
   );

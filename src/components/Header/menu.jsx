@@ -16,11 +16,9 @@ import { cn } from "../../utils/utils";
 export default function UserDropDown({
   activeRoute,
   activeStyles,
-  data,
   user,
   handleLogout,
   isLoggedIn,
-  status,
 }) {
   return (
     <DropdownMenu>

@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { Outlet, ScrollRestoration, useMatches } from "react-router-dom";
+import { Outlet, useMatches } from "react-router-dom";
 import "./index.css";
 import NavBar from "./components/Header";
 import Footer from "./components/Footer";
@@ -18,6 +18,7 @@ function App() {
   const contentRef = useRef();
   const [scrollWidth, setScrollWidth] = useState(15);
   const [hasScrolled, setHasScrolled] = useState(false); // State to track scroll position
+  const { scrollUp } = useScrollToTop({ contentRef });
 
   useEffect(() => {
     if (data) {
@@ -37,6 +38,7 @@ function App() {
 
   return (
     <div
+      id="content"
       className="grid h-[100dvh]  overflow-x-hidden bg-background"
       ref={contentRef}
       onScroll={handleScroll}
@@ -80,6 +82,7 @@ function App() {
 export default App;
 
 import { useLocation } from "react-router-dom";
+import useScrollToTop from "./hooks/useScrollToTop";
 
 export function ScrollToTop({ target }) {
   const { pathname } = useLocation();

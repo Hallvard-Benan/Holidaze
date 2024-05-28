@@ -84,7 +84,8 @@ export default function UpdateAvatarForm({
           <DialogHeader>
             <DialogTitle>Edit {variant}</DialogTitle>
             <DialogDescription>
-              Make changes to your profile here. Click save when you're done.
+              Make changes to your profile here. Click save when you&apos;re
+              done.
             </DialogDescription>
             <div className="flex justify-between">
               <div>

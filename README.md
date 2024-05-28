@@ -51,7 +51,7 @@ Venue managers
 ### Installing
 
 ```bash
-git clone git@github.com:Hallvard-Benan/auction-house.git
+git clone git@github.com:Hallvard-Benan/Holidaze.git
 ```
 
 Install dependencies

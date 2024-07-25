@@ -1,4 +1,4 @@
-# Auction House, Semester project 2
+# Holiday Helper
 
 ![image](/public/screenshot.png)
 
